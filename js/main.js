@@ -1,4 +1,3 @@
-// Funcție pentru a încărca tema la deschiderea oricărei pagini
 document.addEventListener('DOMContentLoaded', () => {
     // Verificăm dacă Dark Mode este activat în memorie
     if (localStorage.getItem('darkMode') === 'true') {
