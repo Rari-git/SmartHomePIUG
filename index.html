@@ -15,10 +15,11 @@
     </nav>
     <main>
         <h1>Tablou de Bord</h1>
-        <p>Apasă pe dispozitive pentru a le activa/dezactiva. Cele mai folosite vor apărea primele!</p>
-        
+        <div class="help-box">
+            <strong>ℹ️ Suport (Help):</strong> Apasă pe dispozitivele de mai jos pentru a le activa/dezactiva. 
+            Sistemul este inteligent: dispozitivele pe care le folosești cel mai des se vor muta automat pe prima linie pentru acces rapid.
+        </div>
         <div class="grid" id="dashboard-grid">
-            <!-- ID-urile trebuie să fie unice pentru ca algoritmul să le recunoască -->
             <div class="card" id="bec_living" onclick="trackAccess('bec_living')">💡 Bec Living</div>
             <div class="card" id="tv_dormitor" onclick="trackAccess('tv_dormitor')">📺 TV Dormitor</div>
             <div class="card" id="termostat_hol" onclick="trackAccess('termostat_hol')">🌡️ Termostat Hol</div>

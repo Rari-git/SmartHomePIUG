@@ -16,14 +16,17 @@
     <main>
         <h1>Control Camere</h1>
         
-        <div class="form-group">
-            <h3>Setare Temperatură Generală</h3>
-            <label for="tempInput">Grade Celsius (15 - 30):</label>
-            <input type="number" id="tempInput" placeholder="Ex: 22">
-            <button onclick="valideazaTemperatura()">Setează</button>
-            <p id="tempError" class="error-msg">❌ Eroare: Temperatura trebuie să fie între 15 și 30 de grade!</p>
-            <p id="tempSuccess" class="success-msg">✅ Temperatura a fost actualizată!</p>
-        </div>
+       <div class="form-group">
+    <h3>Setare Temperatură Generală</h3>
+    
+    <p>Temperatura curentă este: <strong id="tempCurenta">22</strong>°C</p>
+    
+    <label for="tempInput">Grade Celsius (15 - 30):</label>
+    <input type="number" id="tempInput" placeholder="Ex: 22">
+    <button onclick="valideazaTemperatura()">Setează</button>
+    <p id="tempError" class="error-msg"></p>
+    <p id="tempSuccess" class="success-msg"></p>
+</div>
     </main>
 
     <script src="js/main.js"></script>

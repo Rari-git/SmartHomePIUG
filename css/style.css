@@ -129,3 +129,52 @@ button:hover {
     display: none;
     margin-top: 5px;
 }
+
+/* --- Euristica 1: Notificări Toast (Vizibilitatea stării) --- */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* --- Euristica 3: Buton de Undo (Libertate și control) --- */
+.undo-btn {
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.undo-btn:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* --- Euristica 10: Suport și documentare --- */
+.help-box {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid var(--accent-color);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
