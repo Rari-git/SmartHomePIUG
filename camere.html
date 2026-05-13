@@ -11,25 +11,115 @@
         <a href="index.html">🏠 Dashboard</a>
         <a href="camere.html">🛋️ Camere</a>
         <a href="securitate.html">🛡️ Securitate</a>
+        <a href="pericole.html">🚨 Pericole</a> 
         <a href="setari.html">⚙️ Setări</a>
     </nav>
-    <main>
-        <h1>Control Camere</h1>
-        
-       <div class="form-group">
-    <h3>Setare Temperatură Generală</h3>
-    
-    <p>Temperatura curentă este: <strong id="tempCurenta">22</strong>°C</p>
-    
-    <label for="tempInput">Grade Celsius (15 - 30):</label>
-    <input type="number" id="tempInput" placeholder="Ex: 22">
-    <button onclick="valideazaTemperatura()">Setează</button>
-    <p id="tempError" class="error-msg"></p>
-    <p id="tempSuccess" class="success-msg"></p>
-</div>
-    </main>
 
     <script src="js/main.js"></script>
     <script src="js/validation.js"></script>
 </body>
 </html>
+
+<main>
+    <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+        
+        <div style="flex: 1; min-width: 300px;">
+            <h1>Control Camere</h1>
+            
+            <div class="form-group">
+    <h3>Setare Temperatură Generală</h3>
+    <p>Temperatura curentă în casă este:</p>
+    
+    <h2 style="color: var(--accent-color); font-size: 2.5em; margin: 10px 0;">
+        <span id="tempCurenta">22</span>°C
+    </h2>
+    
+    <label for="tempInput">Setează valoare nouă (15 - 30):</label>
+    <input type="number" id="tempInput" placeholder="Ex: 22">
+    <button onclick="valideazaTemperatura()">Actualizează</button>
+    
+    <p id="tempError" class="error-msg"></p>
+    <p id="tempSuccess" class="success-msg"></p>
+</div>
+
+            <div class="form-group">
+                <h3>💧 Monitorizare Umiditate</h3>
+                <p>Umiditatea medie în casă este:</p>
+                
+                <h2 style="color: var(--accent-color); font-size: 2.5em; margin: 10px 0;" id="umiditateCurenta">45%</h2>
+                
+                <p style="font-size: 0.9em; font-weight: bold;">
+                    Stare: <span id="stareUmiditate" style="color: var(--success-color);">Optimă</span>
+                </p>
+                
+                <button onclick="actualizeazaSenzori()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); margin-top: 10px; width: 100%;">
+                    🔄 Actualizează Senzorii
+                </button>
+            </div>
+
+            <div class="form-group">
+                <h3>Setare Umiditate Generală</h3>
+                <p>Umiditatea curentă este: <strong id="umiditateCurenta">45</strong>%</p>
+                
+                <label for="umiditateInput">Procentaj (30 - 60):</label>
+                <input type="number" id="umiditateInput" placeholder="Ex: 50">
+                <button onclick="valideazaUmiditate()">Setează Umiditate</button>
+                <p id="umiditateError" class="error-msg"></p>
+                <p id="umiditateSuccess" class="success-msg"></p>
+            </div>
+
+            <div class="form-group">
+                <h3>🍃 Calitatea Aerului (CO2)</h3>
+                <p>Nivelul de dioxid de carbon:</p>
+                
+                <h2 style="color: var(--accent-color); font-size: 2.5em; margin: 10px 0;"><span id="co2Curent">450</span> ppm</h2>
+                
+                <p style="font-size: 0.9em; font-weight: bold;">
+                    Stare: <span id="stareCO2" style="color: var(--success-color);">Excelentă</span>
+                </p>
+                
+                <button onclick="actualizeazaSenzorCO2()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); margin-top: 10px; width: 100%;">
+                    🔄 Verifică Aerul
+                </button>
+            </div>
+        </div>
+
+        <div style="flex: 2; min-width: 400px;">
+            <h1>Control Temperatură pe Camere</h1>
+            <div class="grid">
+                <div class="form-group">
+                    <h3>🛋️ Living</h3>
+                    <p>Temperatura actuală: <strong id="temp-living">21</strong>°C</p>
+                    <input type="number" id="input-living" placeholder="Ex: 22">
+                    <button onclick="valideazaTemperaturaCameră('living')">Setează Living</button>
+                    <p id="error-living" class="error-msg"></p>
+                </div>
+
+                <div class="form-group">
+                    <h3>🛏️ Dormitor</h3>
+                    <p>Temperatura actuală: <strong id="temp-dormitor">19</strong>°C</p>
+                    <input type="number" id="input-dormitor" placeholder="Ex: 20">
+                    <button onclick="valideazaTemperaturaCameră('dormitor')">Setează Dormitor</button>
+                    <p id="error-dormitor" class="error-msg"></p>
+                </div>
+
+                <div class="form-group">
+                    <h3>🍳 Bucătărie</h3>
+                    <p>Temperatura actuală: <strong id="temp-bucatarie">23</strong>°C</p>
+                    <input type="number" id="input-bucatarie" placeholder="Ex: 21">
+                    <button onclick="valideazaTemperaturaCameră('bucatarie')">Setează Bucătărie</button>
+                    <p id="error-bucatarie" class="error-msg"></p>
+                </div>
+
+                <div class="form-group">
+                    <h3>🚿 Baie</h3>
+                    <p>Temperatura actuală: <strong id="temp-baie">24</strong>°C</p>
+                    <input type="number" id="input-baie" placeholder="Ex: 25">
+                    <button onclick="valideazaTemperaturaCameră('baie')">Setează Baie</button>
+                    <p id="error-baie" class="error-msg"></p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</main>

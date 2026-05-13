@@ -178,3 +178,13 @@ button:hover {
     margin-bottom: 20px;
     border-radius: 4px;
 }
+
+@keyframes flashRed {
+    0% { background-color: var(--bg-primary); }
+    50% { background-color: rgba(231, 76, 60, 0.4); } /* Un roșu transparent */
+    100% { background-color: var(--bg-primary); }
+}
+
+.alarm-flash {
+    animation: flashRed 1.5s infinite; /* Repetă animația la infinit până e oprită */
+}
