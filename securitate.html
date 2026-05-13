@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Securitate</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="camere.html">🛋️ Camere</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <h1>Sisteme de Securitate</h1>
+        
+        <div class="form-group">
+            <h3>Dezactivare Sistem Alarmă</h3>
+            <label for="pinInput">Introdu codul PIN (4 cifre):</label>
+            <input type="password" id="pinInput" placeholder="****" maxlength="4">
+            <button onclick="valideazaPIN()">Dezactivează Alarmă</button>
+            <p id="pinError" class="error-msg">❌ Eroare: PIN-ul trebuie să conțină exact 4 cifre!</p>
+            <p id="pinSuccess" class="success-msg">✅ Sistemul a fost dezactivat!</p>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Camere</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="camere.html">🛋️ Camere</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <h1>Control Camere</h1>
+        
+        <div class="form-group">
+            <h3>Setare Temperatură Generală</h3>
+            <label for="tempInput">Grade Celsius (15 - 30):</label>
+            <input type="number" id="tempInput" placeholder="Ex: 22">
+            <button onclick="valideazaTemperatura()">Setează</button>
+            <p id="tempError" class="error-msg">❌ Eroare: Temperatura trebuie să fie între 15 și 30 de grade!</p>
+            <p id="tempSuccess" class="success-msg">✅ Temperatura a fost actualizată!</p>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>

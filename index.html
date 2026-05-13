@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="camere.html">🛋️ Camere</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <h1>Tablou de Bord</h1>
+        <p>Apasă pe dispozitive pentru a le activa/dezactiva. Cele mai folosite vor apărea primele!</p>
+        
+        <div class="grid" id="dashboard-grid">
+            <!-- ID-urile trebuie să fie unice pentru ca algoritmul să le recunoască -->
+            <div class="card" id="bec_living" onclick="trackAccess('bec_living')">💡 Bec Living</div>
+            <div class="card" id="tv_dormitor" onclick="trackAccess('tv_dormitor')">📺 TV Dormitor</div>
+            <div class="card" id="termostat_hol" onclick="trackAccess('termostat_hol')">🌡️ Termostat Hol</div>
+            <div class="card" id="lumina_baie" onclick="trackAccess('lumina_baie')">🚿 Lumină Baie</div>
+            <div class="card" id="boxa_smart" onclick="trackAccess('boxa_smart')">🎵 Boxă Smart</div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/counter.js"></script>
+</body>
+</html>

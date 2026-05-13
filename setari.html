@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Setări</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="camere.html">🛋️ Camere</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <h1>Personalizare și Setări</h1>
+        
+        <div class="form-group">
+            <h3>Personalizare Interfață</h3>
+            <button onclick="toggleDarkMode()">🌙 Comută Mod Zi/Noapte</button>
+            <br><br>
+            <label for="colorPicker">Schimbă Culoarea de Accent:</label>
+            <input type="color" id="colorPicker" value="#3498db" onchange="schimbaCuloareAccent(this.value)" style="height: 40px; cursor:pointer;">
+        </div>
+
+        <div class="form-group">
+            <h3>Redenumire Dispozitiv Principal</h3>
+            <label for="numeInput">Nume Nou (fără caractere speciale):</label>
+            <input type="text" id="numeInput" placeholder="Ex: Aer Conditionat">
+            <button onclick="valideazaNume()">Redenumește</button>
+            <p id="numeError" class="error-msg">❌ Eroare: Numele poate conține doar litere și spații!</p>
+            <p id="numeSuccess" class="success-msg">✅ Dispozitiv redenumit cu succes!</p>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>
