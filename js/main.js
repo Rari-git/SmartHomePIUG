@@ -60,3 +60,12 @@ document.addEventListener('keypress', function(e) {
         }
     }
 });
+
+function toggleHelp() {
+    const helpBox = document.getElementById('help-box');
+    if (helpBox.style.display === 'none' || helpBox.style.display === '') {
+        helpBox.style.display = 'block';
+    } else {
+        helpBox.style.display = 'none';
+    }
+}
