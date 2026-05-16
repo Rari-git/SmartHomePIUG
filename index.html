@@ -48,11 +48,12 @@
         <div class="hk-grid" id="fav-accessories-container"></div>
     </main>
 
-    <div id="popup-dispozitive" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="inchidePopup()">&times;</span>
-            <h2 id="modal-titlu" style="margin: 0 0 20px 0; color: var(--accent-color);"></h2>
-            <div id="modal-continut"></div>
+    <div id="popup-dispozitive" class="popup-container">
+        <div class="popup-content">
+            <span class="close-popup" onclick="document.getElementById('popup-dispozitive').classList.remove('active');">&times;</span>
+            <h2 id="modal-titlu">Setări Dispozitiv</h2>
+            <div id="modal-continut">
+                </div>
         </div>
     </div>
 

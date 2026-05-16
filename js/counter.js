@@ -14,7 +14,7 @@ const scenesDB = [
     { id: 's_noapte', nume: "🌙 Mod Noapte", descriere: "Oprește luminile, armează ușile.", action: () => aplicaMod('noapte') },
     { id: 's_party', nume: "🎉 Mod Party", descriere: "Lumini 100% și muzică în living.", action: () => aplicaMod('party') },
     { id: 's_cinema', nume: "🎬 Mod Cinema", descriere: "Draperii trase, TV pornit.", action: () => aplicaMod('cinema') },
-    { id: 's_off', nume: "🛑 Stinge Tot", descriere: "Oprește tout și părăsește casa.", action: () => stingeTotGlobal() }
+    { id: 's_off', nume: "🛑 Stinge Tot", descriere: "Oprește tot și părăsește casa.", action: () => stingeTotGlobal() }
 ];
 
 const subDispozitive = {
@@ -193,7 +193,7 @@ function afiseazaNotificariHome() {
     }
 }
 
-function deschidePopupToateNotificările() {
+function deschidePopupToateNotificarile() {
     const modal = document.getElementById('popup-dispozitive');
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
@@ -205,7 +205,7 @@ function deschidePopupToateNotificările() {
     const toate = genereazaListaNotificari();
 
     // Generăm lista interioară cu scroll
-    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 20px; text-align: left;">`;
+    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left;">`;
     toate.forEach(notif => {
         html += `
             <div class="notification-item" style="padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
@@ -215,13 +215,9 @@ function deschidePopupToateNotificările() {
     });
     html += `</div>`;
     
-    // Generăm butoanele de control din subsol (cu funcția nativă de închidere)
+    // Lăsăm doar acțiunea de ștergere a istoricului în subsol, fără buton de închidere redundant
     html += `
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-            <button onclick="document.getElementById('popup-dispozitive').classList.remove('active');" 
-                    style="background-color: var(--accent-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em;">
-                ❌ Închide Fereastra
-            </button>
+        <div style="margin-top: 10px;">
             <button onclick="localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); document.getElementById('popup-dispozitive').classList.remove('active');" 
                     style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
                 🗑️ Șterge Istoric Mișcare
