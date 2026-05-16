@@ -1,4 +1,35 @@
-// Funcție dinamică pentru validarea și setarea temperaturii pe camere
+// --- 1. Validare Temperatură Generală (Actualizează și Widget-ul) ---
+function valideazaTemperatura() {
+    const input = document.getElementById('tempInput').value;
+    const errorMsg = document.getElementById('tempError');
+    const successMsg = document.getElementById('tempSuccess');
+    
+    errorMsg.style.display = 'none';
+    successMsg.style.display = 'none';
+
+    if (input === "" || isNaN(input) || input < 15 || input > 30) {
+        errorMsg.innerText = "❌ Alege o valoare între 15 și 30.";
+        errorMsg.style.display = 'block';
+    } else {
+        successMsg.innerText = `✅ Temperatura a fost setată la ${input}°C.`;
+        successMsg.style.display = 'block';
+        
+        // Actualizăm valoarea pe coloana din stânga
+        document.getElementById('tempCurenta').innerText = input;
+        
+        // --- Sincronizare cu WIDGET-ul de sus ---
+        const widgetTemp = document.getElementById('widget-temp');
+        if (widgetTemp) widgetTemp.innerText = input;
+
+        document.getElementById('tempInput').value = ""; // curățăm input-ul
+
+        if (typeof showToast === "function") {
+            showToast(`Temperatura generală a fost setată la ${input}°C.`);
+        }
+    }
+}
+
+// --- 2. Funcție dinamică pentru validarea și setarea temperaturii pe camere ---
 function valideazaTemperaturaCameră(camera) {
     const inputId = `input-${camera}`;
     const displayId = `temp-${camera}`;
@@ -42,7 +73,7 @@ function valideazaTemperaturaCameră(camera) {
     }
 }
 
-// --- NOU: Funcție pentru simularea monitorizării (Euritica 1) ---
+// --- 3. Funcție pentru simularea monitorizării Umidității (Euritica 1) ---
 function actualizeazaSenzori() {
     const displayElem = document.getElementById('umiditateCurenta');
     const stareElem = document.getElementById('stareUmiditate');
@@ -70,13 +101,17 @@ function actualizeazaSenzori() {
         stareElem.style.color = "var(--error-color)";
     }
 
+    // --- Sincronizare cu WIDGET-ul de sus ---
+    const widgetUmiditate = document.getElementById('widget-umiditate');
+    if (widgetUmiditate) widgetUmiditate.innerText = nouaUmiditate;
+
     // Afișăm o notificare că senzorii au fost citiți
     if (typeof showToast === "function") {
         showToast("Senzorul a fost citit. Datele sunt actualizate.");
     }
 }
 
-// --- NOU: Funcție pentru simularea senzorului de CO2 ---
+// --- 4. Funcție pentru simularea senzorului de CO2 ---
 function actualizeazaSenzorCO2() {
     const displayElem = document.getElementById('co2Curent');
     const stareElem = document.getElementById('stareCO2');
@@ -106,12 +141,16 @@ function actualizeazaSenzorCO2() {
         stareElem.style.color = "var(--error-color)";
     }
 
+    // --- Sincronizare cu WIDGET-ul de sus ---
+    const widgetCO2 = document.getElementById('widget-co2');
+    if (widgetCO2) widgetCO2.innerText = nouaValoare;
+
     if (typeof showToast === "function") {
         showToast("Senzor CO2 citit. Stare actualizată.");
     }
 }
 
-// --- Senzor Inundație (Pagina Pericole) ---
+// --- 5. Senzor Inundație (Pagina Pericole) ---
 function simuleazaInundatie() {
     const stareElem = document.getElementById('stareInundatie');
     const cardElem = document.getElementById('card-inundatie');
@@ -129,7 +168,7 @@ function simuleazaInundatie() {
     // Afișăm butonul de remediere a problemei
     btnReset.style.display = "block";
     
-    // --- ADAUGĂ ACEASTĂ LINIE pentru flash ---
+    // --- Flash Roșu ---
     document.body.classList.add('alarm-flash'); 
     
     if (typeof showToast === "function") {
@@ -154,7 +193,7 @@ function reseteazaInundatie() {
     // Ascundem butonul de reset
     btnReset.style.display = "none";
     
-    // --- ADAUGĂ ACEASTĂ LINIE pentru a opri flash-ul ---
+    // --- Oprim flash-ul ---
     document.body.classList.remove('alarm-flash');
     
     if (typeof showToast === "function") {
@@ -162,7 +201,7 @@ function reseteazaInundatie() {
     }
 }
 
-// --- NOU: Senzor Fum și Monoxid de Carbon (Pagina Pericole) ---
+// --- 6. Senzor Fum și Monoxid de Carbon (Pagina Pericole) ---
 function simuleazaIncendiu() {
     const stareElem = document.getElementById('stareIncendiu');
     const cardElem = document.getElementById('card-incendiu');
@@ -187,6 +226,75 @@ function simuleazaIncendiu() {
     
     if (typeof showToast === "function") {
         showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.");
+    }
+}
+
+// --- Acțiune Corectivă: Pornește Ventilația pentru Umiditate (Euritica 3 & 9) ---
+function pornesteDezumidificator() {
+    const displayElem = document.getElementById('umiditateCurenta');
+    const stareElem = document.getElementById('stareUmiditate');
+    
+    let valoareCurenta = parseInt(displayElem.innerText);
+    
+    // Scădem umiditatea considerabil pentru a simula ventilația
+    let nouaUmiditate = valoareCurenta - 8;
+    if(nouaUmiditate < 35) nouaUmiditate = 35; // Pragul minim sănătos
+    
+    // Actualizare interfață (Euritica 1)
+    displayElem.innerText = nouaUmiditate + "%";
+    
+    // Evaluare vizuală a noii stări
+    if(nouaUmiditate >= 40 && nouaUmiditate <= 60) {
+        stareElem.innerText = "Optimă";
+        stareElem.style.color = "var(--success-color)";
+    } else if (nouaUmiditate < 40) {
+        stareElem.innerText = "Avertisment (Prea uscat)";
+        stareElem.style.color = "orange";
+    } else {
+        stareElem.innerText = "Avertisment (Prea umed)";
+        stareElem.style.color = "var(--error-color)";
+    }
+
+    // Sincronizare widget sus
+    const widgetUmiditate = document.getElementById('widget-umiditate');
+    if (widgetUmiditate) widgetUmiditate.innerText = nouaUmiditate;
+
+    if (typeof showToast === "function") {
+        showToast("💨 Ventilația a pornit. Umiditatea scade spre nivelul optim.");
+    }
+}
+
+// --- Acțiune Corectivă: Deschide Geamurile pentru CO2 (Euritica 3 & 9) ---
+function deschideGeamurile() {
+    const displayElem = document.getElementById('co2Curent');
+    const stareElem = document.getElementById('stareCO2');
+    
+    let valoareCurenta = parseInt(displayElem.innerText);
+    
+    // Scădem CO2-ul dramatic pentru a simula aerisirea (aerul de afară intră)
+    let nouaValoare = valoareCurenta - 150;
+    if(nouaValoare < 400) nouaValoare = 400; // 400 ppm este media globală de bază a atmosferei
+    
+    // Actualizare interfață (Euritica 1)
+    displayElem.innerText = nouaValoare;
+    
+    if(nouaValoare < 800) {
+        stareElem.innerText = "Excelentă";
+        stareElem.style.color = "var(--success-color)";
+    } else if (nouaValoare < 1200) {
+        stareElem.innerText = "Acceptabilă";
+        stareElem.style.color = "orange";
+    } else {
+        stareElem.innerText = "Avertisment: Aer închis!";
+        stareElem.style.color = "var(--error-color)";
+    }
+
+    // Sincronizare widget sus
+    const widgetCO2 = document.getElementById('widget-co2');
+    if (widgetCO2) widgetCO2.innerText = nouaValoare;
+
+    if (typeof showToast === "function") {
+        showToast("🪟 Geamurile inteligente au fost deschise. Nivelul de CO2 revine la normal.");
     }
 }
 
@@ -216,31 +324,7 @@ function reseteazaIncendiu() {
     }
 }
 
-// Încărcăm temperaturile salvate la deschiderea paginii (Euritica 6: Recunoaștere)
-document.addEventListener('DOMContentLoaded', () => {
-    const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
-    camere.forEach(camera => {
-        const salvata = localStorage.getItem(`temp-${camera}`);
-        const displayElem = document.getElementById(`temp-${camera}`);
-        if (salvata && displayElem) {
-            displayElem.innerText = salvata;
-        }
-    });
-});
-
-// Încărcăm temperaturile salvate la deschiderea paginii
-document.addEventListener('DOMContentLoaded', () => {
-    const camere = ['living', 'dormitor', 'bucatarie'];
-    camere.forEach(camera => {
-        const salvata = localStorage.getItem(`temp-${camera}`);
-        const displayElem = document.getElementById(`temp-${camera}`);
-        if (salvata && displayElem) {
-            displayElem.innerText = salvata;
-        }
-    });
-});
-
-// 2. Validare PIN Securitate
+// --- 7. Validare PIN Securitate ---
 function valideazaPIN() {
     const input = document.getElementById('pinInput').value;
     const errorMsg = document.getElementById('pinError');
@@ -267,7 +351,7 @@ function valideazaPIN() {
     }
 }
 
-// 3. Validare Redenumire Dispozitiv (Setări)
+// --- 8. Validare Redenumire Dispozitiv (Setări) ---
 function valideazaNume() {
     const input = document.getElementById('numeInput').value;
     const errorMsg = document.getElementById('numeError');
@@ -286,3 +370,16 @@ function valideazaNume() {
         document.getElementById('numeInput').value = "";
     }
 }
+
+// --- 9. Inițializare Setări la încărcare (Euritica 6: Recunoaștere) ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Încărcăm temperaturile salvate pentru cele 4 camere
+    const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
+    camere.forEach(camera => {
+        const salvata = localStorage.getItem(`temp-${camera}`);
+        const displayElem = document.getElementById(`temp-${camera}`);
+        if (salvata && displayElem) {
+            displayElem.innerText = salvata;
+        }
+    });
+});

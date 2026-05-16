@@ -2,32 +2,40 @@
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Dashboard</title>
+    <title>SmartHome - Home</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav>
         <h2>SmartHome</h2>
-        <a href="index.html">🏠 Dashboard</a>
+        <a href="index.html">🏠 Home</a>
         <a href="camere.html">🛋️ Camere</a>
         <a href="securitate.html">🛡️ Securitate</a>
         <a href="pericole.html">🚨 Pericole</a>
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
-        <h1>Tablou de Bord</h1>
+        <h1>Panou Principal - Home</h1>
         <div class="help-box">
-            <strong>ℹ️ Suport (Help):</strong> Apasă pe dispozitivele de mai jos pentru a le activa/dezactiva. 
-            Sistemul este inteligent: dispozitivele pe care le folosești cel mai des se vor muta automat pe prima linie pentru acces rapid.
+            <strong>ℹ️ Suport rapid:</strong> Dați click pe oricare categorie de mai jos pentru a deschide panoul de control dedicat. Categoriile cele mai accesate vor urca automat pe prima poziție pentru un acces rapid!
         </div>
+
         <div class="grid" id="dashboard-grid">
-            <div class="card" id="bec_living" onclick="trackAccess('bec_living')">💡 Bec Living</div>
-            <div class="card" id="tv_dormitor" onclick="trackAccess('tv_dormitor')">📺 TV Dormitor</div>
-            <div class="card" id="termostat_hol" onclick="trackAccess('termostat_hol')">🌡️ Termostat Hol</div>
-            <div class="card" id="lumina_baie" onclick="trackAccess('lumina_baie')">🚿 Lumină Baie</div>
-            <div class="card" id="boxa_smart" onclick="trackAccess('boxa_smart')">🎵 Boxă Smart</div>
+            <div class="card" id="cat_scene" onclick="deschideMeniuDispozitive('cat_scene', 'scene')">🎭 Scene Inteligente</div>
+            <div class="card" id="cat_becuri" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri')">💡 Becuri</div>
+            <div class="card" id="cat_tv" onclick="deschideMeniuDispozitive('cat_tv', 'tv')">📺 Televizoare</div>
+            <div class="card" id="cat_audio" onclick="deschideMeniuDispozitive('cat_audio', 'audio')">🎵 Sistem Audio</div>
         </div>
     </main>
+
+    <div id="popup-dispozitive" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="inchidePopup()">&times;</span>
+            <h2 id="modal-titlu" style="margin-top: 0; color: var(--accent-color);">Titlu Pop-up</h2>
+            <div id="modal-continut" style="margin-top: 20px;">
+                </div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
     <script src="js/counter.js"></script>
