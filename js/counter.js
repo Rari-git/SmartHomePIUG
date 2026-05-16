@@ -22,30 +22,35 @@ const scenesDB = [
     { id: 's_dinner', nume: "🍽️ Dinner Time", descriere: "Lumini calde în living și bucătărie.", action: () => aplicaMod('dinner') }
 ];
 
+// --- BAZA DE DATE INTEGRALĂ ALINIATĂ PERFECT CU INDEXURILE DIN HARTA.HTML ---
 const subDispozitive = {
     becuri: [
-        { nume: "Bec Principal", stare: "Pornit", valoare: 75, camera: "Dormitor", icon: "💡" },
-        { nume: "Bec Tavan", stare: "Oprit", valoare: 50, camera: "Living", icon: "💡" },
-        { nume: "Oglindă Baie", stare: "Oprit", valoare: 50, camera: "Baie", icon: "💡" },
-        { nume: "Spoturi Bucătărie", stare: "Oprit", valoare: 100, camera: "Bucătărie", icon: "💡" }
+        { nume: "Bec Dormitor", stare: "Pornit", valoare: 75, camera: "Dormitor", icon: "💡" }, // 0
+        { nume: "Bec Living", stare: "Oprit", valoare: 50, camera: "Living", icon: "💡" },    // 1
+        { nume: "Bec Baie", stare: "Oprit", valoare: 50, camera: "Baie", icon: "💡" },        // 2
+        { nume: "Bec Bucătărie", stare: "Oprit", valoare: 100, camera: "Bucătărie", icon: "💡" } // 3
     ],
     luminiRGB: [
         { nume: "Bandă LED TV", stare: "Oprit", valoare: 100, culoare: "#3498db", camera: "Living", icon: "🌈" },
         { nume: "Lampă Birou", stare: "Oprit", valoare: 80, culoare: "#f1c40f", camera: "Dormitor", icon: "🌈" }
     ],
     jaluzele: [
-        { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Dormitor", icon: "🪟" },
-        { nume: "Draperie", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },
-        { nume: "Draperie", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },
-        { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Baie", icon: "🪟" },
-        { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Bucătărie", icon: "🪟" }
+        { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Dormitor", icon: "🪟" },          // 0
+        { nume: "Draperie 1 Living", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },  // 1
+        { nume: "Draperie 2 Living", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },  // 2
+        { nume: "Draperie Baie", stare: "Închis", valoare: 0, camera: "Baie", icon: "🪟" },          // 3
+        { nume: "Draperie Bucătărie", stare: "Închis", valoare: 0, camera: "Bucătărie", icon: "🪟" } // 4
     ],
     audio: [
-        { nume: "HomePod Mini", stare: "Oprit", valoare: 40, camera: "Dormitor", icon: "🎵" },
-        { nume: "Soundbar", stare: "Oprit", valoare: 30, camera: "Living", icon: "🔊" }
+        { nume: "Boxă Dormitor", stare: "Oprit", valoare: 40, camera: "Dormitor", icon: "🎵" },      // 0
+        { nume: "Boxă Living", stare: "Oprit", valoare: 30, camera: "Living", icon: "🎵" },          // 1
+        { nume: "Sistem Audio Dolby Atmos 7.1", stare: "Oprit", valoare: 50, camera: "Living", icon: "🔊" }, // 2
+        { nume: "Boxă Baie", stare: "Oprit", valoare: 30, camera: "Baie", icon: "🎵" },              // 3
+        { nume: "Boxă Bucătărie", stare: "Oprit", valoare: 20, camera: "Bucătărie", icon: "🎵" }     // 4
     ],
     tv: [
-        { nume: "Smart TV OLED", stare: "Oprit", camera: "Living", icon: "📺" }
+        { nume: "TV Dormitor", stare: "Oprit", camera: "Dormitor", icon: "📺" }, // 0
+        { nume: "Smart TV OLED 8K", stare: "Oprit", camera: "Living", icon: "📺" } // 1
     ],
     aspirator: [
         { nume: "Robot Curățenie", stare: "La Bază", baterie: 100, camera: "Living", icon: "🤖" }
@@ -55,24 +60,26 @@ const subDispozitive = {
         { nume: "Purificator Aer", stare: "Oprit", camera: "Living", icon: "🌬️" }
     ],
     electrocasnice: [
-        { nume: "Mașină de Spălat", stare: "Oprit", camera: "Baie", icon: "🧺" },
-        { nume: "Uscător", stare: "Oprit", camera: "Baie", icon: "💨" },
-        { nume: "Espressor Cafea", stare: "Oprit", camera: "Bucătărie", icon: "☕" }
+        { nume: "Mașină de Spălat", stare: "Oprit", camera: "Baie", icon: "🧺" }, // 0
+        { nume: "Uscător", stare: "Oprit", camera: "Baie", icon: "💨" },          // 1
+        { nume: "Espressor Cafea", stare: "Oprit", camera: "Bucătărie", icon: "☕" } // 2
     ],
     prize: [
-        { nume: "Priză (TV, Laptop)", stare: "Pornit", consum: 45, camera: "Dormitor", icon: "🔌" },
-        { nume: "Priză (Audio)", stare: "Pornit", consum: 180, camera: "Living", icon: "🔌" }
+        { nume: "Priză Dormitor", stare: "Pornit", consum: 120, detalii: "TV, Laptop, Purificator", camera: "Dormitor", icon: "🔌" }, // 0
+        { nume: "Priză Living", stare: "Pornit", consum: 480, detalii: "Sistem Audio, TV, Robot Curățenie, Purificator", camera: "Living", icon: "🔌" }, // 1
+        { nume: "Priză Baie", stare: "Pornit", consum: 0, detalii: "Mașină de Spălat, Uscător", camera: "Baie", icon: "🔌" }, // 2
+        { nume: "Priză Bucătărie", stare: "Pornit", consum: 150, detalii: "Espressor, Frigider", camera: "Bucătărie", icon: "🔌" } // 3
     ],
     senzoriContact: [
-        { nume: "Fereastră", stare: "Închis", camera: "Dormitor", icon: "🟩" },
-        { nume: "Fereastră", stare: "Închis", camera: "Living", icon: "🟩" },
-        { nume: "Fereastră", stare: "Închis", camera: "Living", icon: "🟩" },
-        { nume: "Fereastră", stare: "Închis", camera: "Bucătărie", icon: "🟩" },
-        { nume: "Fereastră", stare: "Închis", camera: "Baie", icon: "🟩" }
+        { nume: "Fereastră Dormitor", stare: "Închis", camera: "Dormitor", icon: "🟩" },  // 0
+        { nume: "Fereastră 1 Living", stare: "Închis", camera: "Living", icon: "🟩" },     // 1
+        { nume: "Fereastră 2 Living", stare: "Închis", camera: "Living", icon: "🟩" },     // 2
+        { nume: "Fereastră Bucătărie", stare: "Închis", camera: "Bucătărie", icon: "🟩" }, // 3
+        { nume: "Fereastră Baie", stare: "Închis", camera: "Baie", icon: "🟩" }            // 4
     ],
     senzoriMiscare: [
-        { nume: "Senzor Mișcare", stare: "Inactiv", camera: "Living", icon: "🏃" },
-        { nume: "Senzor Mișcare", stare: "Inactiv", camera: "Hol", icon: "🏃" }
+        { nume: "Senzor Mișcare Living", stare: "Inactiv", camera: "Living", icon: "🏃" },
+        { nume: "Senzor Mișcare Hol", stare: "Inactiv", camera: "Hol", icon: "🏃" }
     ],
     camereVideo: [
         { nume: "Interfon Video", stare: "Standby", camera: "Ușă Principală", icon: "📹" },
@@ -84,7 +91,7 @@ const subDispozitive = {
 };
 
 function initFavorites() {
-    if (!localStorage.getItem('favAcc')) localStorage.setItem('favAcc', JSON.stringify(['becuri_1', 'tv_0', 'incuietori_0', 'camereVideo_0']));
+    if (!localStorage.getItem('favAcc')) localStorage.setItem('favAcc', JSON.stringify(['becuri_1', 'tv_1', 'incuietori_0', 'camereVideo_0']));
     if (!localStorage.getItem('favScenes')) localStorage.setItem('favScenes', JSON.stringify(['s_morning', 's_night']));
     if (!localStorage.getItem('motionLogs')) localStorage.setItem('motionLogs', JSON.stringify([]));
     if (!localStorage.getItem('userAutomations')) localStorage.setItem('userAutomations', JSON.stringify([]));
@@ -135,12 +142,10 @@ function toggleStareDispozitiv(cat, index, event) {
     reincarcaInterfata();
 }
 
-// --- NOUL MOTOR DE AUTOMATIZARE (IF / THEN LOGIC) ---
 function verificaReguliAutomatizare(triggerCat, triggerIdx, newState) {
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     rules.forEach(rule => {
         if (rule.tCat === triggerCat && rule.tIdx === triggerIdx.toString() && rule.tState === newState) {
-            // Regula s-a declanșat! Executăm acțiunea!
             const actionDisp = subDispozitive[rule.aCat][rule.aIdx];
             if (actionDisp) {
                 actionDisp.stare = rule.aState;
@@ -152,6 +157,7 @@ function verificaReguliAutomatizare(triggerCat, triggerIdx, newState) {
 
 function deschideModalAutomatizare() {
     const modal = document.getElementById('popup-automatizare');
+    if(!modal) return;
     const selectTrigger = document.getElementById('auto-trigger-dev');
     const selectAction = document.getElementById('auto-action-dev');
     
@@ -200,12 +206,10 @@ function randareAutomatizari() {
     const container = document.getElementById('automations-list');
     if (!container) return;
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    
     if (rules.length === 0) {
         container.innerHTML = `<p style="opacity: 0.6;">Nu ai creat nicio automatizare încă.</p>`;
         return;
     }
-
     let html = '';
     rules.forEach(rule => {
         html += `
@@ -220,8 +224,6 @@ function randareAutomatizari() {
     });
     container.innerHTML = html;
 }
-
-// --- Restul funcțiilor de randare UX/UI ---
 
 function genereazaListaNotificari() {
     let notificari = [];
@@ -394,46 +396,136 @@ function executaScena(id) {
     }
 }
 
+// --- LOGICA PENTRU CONSUM DINAMIC REAL ---
+function calculeazaConsumPriza(disp) {
+    if (disp.stare !== 'Pornit') return 0;
+    let consumReal = 0;
+    
+    if (disp.camera === 'Baie') {
+        if (subDispozitive.electrocasnice[0] && subDispozitive.electrocasnice[0].stare === 'Pornit') consumReal += 2000;
+        if (subDispozitive.electrocasnice[1] && subDispozitive.electrocasnice[1].stare === 'Pornit') consumReal += 2400;
+    } 
+    else if (disp.camera === 'Dormitor') {
+        if (subDispozitive.tv[0] && subDispozitive.tv[0].stare === 'Pornit') consumReal += 90;
+        if (subDispozitive.purificator[0] && subDispozitive.purificator[0].stare !== 'Oprit') consumReal += 30;
+    } 
+    else if (disp.camera === 'Bucătărie') {
+        consumReal += 150; // Frigiderul consumă constant
+        if (subDispozitive.electrocasnice[2] && subDispozitive.electrocasnice[2].stare === 'Pornit') consumReal += 1200;
+    } 
+    else if (disp.camera === 'Living') {
+        if (subDispozitive.tv[1] && subDispozitive.tv[1].stare === 'Pornit') consumReal += 150;
+        if (subDispozitive.audio[1] && subDispozitive.audio[1].stare === 'Pornit') consumReal += 40;
+        if (subDispozitive.audio[2] && subDispozitive.audio[2].stare === 'Pornit') consumReal += 200;
+        if (subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === 'Curăță') consumReal += 60;
+        if (subDispozitive.purificator[1] && subDispozitive.purificator[1].stare !== 'Oprit') consumReal += 30;
+    }
+    return consumReal;
+}
+
+// --- LOGICA DE POP-UP PENTRU HARTA CASEI (Termostate, Prize, Ferestre) ---
 function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
     const modal = document.getElementById('popup-dispozitive');
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
-
     continental.innerHTML = "";
+
+    // 1. POP-UP PENTRU TERMOSTATE
+    if (categorie.startsWith('climatizare-')) {
+        const camera = categorie.split('-')[1];
+        titlu.innerText = `🌡️ Termostat ${camera.charAt(0).toUpperCase() + camera.slice(1)}`;
+        
+        let temp = localStorage.getItem(`temp-${camera}`) || "22";
+        continental.innerHTML = `
+            <div style="text-align: center; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; opacity: 0.8;">Setare Temperatură</h3>
+                <div style="font-size: 3.5em; font-weight: bold; color: var(--accent-color); margin: 10px 0;">
+                    <span id="popup-temp-${camera}">${temp}</span>°C
+                </div>
+                <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+                    <button onclick="ajusteazaDinPopup('${camera}', 'minus')" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg-primary); font-size: 1.8em; font-weight: bold; cursor: pointer;">−</button>
+                    <button onclick="ajusteazaDinPopup('${camera}', 'plus')" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg-primary); font-size: 1.8em; font-weight: bold; pointer; cursor: pointer;">+</button>
+                </div>
+            </div>
+        `;
+        modal.classList.add('active');
+        return;
+    }
+
+    // 2. POP-UP PENTRU SENZORI PERICOLE
+    if (categorie.startsWith('senzori-')) {
+        const camera = categorie.split('-')[1];
+        titlu.innerText = camera === 'baie' ? `💧 Senzor Inundație Baie` : `🔥 Senzor Incendiu Bucătărie`;
+        
+        continental.innerHTML = `
+            <div style="background: rgba(46, 204, 113, 0.1); border: 2px solid var(--success-color); color: var(--success-color); padding: 20px; border-radius: 12px; text-align: center; font-weight: bold;">
+                <div style="font-size: 3em; margin-bottom: 10px;">✅</div>
+                Senzorul din ${camera === 'baie' ? 'Baie' : 'Bucătărie'} este activ și monitorizează în timp real.<br>Stare: Parametri Normali (Sigur)
+            </div>
+        `;
+        modal.classList.add('active');
+        return;
+    }
+
+    // 3. POP-UP STANDARD PENTRU COLECȚIILE DE DISPOZITIVE (becuri, jaluzele, prize, etc.)
     const disp = subDispozitive[categorie][elementIndex];
     titlu.innerText = `${disp.icon} ${disp.nume}`;
+    let contentHtml = '';
 
-    let contentHtml = `
-        <div style="margin-bottom: 20px; text-align:center;">
-            <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); inchidePopup();" 
-                    style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'}; 
-                           color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
-                Schimbă Stare (Curent: ${disp.stare})
-            </button>
-        </div>
-    `;
-
-    if (categorie === 'camereVideo') {
-        contentHtml += `
-            <div style="background: #111; border-radius: 8px; height: 200px; display:flex; align-items:center; justify-content:center; color:white; position:relative; margin-bottom: 15px; overflow: hidden;">
-                ${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em; animation: pulse 1s infinite;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}
+    if (categorie === 'prize') {
+        const consumCurent = calculeazaConsumPriza(disp);
+        contentHtml = `
+            <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                <div style="font-size: 1.1em; font-weight: bold; opacity: 0.8; margin-bottom: 5px;">Consum Curent în ${disp.camera}</div>
+                <div style="font-size: 3.5em; font-weight: bold; color: var(--accent-color); margin: 10px 0;">${consumCurent} W</div>
+                <div style="font-size: 0.9em; opacity: 0.7; margin-bottom: 20px;">Dispozitive conectate: <br><strong>${disp.detalii}</strong></div>
+                <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); inchidePopup();" 
+                        style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+                    Alimentare Priză: ${disp.stare}
+                </button>
             </div>
         `;
-    }
-
-    if (['becuri', 'audio', 'jaluzele', 'luminiRGB'].includes(categorie)) {
-        const isOff = disp.stare === 'Oprit' || disp.stare === 'Închis';
-        contentHtml += `
-            <div class="slider-container ${isOff ? 'disabled-controls' : ''}" style="margin-top: 20px;">
-                <label>Intensitate / Volum: <span id="val-${categorie}-${elementIndex}">${disp.valoare}</span>%</label>
-                <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} 
-                       oninput="subDispozitive['${categorie}'][${elementIndex}].valoare = this.value; document.getElementById('val-${categorie}-${elementIndex}').innerText = this.value;">
+    } else {
+        contentHtml = `
+            <div style="margin-bottom: 20px; text-align:center;">
+                <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); inchidePopup();" 
+                        style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'}; 
+                               color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+                    Schimbă Stare (Curent: ${disp.stare})
+                </button>
             </div>
         `;
+
+        if (categorie === 'camereVideo') {
+            contentHtml += `
+                <div style="background: #111; border-radius: 8px; height: 200px; display:flex; align-items:center; justify-content:center; color:white; position:relative; margin-bottom: 15px; overflow: hidden;">
+                    ${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em; animation: pulse 1s infinite;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}
+                </div>
+            `;
+        }
+
+        if (['becuri', 'audio', 'jaluzele', 'luminiRGB'].includes(categorie)) {
+            const isOff = disp.stare === 'Oprit' || disp.stare === 'Închis';
+            contentHtml += `
+                <div class="slider-container ${isOff ? 'disabled-controls' : ''}" style="margin-top: 20px;">
+                    <label>Intensitate / Volum: <span id="val-${categorie}-${elementIndex}">${disp.valoare}</span>%</label>
+                    <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} 
+                           oninput="subDispozitive['${categorie}'][${elementIndex}].valoare = this.value; document.getElementById('val-${categorie}-${elementIndex}').innerText = this.value;">
+                </div>
+            `;
+        }
     }
-    
     continental.innerHTML = contentHtml;
     modal.classList.add('active');
+}
+
+function ajusteazaDinPopup(camera, directie) {
+    let val = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
+    val = directie === 'plus' ? val + 1 : val - 1;
+    if(val < 15) val = 15;
+    if(val > 30) val = 30;
+    localStorage.setItem(`temp-${camera}`, val);
+    document.getElementById(`popup-temp-${camera}`).innerText = val;
 }
 
 function stingeTotGlobal() { 
@@ -447,10 +539,9 @@ function stingeTotGlobal() {
 
 function aplicaMod(mod) {
     stingeTotGlobal();
-
     if (mod === 'morning') {
         subDispozitive.jaluzele.forEach(d => d.stare = "Deschis");
-        if(subDispozitive.electrocasnice[1]) subDispozitive.electrocasnice[1].stare = "Pornit";
+        if(subDispozitive.electrocasnice[2]) subDispozitive.electrocasnice[2].stare = "Pornit";
         subDispozitive.audio.forEach(d => { d.stare = "Pornit"; d.valoare = 20; });
     } else if (mod === 'away') {
         if(subDispozitive.aspirator[0]) subDispozitive.aspirator[0].stare = "Curăță";
@@ -463,7 +554,7 @@ function aplicaMod(mod) {
         if(subDispozitive.becuri[1]) subDispozitive.becuri[1].stare = "Pornit"; 
     } else if (mod === 'movie') {
         subDispozitive.jaluzele.forEach(d => d.stare = "Închis"); 
-        if(subDispozitive.tv[0]) subDispozitive.tv[0].stare = "Pornit"; 
+        if(subDispozitive.tv[1]) subDispozitive.tv[1].stare = "Pornit"; 
         if(subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#2980b9"; }
         subDispozitive.becuri.forEach(d => d.stare = "Oprit"); 
     } else if (mod === 'focus') {
@@ -473,16 +564,19 @@ function aplicaMod(mod) {
         subDispozitive.becuri.forEach(d => { if(d.camera === "Living" || d.camera === "Bucătărie") d.stare = "Pornit"; });
         if(subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#e67e22"; }
     }
-
     reincarcaInterfata();
 }
 
 function actualizeazaStatusGlobal() {
     const sec = document.getElementById('global-securitate'); const con = document.getElementById('global-consum');
     if(!sec) return;
-    let consum = 150; 
-    subDispozitive.prize.forEach(d => { if(d.stare === "Pornit") consum += d.consum; });
-    con.innerText = (consum/1000).toFixed(2) + " kW";
+    let consumTotal = 150; 
+    if (subDispozitive.prize) {
+        subDispozitive.prize.forEach(priză => {
+            consumTotal += calculeazaConsumPriza(priză);
+        });
+    }
+    con.innerText = (consumTotal/1000).toFixed(2) + " kW";
     sec.innerText = localStorage.getItem('alarmaDezactivata') === 'true' ? "Dezactivată" : "Armată";
 }
 
