@@ -10,21 +10,20 @@
             width: 100%;
             max-width: 650px;
             margin: 30px auto 0 auto;
+            border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             overflow: visible;
         }
-
         .blueprint-image {
             width: 100%;
             height: auto;
             display: block;
+            border-radius: 12px;
             transition: filter 0.3s ease;
         }
-
         body.dark-mode .blueprint-image {
             filter: invert(1) brightness(0.9) contrast(1.1);
         }
-
         .map-hotspot {
             position: absolute;
             width: 38px;
@@ -42,7 +41,6 @@
             user-select: none;
             z-index: 100;
         }
-
         .map-hotspot:hover {
             transform: scale(1.2);
             background-color: var(--accent-color);
@@ -61,7 +59,10 @@
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
-        <h1>Planul Interactiv al Casei (Floor Plan)</h1>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
+            <h1 style="margin: 0;">Planul Interactiv al Casei</h1>
+        </div>
         <p>Gestionare vizuală a dispozitivelor inteligente. Faceți click pe pictogramele din camere pentru control instant.</p>
         
         <div class="map-wrapper">

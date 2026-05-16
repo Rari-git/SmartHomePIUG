@@ -69,3 +69,32 @@ function toggleHelp() {
         helpBox.style.display = 'none';
     }
 }
+
+// --- Logica pentru Meniul Lateral (Sidebar) ---
+function toggleNav() {
+    const nav = document.querySelector('nav');
+    let backdrop = document.getElementById('nav-backdrop');
+
+    // Dacă fundalul protector nu există încă, îl creăm dinamic (Euristica 5 - Prevenirea erorilor)
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'nav-backdrop';
+        backdrop.className = 'nav-backdrop';
+        document.body.appendChild(backdrop);
+        
+        // Dacă utilizatorul dă click în afara meniului (pe zona întunecată), se închide meniul!
+        backdrop.onclick = () => {
+            nav.classList.remove('active');
+            backdrop.classList.remove('active');
+        };
+    }
+
+    // Comutăm clasele de activare
+    nav.classList.toggle('active');
+    
+    if (nav.classList.contains('active')) {
+        backdrop.classList.add('active');
+    } else {
+        backdrop.classList.remove('active');
+    }
+}

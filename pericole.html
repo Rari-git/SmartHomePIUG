@@ -5,12 +5,7 @@
     <title>SmartHome - Pericole</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .perils-container {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
+        .perils-container { display: flex; gap: 25px; flex-wrap: wrap; margin-top: 25px; }
         .peril-card {
             background: var(--card-bg);
             color: var(--text-color);
@@ -27,30 +22,11 @@
             justify-content: space-between;
             position: relative;
         }
-        .peril-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-        .peril-status {
-            font-size: 1.4em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .peril-instructions {
-            font-size: 0.9em;
-            opacity: 0.8;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-        .peril-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .peril-actions button {
-            flex: 1;
-            padding: 10px;
-            font-size: 0.9em;
-        }
+        .peril-icon { font-size: 3em; margin-bottom: 10px; }
+        .peril-status { font-size: 1.4em; font-weight: bold; margin: 10px 0; }
+        .peril-instructions { font-size: 0.9em; opacity: 0.8; margin-bottom: 20px; line-height: 1.4; }
+        .peril-actions { display: flex; gap: 10px; }
+        .peril-actions button { flex: 1; padding: 10px; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -64,11 +40,13 @@
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
-        <h1>Senzori de Pericole și Alerte</h1>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
+            <h1 style="margin: 0;">Senzori de Pericole și Alerte</h1>
+        </div>
         <p>Monitorizarea în timp real a senzorilor tehnici de siguranță împotriva incendiilor și inundațiilor accidentale.</p>
 
         <div class="perils-container">
-            
             <div class="peril-card" id="card-incendiu">
                 <div>
                     <div class="peril-icon" id="icon-incendiu">🛡️</div>
@@ -91,89 +69,55 @@
                 </div>
                 <div class="peril-actions">
                     <button id="btn-sim-inundatie" onclick="simuleazaInundatie()" style="background-color: var(--accent-color);">💧 Simulează Apă</button>
-                    <button id="btn-reset-inundatie" onclick="reseteazaInundatie()" style="background-color: var(--success-color); display: none;">✅ Resetează</button>                </div>
+                    <button id="btn-reset-inundatie" onclick="reseteazaInundatie()" style="background-color: var(--success-color); display: none;">✅ Resetează</button>
+                </div>
             </div>
-
         </div>
     </main>
 
     <script src="js/main.js"></script>
     <script src="js/validation.js"></script>
     <script>
-        // Funcție automată executată la deschiderea paginii pentru sincronizare perfectă (Euristica 1)
         document.addEventListener('DOMContentLoaded', () => {
             const inundatieActive = localStorage.getItem('pericolInundatie') === 'true';
             const incendiuActive = localStorage.getItem('pericolIncendiu') === 'true';
 
             if (incendiuActive) {
-                // Dacă este alertă salvată de fum, randează direct starea roșie critică
-                const stareElem = document.getElementById('stareIncendiu');
-                const cardElem = document.getElementById('card-incendiu');
-                const iconElem = document.getElementById('icon-incendiu');
-                const btnSim = document.getElementById('btn-sim-incendiu');
-                const btnReset = document.getElementById('btn-reset-incendiu');
-                const detaliiElem = document.getElementById('detaliiIncendiu');
-
-                stareElem.innerText = "PERICOL FUM!";
-                stareElem.style.color = "white";
-                iconElem.innerText = "🚨";
-                detaliiElem.innerText = "CRITIC: Nivel ridicat de monoxid de carbon detectat!";
-                detaliiElem.style.fontWeight = "bold";
-                cardElem.style.backgroundColor = "var(--error-color)";
-                cardElem.style.color = "white";
-                cardElem.style.borderTop = "none";
-                btnSim.style.display = "none";
-                if(btnReset) btnReset.style.display = "block";
+                document.getElementById('stareIncendiu').innerText = "PERICOL FUM!";
+                document.getElementById('stareIncendiu').style.color = "white";
+                document.getElementById('icon-incendiu').innerText = "🚨";
+                document.getElementById('detaliiIncendiu').innerText = "CRITIC: Nivel ridicat de monoxid de carbon!";
+                document.getElementById('detaliiIncendiu').style.fontWeight = "bold";
+                document.getElementById('card-incendiu').style.backgroundColor = "var(--error-color)";
+                document.getElementById('card-incendiu').style.color = "white";
+                document.getElementById('card-incendiu').style.borderTop = "none";
+                document.getElementById('btn-sim-incendiu').style.display = "none";
+                document.getElementById('btn-reset-incendiu').style.display = "block";
                 document.body.classList.add('alarm-flash');
             }
-
             if (inundatieActive) {
-                // Dacă este alertă salvată de inundație, randează direct starea albastră/roșie critică
-                const stareElem = document.getElementById('stareInundatie');
-                const cardElem = document.getElementById('card-inundatie');
-                const iconElem = document.getElementById('icon-inundatie');
-                const btnSim = document.getElementById('btn-sim-inundatie');
-                const btnReset = document.querySelector('[onclick="reseteazaInundatie()"]');
-                const detaliiElem = document.getElementById('detaliiInundatie');
-
-                stareElem.innerText = "INUNDAȚIE!";
-                stareElem.style.color = "white";
-                iconElem.innerText = "🚨";
-                detaliiElem.innerText = "CRITIC: Scurgere masivă de apă detectată pe podeaua băii!";
-                detaliiElem.style.fontWeight = "bold";
-                cardElem.style.backgroundColor = "var(--error-color)";
-                cardElem.style.color = "white";
-                cardElem.style.borderTop = "none";
-                btnSim.style.display = "none";
-                if(btnReset) btnReset.style.display = "block";
+                document.getElementById('stareInundatie').innerText = "INUNDAȚIE!";
+                document.getElementById('stareInundatie').style.color = "white";
+                document.getElementById('icon-incendie').innerText = "🚨";
+                document.getElementById('detaliiInundatie').innerText = "CRITIC: Scurgere masivă de apă detectată pe podea!";
+                document.getElementById('detaliiInundatie').style.fontWeight = "bold";
+                document.getElementById('card-inundatie').style.backgroundColor = "var(--error-color)";
+                document.getElementById('card-inundatie').style.color = "white";
+                document.getElementById('card-inundatie').style.borderTop = "none";
+                document.getElementById('btn-sim-inundatie').style.display = "none";
+                document.getElementById('btn-reset-inundatie').style.display = "block";
                 document.body.classList.add('alarm-flash');
             }
         });
 
-        // Interceptăm funcțiile din validation.js pentru a actualiza instantaneu elementele specifice acestei pagini
         const origSimInundatie = window.simuleazaInundatie;
-        window.simuleazaInundatie = function() {
-            origSimInundatie();
-            location.reload(); // Reîncărcare rapidă pentru a aplica șablonul vizual sincronizat de DOM
-        }
-
+        window.simuleazaInundatie = function() { origSimInundatie(); location.reload(); }
         const origResetInundatie = window.reseteazaInundatie;
-        window.reseteazaInundatie = function() {
-            origResetInundatie();
-            location.reload();
-        }
-
+        window.reseteazaInundatie = function() { origResetInundatie(); location.reload(); }
         const origSimIncendiu = window.simuleazaIncendiu;
-        window.simuleazaIncendiu = function() {
-            origSimIncendiu();
-            location.reload();
-        }
-
+        window.simuleazaIncendiu = function() { origSimIncendiu(); location.reload(); }
         const origResetIncendiu = window.reseteazaIncendiu;
-        window.reseteazaIncendiu = function() {
-            origResetIncendiu();
-            location.reload();
-        }
+        window.reseteazaIncendiu = function() { origResetIncendiu(); location.reload(); }
     </script>
 </body>
 </html>

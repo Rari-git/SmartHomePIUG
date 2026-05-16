@@ -5,12 +5,7 @@
     <title>SmartHome - Securitate</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .security-panel {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
+        .security-panel { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 25px; }
         .security-badge {
             background: var(--card-bg);
             padding: 25px;
@@ -23,13 +18,7 @@
             border-top: 5px solid var(--success-color);
             transition: all 0.3s ease;
         }
-        .numpad-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            max-width: 220px;
-            margin: 20px auto;
-        }
+        .numpad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 220px; margin: 20px auto; }
         .numpad-btn {
             background: var(--bg-primary);
             color: var(--text-color);
@@ -47,22 +36,10 @@
             margin: 0 auto;
             transition: background 0.15s, transform 0.1s;
         }
-        .numpad-btn:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-        .numpad-btn:active {
-            transform: scale(0.9);
-        }
-        .security-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .security-actions button {
-            flex: 1;
-            padding: 12px;
-        }
+        .numpad-btn:hover { background: var(--accent-color); color: white; }
+        .numpad-btn:active { transform: scale(0.9); }
+        .security-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .security-actions button { flex: 1; padding: 12px; }
     </style>
 </head>
 <body>
@@ -76,11 +53,13 @@
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
-        <h1>Sisteme de Securitate</h1>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
+            <h1 style="margin: 0;">Sisteme de Securitate</h1>
+        </div>
         <p>Panou central de monitorizare perimetrală și control al sistemului de alarmă anti-efracție.</p>
 
         <div class="security-panel">
-            
             <div class="security-badge" id="panel-badge">
                 <div id="security-icon" style="font-size: 3.5em; margin-bottom: 10px;">🛡️</div>
                 <h3 style="margin: 0; opacity: 0.7;">Stare Sistem</h3>
@@ -90,10 +69,7 @@
 
             <div class="form-group" style="max-width: 350px; flex: 1; min-width: 280px; text-align: center;">
                 <h3 style="margin-top: 0;">Introducere Cod Securitate</h3>
-                
-                <input type="password" id="pinInput" placeholder="••••" maxlength="4" readonly 
-                       style="text-align: center; font-size: 1.8em; letter-spacing: 5px; width: 80%; padding: 8px; margin-bottom: 5px;">
-                
+                <input type="password" id="pinInput" placeholder="••••" maxlength="4" readonly style="text-align: center; font-size: 1.8em; letter-spacing: 5px; width: 80%; padding: 8px; margin-bottom: 5px;">
                 <p id="pinError" class="error-msg" style="margin: 5px 0;"></p>
                 <p id="pinSuccess" class="success-msg" style="margin: 5px 0;"></p>
 
@@ -109,15 +85,13 @@
                     <div class="numpad-btn" onclick="apasăTastăNumpad('9')">9</div>
                     <div class="numpad-btn" onclick="apasăTastăNumpad('⌫')" style="color: var(--error-color);">⌫</div>
                     <div class="numpad-btn" onclick="apasăTastăNumpad('0')">0</div>
-                    <div class="numpad-btn" onclick="apasăTastăNumpad('C')" style="color: var(--error-color); font-size: 1em;">C</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('C')" style="color: var(--error-color);">C</div>
                 </div>
-
                 <div class="security-actions">
                     <button onclick="proceseazăAcțiuneAlarmă('armează')" style="background-color: var(--success-color);">🔒 Armează</button>
                     <button onclick="proceseazăAcțiuneAlarmă('dezactivează')" style="background-color: var(--error-color);">🔓 Dezactivează</button>
                 </div>
             </div>
-
         </div>
     </main>
 

@@ -5,7 +5,6 @@
     <title>SmartHome - Camere</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* --- Design Unificat pentru Termostate și Senzori --- */
         .thermostat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -81,7 +80,6 @@
         .ctrl-btn:active {
             transform: scale(0.9);
         }
-
         .sensor-action-btn {
             padding: 12px 14px;
             font-size: 0.9em;
@@ -91,12 +89,8 @@
             transition: background 0.2s, transform 0.1s, opacity 0.2s;
             border: none;
         }
-        .sensor-action-btn:hover {
-            opacity: 0.9;
-        }
-        .sensor-action-btn:active {
-            transform: scale(0.95);
-        }
+        .sensor-action-btn:hover { opacity: 0.9; }
+        .sensor-action-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -111,7 +105,10 @@
     </nav>
 
     <main>
-        <h1>Monitorizare Climatică și Camere</h1>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
+            <h1 style="margin: 0;">Monitorizare Climatică și Camere</h1>
+        </div>
         <p>Gestiune centralizată și optimizare ecologică a temperaturii, umidității și ventilației pe zone ambientale.</p>
         
         <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; justify-content: space-around; text-align: center; border-left: 5px solid var(--accent-color); flex-wrap: wrap; gap: 15px;">
@@ -159,7 +156,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
             
             <div style="flex: 2; min-width: 400px; order: 2;">
@@ -216,17 +212,14 @@
 
                 </div>
             </div>
-
         </div>
     </main>
 
     <script src="js/main.js"></script>
     <script src="js/validation.js"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
-            
             camere.forEach(camera => {
                 let salvata = localStorage.getItem(`temp-${camera}`);
                 if (!salvata) {
@@ -236,52 +229,36 @@
                     if(camera === 'baie') salvata = "24";
                     localStorage.setItem(`temp-${camera}`, salvata);
                 }
-                
                 const elem = document.getElementById(`temp-${camera}`);
                 if (elem) elem.innerText = salvata;
                 actualizeazăCuloriTermostat(camera, parseFloat(salvata));
             });
-            
             calculeazăMediaClimaticăGenerala();
 
-            // --- SIMULARE AUTOMATĂ SENZORI (Euristica 1) ---
-            // Aici configurăm ca senzorii să citească date noi automat o dată la 60 de secunde (1 minut)
             setInterval(() => {
-                if (typeof actualizeazaSenzori === "function") {
-                    actualizeazaSenzori();
-                }
-                if (typeof actualizeazaSenzorCO2 === "function") {
-                    actualizeazaSenzorCO2();
-                }
-            }, 60000); // 60000 milisecunde = 1 minut (Dacă vrei exact 2 minute, poți schimba valoarea în 120000)
+                if (typeof actualizeazaSenzori === "function") actualizeazaSenzori();
+                if (typeof actualizeazaSenzorCO2 === "function") actualizeazaSenzorCO2();
+            }, 60000);
         });
 
         function ajusteazăClimăCameră(camera, directie) {
             const displayElem = document.getElementById(`temp-${camera}`);
             if (!displayElem) return;
-
             let valoareAcum = parseFloat(displayElem.innerText);
             let nouaValoare = directie === 'plus' ? valoareAcum + 1 : valoareAcum - 1;
-
             if (nouaValoare < 15) nouaValoare = 15;
             if (nouaValoare > 30) nouaValoare = 30;
-
             displayElem.innerText = nouaValoare;
             localStorage.setItem(`temp-${camera}`, nouaValoare);
-
             actualizeazăCuloriTermostat(camera, nouaValoare);
             calculeazăMediaClimaticăGenerala();
-
-            if (typeof showToast === "function") {
-                showToast(`Temperatura în ${camera.charAt(0).toUpperCase() + camera.slice(1)} a fost modificată la ${nouaValoare}°C.`);
-            }
+            if (typeof showToast === "function") showToast(`Temperatura în ${camera.charAt(0).toUpperCase() + camera.slice(1)} a fost modificată la ${nouaValoare}°C.`);
         }
 
         function actualizeazăCuloriTermostat(camera, temperatura) {
             const card = document.getElementById(`card-${camera}`);
             const status = document.getElementById(`status-${camera}`);
             if (!card || !status) return;
-
             if (temperatura <= 19) {
                 status.innerText = "Răcoare (Eco)";
                 status.style.color = "#3498db";
@@ -300,12 +277,10 @@
         function calculeazăMediaClimaticăGenerala() {
             const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
             let suma = 0;
-
             camere.forEach(camera => {
                 const val = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
                 suma += val;
             });
-
             const media = (suma / camere.length).toFixed(1);
             const widget = document.getElementById('widget-temp');
             if (widget) widget.innerText = media;

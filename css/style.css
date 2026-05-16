@@ -341,3 +341,66 @@ body.dark-mode .modal-list-item {
     opacity: 0.4;
     pointer-events: none;
 }
+
+/* --- Meniu Lateral Retractabil (Sidebar Drawer) --- */
+nav {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Ascundem meniul complet în afara ecranului la stânga */
+    width: 220px;
+    height: 100vh;
+    background: var(--card-bg);
+    padding: 20px;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.3);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Animație super-fluidă */
+    z-index: 3000;
+    overflow-y: auto;
+}
+
+nav.active {
+    left: 0; /* Când are clasa .active, glisează pe ecran */
+}
+
+/* Fundalul întunecat care apare când meniul e deschis (Backdrop) */
+.nav-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 2999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.nav-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Designul noului Buton Hamburger (☰) */
+.menu-toggle-btn {
+    background-color: var(--card-bg);
+    color: var(--accent-color);
+    border: none;
+    font-size: 1.6em;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background-color 0.2s;
+    user-select: none;
+}
+
+.menu-toggle-btn:hover {
+    transform: scale(1.05);
+    background-color: var(--accent-color);
+    color: white;
+}
