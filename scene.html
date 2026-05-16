@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Scene</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Home</a>
+        <a href="scene.html" style="color: var(--accent-color); font-weight: bold;">🎭 Scene</a>
+        <a href="accesorii.html">🛋️ Accesorii</a>
+        <a href="harta.html">🗺️ Hartă Casă</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="pericole.html">🚨 Pericole</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
+            <h1 style="margin: 0;">Scene Predefinite</h1>
+        </div>
+        <p>Alege o scenă pentru a controla automat grupuri de accesorii dintr-o singură apăsare.</p>
+        
+        <div class="hk-grid-wide" id="all-scenes-container"></div>
+
+        <h2 class="hk-section-title">Scene Personalizate</h2>
+        <button onclick="alert('Funcționalitate de construire rutine vizuale în curs de dezvoltare.')" 
+                style="background: transparent; border: 2px dashed var(--accent-color); color: var(--accent-color); padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; font-size: 1.1em;">
+            ➕ Crează Scenă Personalizată (Custom Automation)
+        </button>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/counter.js"></script>
+</body>
+</html>

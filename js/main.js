@@ -70,26 +70,25 @@ function toggleHelp() {
     }
 }
 
-// --- Logica pentru Meniul Lateral (Sidebar) ---
+// --- Logica pentru Meniul Lateral (Sidebar Hamburger) ---
 function toggleNav() {
     const nav = document.querySelector('nav');
     let backdrop = document.getElementById('nav-backdrop');
 
-    // Dacă fundalul protector nu există încă, îl creăm dinamic (Euristica 5 - Prevenirea erorilor)
+    // Dacă fundalul protector pentru meniu nu există, îl creăm separat cu un ID unic
     if (!backdrop) {
         backdrop = document.createElement('div');
         backdrop.id = 'nav-backdrop';
         backdrop.className = 'nav-backdrop';
         document.body.appendChild(backdrop);
         
-        // Dacă utilizatorul dă click în afara meniului (pe zona întunecată), se închide meniul!
+        // Închide doar meniul lateral dacă se dă click pe fundalul lui specific
         backdrop.onclick = () => {
             nav.classList.remove('active');
             backdrop.classList.remove('active');
         };
     }
 
-    // Comutăm clasele de activare
     nav.classList.toggle('active');
     
     if (nav.classList.contains('active')) {

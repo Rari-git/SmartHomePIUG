@@ -403,13 +403,20 @@ function valideazaNume() {
     errorMsg.style.display = 'none';
     successMsg.style.display = 'none';
 
-    const numeRegex = /^[A-Za-z\s]+$/;
+    const numeRegex = /^[A-Za-z0-9\săâîșțĂÂÎȘȚ]+$/;
 
     if (input.trim() === "" || !numeRegex.test(input)) {
+        errorMsg.innerText = "❌ Numele conține caractere speciale nepermise!";
         errorMsg.style.display = 'block';
     } else {
+        successMsg.innerText = "✅ Numele locuinței a fost salvat!";
         successMsg.style.display = 'block';
-        showToast(`Dispozitivul a fost redenumit în "${input}".`);
+        
+        localStorage.setItem('numeCasaSalvat', input.trim());
+        
+        if (typeof showToast === "function") {
+            showToast(`Locuința a fost redenumită în "${input.trim()}".`);
+        }
         document.getElementById('numeInput').value = "";
     }
 }

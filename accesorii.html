@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Accesorii</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Home</a>
+        <a href="scene.html">🎭 Scene</a>
+        <a href="accesorii.html" style="color: var(--accent-color); font-weight: bold;">🛋️ Accesorii</a>
+        <a href="harta.html">🗺️ Hartă Casă</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="pericole.html">🚨 Pericole</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
+            <h1 style="margin: 0;">Toate Accesoriile</h1>
+        </div>
+        <p>Apasă pe un obiect pentru a-l opri/porni. Apasă steluța (★) pentru a-l fixa pe pagina Home. Apasă (⚙️) pentru volum/intensitate.</p>
+        
+        <div id="all-accessories-container"></div>
+    </main>
+
+    <div id="popup-dispozitive" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="inchidePopup()">&times;</span>
+            <h2 id="modal-titlu" style="margin: 0 0 20px 0; color: var(--accent-color);"></h2>
+            <div id="modal-continut"></div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/counter.js"></script>
+</body>
+</html>
