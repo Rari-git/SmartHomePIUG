@@ -35,8 +35,10 @@ const subDispozitive = {
     ],
     jaluzele: [
         { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Dormitor", icon: "🪟" },
-        { nume: "Draperie Principală", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },
-        { nume: "Draperie Secundară", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" }
+        { nume: "Draperie", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },
+        { nume: "Draperie", stare: "Deschis", valoare: 100, camera: "Living", icon: "🪟" },
+        { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Baie", icon: "🪟" },
+        { nume: "Draperie", stare: "Închis", valoare: 0, camera: "Bucătărie", icon: "🪟" }
     ],
     audio: [
         { nume: "HomePod Mini", stare: "Oprit", valoare: 40, camera: "Dormitor", icon: "🎵" },
@@ -54,6 +56,7 @@ const subDispozitive = {
     ],
     electrocasnice: [
         { nume: "Mașină de Spălat", stare: "Oprit", camera: "Baie", icon: "🧺" },
+        { nume: "Uscător", stare: "Oprit", camera: "Baie", icon: "💨" },
         { nume: "Espressor Cafea", stare: "Oprit", camera: "Bucătărie", icon: "☕" }
     ],
     prize: [
@@ -63,7 +66,9 @@ const subDispozitive = {
     senzoriContact: [
         { nume: "Fereastră", stare: "Închis", camera: "Dormitor", icon: "🟩" },
         { nume: "Fereastră", stare: "Închis", camera: "Living", icon: "🟩" },
-        { nume: "Fereastră", stare: "Închis", camera: "Bucătărie", icon: "🟩" }
+        { nume: "Fereastră", stare: "Închis", camera: "Living", icon: "🟩" },
+        { nume: "Fereastră", stare: "Închis", camera: "Bucătărie", icon: "🟩" },
+        { nume: "Fereastră", stare: "Închis", camera: "Baie", icon: "🟩" }
     ],
     senzoriMiscare: [
         { nume: "Senzor Mișcare", stare: "Inactiv", camera: "Living", icon: "🏃" },
