@@ -34,9 +34,7 @@
         </div>
 
         <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-            
             <div style="flex: 1; min-width: 300px;">
-                
                 <div class="form-group">
                     <h3>🌡️ Setare Temperatură Generală</h3>
                     <p>Temperatura curentă în casă este:</p>
@@ -57,13 +55,12 @@
                     <p style="font-size: 0.9em; font-weight: bold;">
                         Stare: <span id="stareUmiditate" style="color: var(--success-color);">Optimă</span>
                     </p>
-                    
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
                         <button onclick="actualizeazaSenzori()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
                             🔄 Verifică Senzorii
                         </button>
                         <button onclick="pornesteDezumidificator()" style="background-color: var(--accent-color); color: white; border: none; width: 100%;">
-                            💨Pornește Dezumidificatorul
+                            💨 Pornește Dezumidificatorul
                         </button>
                     </div>
                 </div>
@@ -75,7 +72,6 @@
                     <p style="font-size: 0.9em; font-weight: bold;">
                         Stare: <span id="stareCO2" style="color: var(--success-color);">Excelentă</span>
                     </p>
-                    
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
                         <button onclick="actualizeazaSenzorCO2()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
                             🔄 Verifică Aerul
@@ -97,7 +93,6 @@
                         <button onclick="valideazaTemperaturaCameră('living')">Setează Living</button>
                         <p id="error-living" class="error-msg"></p>
                     </div>
-
                     <div class="form-group">
                         <h3>🛏️ Dormitor</h3>
                         <p>Temperatura actuală: <strong id="temp-dormitor">19</strong>°C</p>
@@ -105,7 +100,6 @@
                         <button onclick="valideazaTemperaturaCameră('dormitor')">Setează Dormitor</button>
                         <p id="error-dormitor" class="error-msg"></p>
                     </div>
-
                     <div class="form-group">
                         <h3>🍳 Bucătărie</h3>
                         <p>Temperatura actuală: <strong id="temp-bucatarie">23</strong>°C</p>
@@ -113,7 +107,6 @@
                         <button onclick="valideazaTemperaturaCameră('bucatarie')">Setează Bucătărie</button>
                         <p id="error-bucatarie" class="error-msg"></p>
                     </div>
-
                     <div class="form-group">
                         <h3>🚿 Baie</h3>
                         <p>Temperatura actuală: <strong id="temp-baie">24</strong>°C</p>
@@ -123,7 +116,6 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </main>
 

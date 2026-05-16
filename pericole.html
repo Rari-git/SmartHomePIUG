@@ -17,40 +17,30 @@
     <main>
         <h1>Monitorizare Pericole și Alarme</h1>
         <p>Alerte critice ale sistemului. Acțiunile de aici au prioritate maximă.</p>
-        
         <div class="grid">
-            
             <div class="card form-group" id="card-inundatie" style="transition: background-color 0.3s; text-align: left; cursor: default;">
                 <h3 style="margin-top: 0;">💧 Senzor Inundație (Baie)</h3>
                 <p>Stare curentă:</p>
-                
                 <h2 style="color: var(--success-color); font-size: 2.5em; margin: 10px 0;" id="stareInundatie">USCAT</h2>
-                
                 <button onclick="simuleazaInundatie()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
                     🌊 Simulează Scurgere Apă
                 </button>
-                
                 <button id="btn-reset-inundatie" onclick="reseteazaInundatie()" style="display: none; background-color: var(--success-color); color: white; width: 100%; margin-top: 10px; border: none;">
                     ✅ Oprește Valva Principală
                 </button>
             </div>
-
             <div class="card form-group" id="card-incendiu" style="transition: background-color 0.3s; text-align: left; cursor: default;">
                 <h3 style="margin-top: 0;">🔥 Senzor Fum și CO (Bucătărie)</h3>
                 <p>Stare curentă:</p>
-                
                 <h2 style="color: var(--success-color); font-size: 2.5em; margin: 10px 0;" id="stareIncendiu">SIGUR</h2>
                 <p id="detaliiIncendiu" style="font-size: 0.9em;">Nivel de particule și gaz în parametri normali.</p>
-
                 <button onclick="simuleazaIncendiu()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
                     🚬 Simulează Fum
                 </button>
-                
                 <button id="btn-reset-incendiu" onclick="reseteazaIncendiu()" style="display: none; background-color: var(--success-color); color: white; width: 100%; margin-top: 10px; border: none;">
                     ✅ Pornește Ventilația & Oprește Alarma
                 </button>
             </div>
-
         </div>
     </main>
 

@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', rearrangeDashboard);
 
-// --- Baza de date cu sub-dispozitivele din casă ---
 const subDispozitive = {
     becuri: [
         { nume: "Bec Living", stare: "Oprit" },
@@ -18,7 +17,6 @@ const subDispozitive = {
     ]
 };
 
-// --- Deschide fereastra Pop-up (Modal) în mod dinamic ---
 function deschideMeniuDispozitive(cardId, categorie) {
     trackAccess(cardId);
 
@@ -26,10 +24,8 @@ function deschideMeniuDispozitive(cardId, categorie) {
     const titlu = document.getElementById('modal-titlu');
     const continut = document.getElementById('modal-continut');
 
-    // Curățăm conținutul anterior
     continut.innerHTML = "";
 
-    // GESTIONARE CATEGORIE: SCENE INTELIGENTE
     if (categorie === 'scene') {
         titlu.innerText = "🎭 Scene & Moduri Casă";
 
@@ -56,7 +52,6 @@ function deschideMeniuDispozitive(cardId, categorie) {
         });
 
     } else {
-        // GESTIONARE DISPOZITIVE CLASICE (Becuri, TV, Audio)
         titlu.innerText = categorie === 'becuri' ? "💡 Gestionare Becuri" : 
                          categorie === 'tv' ? "📺 Control Televizoare" : "🎵 Control Sistem Audio";
 
@@ -85,7 +80,6 @@ function deschideMeniuDispozitive(cardId, categorie) {
     modal.classList.add('active');
 }
 
-// --- Comută starea unui singur dispozitiv din pop-up ---
 function comutaStareSubDispozitiv(categorie, index, buton) {
     const disp = subDispozitive[categorie][index];
     disp.stare = disp.stare === "Pornit" ? "Oprit" : "Pornit";
@@ -98,7 +92,6 @@ function comutaStareSubDispozitiv(categorie, index, buton) {
     }
 }
 
-// --- Oprește toate dispozitivele dintr-o anumită categorie ---
 function stingeTotDinCategorie(categorie) {
     subDispozitive[categorie].forEach(disp => disp.stare = "Oprit");
     
@@ -110,7 +103,6 @@ function stingeTotDinCategorie(categorie) {
     }
 }
 
-// --- Oprește absolut TOT din casă ---
 function stingeTotGlobal() {
     Object.keys(subDispozitive).forEach(categorie => {
         subDispozitive[categorie].forEach(disp => disp.stare = "Oprit");
@@ -120,7 +112,6 @@ function stingeTotGlobal() {
     }
 }
 
-// --- Aplicarea Modurilor Inteligente (Scene) ---
 function aplicaMod(mod) {
     if (mod === 'noapte') {
         Object.keys(subDispozitive).forEach(cat => {
@@ -148,25 +139,19 @@ function aplicaMod(mod) {
     }
 }
 
-// --- Contorizare click-uri și rearanjare Grid ---
-// --- Contorizare click-uri și rearanjare inteligentă Grid ---
 function trackAccess(deviceId) {
-    // Dacă id-ul este invalid sau este containerul însuși, oprim funcția
     if(!deviceId || deviceId === 'dashboard-grid') return;
     
-    // Preluăm click-urile, ne asigurăm că sunt numere întregi și adăugăm 1
     let counts = JSON.parse(localStorage.getItem('deviceCounts')) || {};
     counts[deviceId] = (parseInt(counts[deviceId]) || 0) + 1;
     localStorage.setItem('deviceCounts', JSON.stringify(counts));
     
-    // Efectul vizual de apăsare (Pop)
     const card = document.getElementById(deviceId);
     if (card) {
         card.style.transform = 'scale(0.95)';
         setTimeout(() => { card.style.transform = 'scale(1)'; }, 150);
     }
     
-    // Apelăm rearanjarea
     rearrangeDashboard();
 }
 
@@ -174,25 +159,20 @@ function rearrangeDashboard() {
     const container = document.getElementById('dashboard-grid');
     if (!container) return;
 
-    // Preluăm toate cardurile (categoriile) din container
     const cards = Array.from(container.children);
     let counts = JSON.parse(localStorage.getItem('deviceCounts')) || {};
 
-    // Le sortăm descrescător în funcție de numărul de accesări
     cards.sort((a, b) => {
         let countA = parseInt(counts[a.id]) || 0;
         let countB = parseInt(counts[b.id]) || 0;
         return countB - countA; 
     });
 
-    // APLICĂM NOUA METODĂ: Folosim CSS 'order' pentru a le rearanja vizual în Grid
-    // Poziția 0 e prima, 1 a doua, etc.
     cards.forEach((card, index) => {
         card.style.order = index;
     });
 }
 
-// --- Închidere Pop-up (Modal) ---
 function inchidePopup() {
     const modal = document.getElementById('popup-dispozitive');
     if(modal) modal.classList.remove('active');
