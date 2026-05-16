@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizeazaStatusGlobal();
 });
 
+// --- Baza de date cu toate sistemele din casă ---
 const subDispozitive = {
     becuri: [
         { nume: "Bec Living", stare: "Oprit", valoare: 50 },
@@ -17,9 +18,24 @@ const subDispozitive = {
     ],
     audio: [
         { nume: "Sistem Audio Living", stare: "Oprit", valoare: 30 },
-        { nume: "Boxă Inteligentă Dormitor", stare: "Oprit", valoare: 40 },
-        { nume: "Boxă Inteligentă Bucătărie", stare: "Oprit", valoare: 20 },
-        { nume: "Boxă Inteligentă Baie", stare: "Oprit", valoare: 30 }
+        { nume: "Boxă Dormitor", stare: "Oprit", valoare: 40 },
+        { nume: "Boxă Baie", stare: "Oprit", valoare: 30 }
+    ],
+    aspirator: [
+        { nume: "Robot Aspirator Etaj", stare: "La Bază", baterie: 100 }
+    ],
+    jaluzele: [
+        { nume: "Draperii Living", stare: "Oprit", valoare: 0 },
+        { nume: "Jaluzele Dormitor", stare: "Oprit", valoare: 100 }
+    ],
+    prize: [
+        { nume: "Priză Cafetieră", stare: "Oprit", consum: 800 },
+        { nume: "Priză TV", stare: "Pornit", consum: 120 },
+        { nume: "Priză Mașină Spălat", stare: "Oprit", consum: 2100 }
+    ],
+    incuietori: [
+        { nume: "Ușă Intrare", stare: "Blocat" },
+        { nume: "Ușă Terasă", stare: "Blocat" }
     ]
 };
 
@@ -32,11 +48,10 @@ function deschideMeniuDispozitive(cardId, categorie) {
     const continut = document.getElementById('modal-continut');
 
     continut.innerHTML = "";
-    
     let titluText = "";
     let logoStr = "";
 
-    // -- GENERARE PENTRU SCENE --
+    // -- 1. GENERARE PENTRU SCENE --
     if (categorie === 'scene') {
         titluText = "🎭 Scene & Moduri Casă";
         logoStr = "🎭";
@@ -57,15 +72,24 @@ function deschideMeniuDispozitive(cardId, categorie) {
             continut.appendChild(btn);
         });
 
-    // -- GENERARE PENTRU DISPOZITIVE (Becuri, TV, Audio) --
+    // -- 2. GENERARE PENTRU DISPOZITIVE --
     } else {
         if(categorie === 'becuri') { titluText = "💡 Gestionare Becuri"; logoStr = "💡"; }
         else if(categorie === 'tv') { titluText = "📺 Control Televizoare"; logoStr = "📺"; }
-        else if(categorie === 'audio') { titluText = "🎵 Control Sistem Audio"; logoStr = "🎵"; }
+        else if(categorie === 'audio') { titluText = "🎵 Sistem Audio"; logoStr = "🎵"; }
+        else if(categorie === 'aspirator') { titluText = "🤖 Control Aspirator"; logoStr = "🤖"; }
+        else if(categorie === 'jaluzele') { titluText = "🪟 Draperii & Jaluzele"; logoStr = "🪟"; }
+        else if(categorie === 'prize') { titluText = "🔌 Prize Inteligente"; logoStr = "🔌"; }
+        else if(categorie === 'incuietori') { titluText = "🚪 Încuietori Smart"; logoStr = "🚪"; }
+
+        // Butonul Global de pe categorie (Text adaptiv)
+        let masterBtnText = "🛑 Oprește toate dispozitivele";
+        if (categorie === 'incuietori') masterBtnText = "🔒 Blochează toate ușile";
+        if (categorie === 'aspirator') masterBtnText = "🏠 Trimite la Bază";
 
         const masterOffLocal = document.createElement('button');
         masterOffLocal.style.cssText = "width: 100%; background-color: transparent; border: 2px solid var(--error-color); color: var(--text-color); margin-bottom: 15px; font-size: 0.9em; padding: 10px; border-radius: 5px; cursor: pointer;";
-        masterOffLocal.innerText = `🛑 Oprește toate dispozitivele din această listă`;
+        masterOffLocal.innerText = masterBtnText;
         masterOffLocal.onclick = () => stingeTotDinCategorie(categorie);
         continut.appendChild(masterOffLocal);
 
@@ -73,46 +97,77 @@ function deschideMeniuDispozitive(cardId, categorie) {
             const containerBlock = document.createElement('div');
             containerBlock.style.cssText = "margin-bottom: 20px; padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05);";
 
-            const itemHeader = document.createElement('div');
-            itemHeader.className = 'modal-list-item';
-            itemHeader.style.border = "none";
-            itemHeader.style.padding = "0";
-
-            const btnColor = disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6';
-            itemHeader.innerHTML = `
-                <span style="font-weight: 500;">${disp.nume}</span>
-                <button onclick="comutaStareSubDispozitiv('${categorie}', ${index}, this)" 
-                        style="background-color: ${btnColor}; color: white; cursor: pointer; padding: 6px 14px; border: none; border-radius: 4px;">
-                    ${disp.stare}
-                </button>
-            `;
-            containerBlock.appendChild(itemHeader);
-
-            // SLIDERE DOAR PENTRU BECURI SI AUDIO
-            if (categorie === 'becuri' || categorie === 'audio') {
-                const isOff = disp.stare === 'Oprit';
-                const sliderWrapper = document.createElement('div');
-                sliderWrapper.className = `slider-container ${isOff ? 'disabled-controls' : ''}`;
-                
-                const labelText = categorie === 'becuri' ? `Intensitate: <span id="val-${categorie}-${index}">${disp.valoare}</span>%` : `Volum: <span id="val-${categorie}-${index}">${disp.valoare}</span>%`;
-                
-                let presetsHtml = '';
-                if (categorie === 'becuri') {
-                    presetsHtml = `<div style="display:flex; gap:5px; margin-top:2px;">
-                        <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 10)">10%</button>
-                        <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 25)">25%</button>
-                        <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 50)">50%</button>
-                        <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 75)">75%</button>
-                        <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 100)">100%</button>
-                    </div>`;
-                }
-
-                sliderWrapper.innerHTML = `
-                    <label style="font-size:0.85em; opacity:0.8;">${labelText}</label>
-                    <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} id="slider-${categorie}-${index}" oninput="actualizeazaValoareSlider('${categorie}', ${index}, this.value)">
-                    ${presetsHtml}
+            // --- RENDERING SPECIAL PENTRU ASPIRATOR (Stări Multiple) ---
+            if (categorie === 'aspirator') {
+                let statusColor = disp.stare === 'Curăță' ? 'var(--accent-color)' : (disp.stare === 'Pauză' ? 'orange' : '#95a5a6');
+                containerBlock.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; font-weight:500;">
+                        <span>${disp.nume}</span>
+                        <span style="color:${statusColor}; font-weight:bold;">${disp.stare} (🔋${disp.baterie}%)</span>
+                    </div>
+                    <div style="display:flex; gap:5px; margin-top:10px;">
+                        <button onclick="comutaAspirator(${index}, 'Curăță')" style="flex:1; background-color:var(--accent-color); color:white; border:none; border-radius:4px; padding:8px; cursor:pointer;">▶️ Curăță</button>
+                        <button onclick="comutaAspirator(${index}, 'Pauză')" style="flex:1; background-color:orange; color:white; border:none; border-radius:4px; padding:8px; cursor:pointer;">⏸️ Pauză</button>
+                        <button onclick="comutaAspirator(${index}, 'La Bază')" style="flex:1; background-color:#95a5a6; color:white; border:none; border-radius:4px; padding:8px; cursor:pointer;">🏠 Bază</button>
+                    </div>
                 `;
-                containerBlock.appendChild(sliderWrapper);
+            } 
+            // --- RENDERING CLASIC PENTRU RESTUL ---
+            else {
+                const itemHeader = document.createElement('div');
+                itemHeader.className = 'modal-list-item';
+                itemHeader.style.border = "none";
+                itemHeader.style.padding = "0";
+
+                let btnColor = disp.stare === 'Pornit' || disp.stare === 'Blocat' ? 'var(--success-color)' : '#95a5a6';
+                if (disp.stare === 'Deblocat') btnColor = 'var(--error-color)'; // Ușă deblocată e roșie!
+                
+                let extraText = categorie === 'prize' ? ` <span style="font-size:0.8em; color:var(--accent-color);">(⚡ ${disp.consum}W)</span>` : '';
+
+                itemHeader.innerHTML = `
+                    <span style="font-weight: 500;">${disp.nume}${extraText}</span>
+                    <button onclick="comutaStareSubDispozitiv('${categorie}', ${index}, this)" 
+                            style="background-color: ${btnColor}; color: white; cursor: pointer; padding: 6px 14px; border: none; border-radius: 4px;">
+                        ${disp.stare}
+                    </button>
+                `;
+                containerBlock.appendChild(itemHeader);
+
+                // SLIDERE PENTRU BECURI, AUDIO ȘI JALUZELE
+                if (categorie === 'becuri' || categorie === 'audio' || categorie === 'jaluzele') {
+                    const isOff = disp.stare === 'Oprit';
+                    const sliderWrapper = document.createElement('div');
+                    sliderWrapper.className = `slider-container ${isOff ? 'disabled-controls' : ''}`;
+                    
+                    let labelText = '';
+                    if(categorie === 'becuri') labelText = `Intensitate: <span id="val-${categorie}-${index}">${disp.valoare}</span>%`;
+                    if(categorie === 'audio') labelText = `Volum: <span id="val-${categorie}-${index}">${disp.valoare}</span>%`;
+                    if(categorie === 'jaluzele') labelText = `Nivel Deschidere: <span id="val-${categorie}-${index}">${disp.valoare}</span>%`;
+                    
+                    let presetsHtml = '';
+                    if (categorie === 'becuri') {
+                        presetsHtml = `<div style="display:flex; gap:5px; margin-top:2px;">
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 10)">10%</button>
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 25)">25%</button>
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 50)">50%</button>
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 75)">75%</button>
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 100)">100%</button>
+                        </div>`;
+                    } else if (categorie === 'jaluzele') {
+                        presetsHtml = `<div style="display:flex; gap:5px; margin-top:2px;">
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 0)">Închis</button>
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 50)">Jumătate</button>
+                            <button class="preset-btn" ${isOff ? 'disabled' : ''} onclick="seteazaPresetSlider('${categorie}', ${index}, 100)">Deschis complet</button>
+                        </div>`;
+                    }
+
+                    sliderWrapper.innerHTML = `
+                        <label style="font-size:0.85em; opacity:0.8;">${labelText}</label>
+                        <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} id="slider-${categorie}-${index}" oninput="actualizeazaValoareSlider('${categorie}', ${index}, this.value)">
+                        ${presetsHtml}
+                    `;
+                    containerBlock.appendChild(sliderWrapper);
+                }
             }
             continut.appendChild(containerBlock);
         });
@@ -120,55 +175,44 @@ function deschideMeniuDispozitive(cardId, categorie) {
 
     // Setare Titlu și Steluță
     titlu.innerText = titluText;
-    
     const pinnedItems = JSON.parse(localStorage.getItem('pinnedItems')) || [];
     const isPinned = pinnedItems.some(item => item.id === cardId);
     
-    if (isPinned) {
-        star.classList.add('pinned');
-        star.innerText = "★";
-    } else {
-        star.classList.remove('pinned');
-        star.innerText = "☆";
-    }
+    if (isPinned) { star.classList.add('pinned'); star.innerText = "★"; } 
+    else { star.classList.remove('pinned'); star.innerText = "☆"; }
     
     star.onclick = () => togglePinModal(cardId, logoStr, star);
-
     modal.classList.add('active');
 }
 
-// --- FUNCȚIA CARE GESTIONEAZĂ STELUȚA ---
+// --- FUNCȚII PENTRU STELUȚE ȘI PINNED ---
 function togglePinModal(cardId, logo, starElement) {
     let pinnedItems = JSON.parse(localStorage.getItem('pinnedItems')) || [];
-
     if (starElement.classList.contains('pinned')) {
         starElement.classList.remove('pinned');
         starElement.innerText = "☆";
         pinnedItems = pinnedItems.filter(item => item.id !== cardId);
-        if (typeof showToast === "function") showToast("Categori eliminată din Acces Rapid.");
+        if (typeof showToast === "function") showToast("Categorie eliminată din Acces Rapid.");
     } else {
         starElement.classList.add('pinned');
         starElement.innerText = "★";
         pinnedItems.push({ id: cardId, logo: logo });
-        // Notificare de UX care explică utilizatorului UNDE apare cercul
-        if (typeof showToast === "function") showToast("📌 Adăugat! Închide fereastra pop-up pentru a vedea cercul de acces rapid.");
+        if (typeof showToast === "function") showToast("📌 Adăugat! Închide fereastra pentru a vedea cercul de acces rapid.");
     }
-
     localStorage.setItem('pinnedItems', JSON.stringify(pinnedItems));
-    randareCercuriPinned(); // Actualizează fundalul imediat
+    randareCercuriPinned();
 }
 
 function randareCercuriPinned() {
     const container = document.getElementById('pinned-container');
     if (!container) return;
-
     container.innerHTML = "";
     const pinnedItems = JSON.parse(localStorage.getItem('pinnedItems')) || [];
 
     if (pinnedItems.length > 0) {
         const label = document.createElement('span');
         label.style.cssText = "font-size: 0.9em; font-weight: bold; opacity: 0.7; margin-right: 5px;";
-        label.innerText = "Pinned:";
+        label.innerText = "Acces Rapid:";
         container.appendChild(label);
     }
 
@@ -176,21 +220,41 @@ function randareCercuriPinned() {
         const circle = document.createElement('div');
         circle.className = "pinned-circle";
         circle.innerText = item.logo;
-        circle.title = `Acces rapid`;
+        circle.title = `Deschide panoul`;
         
-        const catTarget = item.id === 'cat_scene' ? 'scene' : item.id === 'cat_becuri' ? 'becuri' : item.id === 'cat_tv' ? 'tv' : 'audio';
+        let catTarget = item.id.replace('cat_', ''); // Transformă cat_prize în prize automat!
         circle.onclick = () => deschideMeniuDispozitive(item.id, catTarget);
-        
         container.appendChild(circle);
     });
 }
 
+// --- LOGICA DE SCHIMBARE A STĂRII DISPOZITIVELOR ---
+function comutaAspirator(index, nouaStare) {
+    subDispozitive.aspirator[index].stare = nouaStare;
+    deschideMeniuDispozitive('cat_aspirator', 'aspirator'); // Reîncărcăm pop-up-ul
+    actualizeazaStatusGlobal();
+    if (typeof showToast === "function") showToast(`Aspiratorul a primit comanda: ${nouaStare}`);
+}
+
 function comutaStareSubDispozitiv(categorie, index, buton) {
     const disp = subDispozitive[categorie][index];
-    disp.stare = disp.stare === "Pornit" ? "Oprit" : "Pornit";
+    
+    // Euristica 5: Prevenirea erorilor critice la Securitate
+    if (categorie === 'incuietori') {
+        if (disp.stare === 'Blocat') {
+            if(!confirm(`⚠️ SECURITATE: Ești sigur că vrei să DEBLOCHEZI: ${disp.nume}?`)) return;
+            disp.stare = "Deblocat";
+        } else {
+            disp.stare = "Blocat";
+        }
+    } else {
+        disp.stare = disp.stare === "Pornit" ? "Oprit" : "Pornit";
+    }
     
     buton.innerText = disp.stare;
-    buton.style.backgroundColor = disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6';
+    let btnColor = disp.stare === 'Pornit' || disp.stare === 'Blocat' ? 'var(--success-color)' : '#95a5a6';
+    if (disp.stare === 'Deblocat') btnColor = 'var(--error-color)';
+    buton.style.backgroundColor = btnColor;
     
     const wrapper = buton.closest('div').nextElementSibling;
     if (wrapper && wrapper.classList.contains('slider-container')) {
@@ -208,10 +272,7 @@ function comutaStareSubDispozitiv(categorie, index, buton) {
     }
 
     actualizeazaStatusGlobal();
-
-    if (typeof showToast === "function") {
-        showToast(`${disp.nume} a fost ${disp.stare.toLowerCase()}.`);
-    }
+    if (typeof showToast === "function") showToast(`${disp.nume} este acum ${disp.stare}.`);
 }
 
 function actualizeazaValoareSlider(categorie, index, val) {
@@ -226,83 +287,84 @@ function seteazaPresetSlider(categorie, index, val) {
     const labelVal = document.getElementById(`val-${categorie}-${index}`);
     if (slider) slider.value = val;
     if (labelVal) labelVal.innerText = val;
-    
-    if (typeof showToast === "function") {
-        showToast(`Intensitatea pentru ${subDispozitive[categorie][index].nume} a fost setată la ${val}%.`);
-    }
 }
 
+// --- FUNCȚII GLOBALE ȘI SCENE ---
 function stingeTotDinCategorie(categorie) {
-    subDispozitive[categorie].forEach(disp => disp.stare = "Oprit");
-    const modalId = categorie === 'becuri' ? 'cat_becuri' : categorie === 'tv' ? 'cat_tv' : 'cat_audio';
-    deschideMeniuDispozitive(modalId, categorie);
+    subDispozitive[categorie].forEach(disp => {
+        if (categorie === 'incuietori') disp.stare = 'Blocat';
+        else if (categorie === 'aspirator') disp.stare = 'La Bază';
+        else disp.stare = 'Oprit';
+    });
+    deschideMeniuDispozitive(`cat_${categorie}`, categorie);
     actualizeazaStatusGlobal();
-    if (typeof showToast === "function") {
-        showToast(`Toate elementele din categoria ${categorie} au fost oprite.`);
-    }
+    if (typeof showToast === "function") showToast(`Acțiune executată pentru categoria: ${categorie}`);
 }
 
 function stingeTotGlobal() {
-    Object.keys(subDispozitive).forEach(categorie => {
-        subDispozitive[categorie].forEach(disp => disp.stare = "Oprit");
+    Object.keys(subDispozitive).forEach(cat => {
+        subDispozitive[cat].forEach(d => {
+            if (cat === 'incuietori') d.stare = "Blocat";
+            else if (cat === 'aspirator') d.stare = "La Bază";
+            else d.stare = "Oprit";
+        });
     });
     actualizeazaStatusGlobal();
-    if (typeof showToast === "function") {
-        showToast("🛑 Comandă Master Off executată. Toate dispozitivele au fost oprite!");
-    }
+    if (typeof showToast === "function") showToast("🛑 Comandă Master Off! Totul a fost închis și securizat.");
 }
 
 function aplicaMod(mod) {
+    stingeTotGlobal(); // Închidem tot ca bază curată
     if (mod === 'noapte') {
-        Object.keys(subDispozitive).forEach(cat => {
-            subDispozitive[cat].forEach(d => d.stare = "Oprit");
-        });
-        if (typeof showToast === "function") {
-            showToast("🌙 Modul Noapte activat. Totul a fost stins în casă.");
-        }
+        if (typeof showToast === "function") showToast("🌙 Mod Noapte: Totul închis, uși blocate.");
     } 
     else if (mod === 'party') {
-        subDispozitive.becuri.forEach(d => d.stare = "Pornit");
-        subDispozitive.audio.forEach(d => d.stare = "Pornit");
-        subDispozitive.tv.forEach(d => d.stare = "Oprit");
-        if (typeof showToast === "function") {
-            showToast("🎉 Modul Party activat! Lumini și muzică la maxim.");
-        }
+        subDispozitive.becuri.forEach(d => { d.stare = "Pornit"; d.valoare = 100; });
+        subDispozitive.audio.forEach(d => { d.stare = "Pornit"; d.valoare = 80; });
+        if (typeof showToast === "function") showToast("🎉 Mod Party: Lumini la 100% și Muzică pornită.");
     } 
     else if (mod === 'cinema') {
-        subDispozitive.becuri.forEach(d => d.stare = "Oprit");
+        subDispozitive.jaluzele.forEach(d => { d.stare = "Pornit"; d.valoare = 0; }); // Tragem jaluzelele
         subDispozitive.tv.forEach(d => d.stare = "Pornit");
-        subDispozitive.audio.forEach(d => d.stare = "Pornit");
-        if (typeof showToast === "function") {
-            showToast("🎬 Modul Cinema activat. Luminile s-au stins, TV și Audio pornite.");
-        }
+        subDispozitive.audio.forEach(d => { d.stare = "Pornit"; d.valoare = 40; });
+        if (typeof showToast === "function") showToast("🎬 Mod Cinema: Jaluzele trase, TV pornit.");
     }
     actualizeazaStatusGlobal();
 }
 
+// --- LOGICA STATUSULUI CASEI ---
 function actualizeazaStatusGlobal() {
     const securitateElem = document.getElementById('global-securitate');
     const pericoleElem = document.getElementById('global-pericole');
     const consumElem = document.getElementById('global-consum');
     const bannerElem = document.getElementById('status-banner');
-
     if (!consumElem) return;
 
-    let consum = 0.2;
-    subDispozitive.becuri.forEach(d => { if (d.stare === "Pornit") consum += 0.1; });
-    subDispozitive.tv.forEach(d => { if (d.stare === "Pornit") consum += 0.3; });
-    subDispozitive.audio.forEach(d => { if (d.stare === "Pornit") consum += 0.2; });
-    consumElem.innerText = consum.toFixed(1) + " kWh";
+    // Calculăm Consumul Electric
+    let consumWați = 200; // Consumul de bază al routerului/sistemului
+    subDispozitive.becuri.forEach(d => { if (d.stare === "Pornit") consumWați += (d.valoare * 0.5); }); // becurile variază în funcție de intensitate
+    subDispozitive.tv.forEach(d => { if (d.stare === "Pornit") consumWați += 150; });
+    subDispozitive.audio.forEach(d => { if (d.stare === "Pornit") consumWați += 80; });
+    subDispozitive.prize.forEach(d => { if (d.stare === "Pornit") consumWați += d.consum; });
+    
+    consumElem.innerText = (consumWați / 1000).toFixed(2) + " kW";
 
+    // Verificăm Securitatea
     const alDezactivata = localStorage.getItem('alarmaDezactivata') === 'true';
+    const usaDeblocata = subDispozitive.incuietori.some(d => d.stare === "Deblocat");
+
     if (alDezactivata) {
         securitateElem.innerText = "Dezactivată";
         securitateElem.style.color = "var(--error-color)";
+    } else if (usaDeblocata) {
+        securitateElem.innerText = "Vulnerabilă (Ușă deschisă)";
+        securitateElem.style.color = "orange";
     } else {
-        securitateElem.innerText = "Armată";
+        securitateElem.innerText = "Armată & Sigură";
         securitateElem.style.color = "var(--success-color)";
     }
 
+    // Verificăm Pericolele
     const inundatieActive = localStorage.getItem('pericolInundatie') === 'true';
     const incendiuActive = localStorage.getItem('pericolIncendiu') === 'true';
 
@@ -313,20 +375,20 @@ function actualizeazaStatusGlobal() {
         bannerElem.style.borderLeft = "5px solid white";
         document.querySelectorAll('#status-banner h4, #status-banner p').forEach(el => el.style.color = "white");
     } else {
-        pericoleElem.innerText = "Sigur";
+        pericoleElem.innerText = "Normal";
         pericoleElem.style.color = "var(--success-color)";
         bannerElem.style.backgroundColor = "var(--card-bg)";
         bannerElem.style.borderLeft = "5px solid var(--success-color)";
         document.querySelectorAll('#status-banner h4').forEach(el => el.style.color = "var(--text-color)");
-        document.getElementById('global-securitate').style.color = alDezactivata ? "var(--error-color)" : "var(--success-color)";
+        document.getElementById('global-securitate').style.color = alDezactivata ? "var(--error-color)" : (usaDeblocata ? "orange" : "var(--success-color)");
         document.getElementById('global-pericole').style.color = "var(--success-color)";
         document.getElementById('global-consum').style.color = "var(--accent-color)";
     }
 }
 
+// --- UTILITIES ---
 function trackAccess(deviceId) {
     if (!deviceId || deviceId === 'dashboard-grid') return;
-    
     let counts = JSON.parse(localStorage.getItem('deviceCounts')) || {};
     counts[deviceId] = (parseInt(counts[deviceId]) || 0) + 1;
     localStorage.setItem('deviceCounts', JSON.stringify(counts));
@@ -336,14 +398,12 @@ function trackAccess(deviceId) {
         card.style.transform = 'scale(0.95)';
         setTimeout(() => { card.style.transform = 'scale(1)'; }, 150);
     }
-    
     rearrangeDashboard();
 }
 
 function rearrangeDashboard() {
     const container = document.getElementById('dashboard-grid');
     if (!container) return;
-
     const cards = Array.from(container.children);
     let counts = JSON.parse(localStorage.getItem('deviceCounts')) || {};
 
@@ -353,9 +413,7 @@ function rearrangeDashboard() {
         return countB - countA; 
     });
 
-    cards.forEach((card, index) => {
-        card.style.order = index;
-    });
+    cards.forEach((card, index) => { card.style.order = index; });
 }
 
 function inchidePopup() {
@@ -365,7 +423,5 @@ function inchidePopup() {
 
 window.onclick = function(event) {
     const modal = document.getElementById('popup-dispozitive');
-    if (event.target === modal) {
-        modal.classList.remove('active');
-    }
+    if (event.target === modal) modal.classList.remove('active');
 }

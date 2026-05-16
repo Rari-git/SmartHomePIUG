@@ -270,3 +270,69 @@ body.dark-mode .modal-list-item {
 .modal-star-icon.pinned {
     color: #f1c40f;
 }
+
+/* --- Stiluri pentru elementele Favorite (Pinned) --- */
+.pinned-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: 2px solid var(--accent-color);
+}
+
+.pinned-circle:hover {
+    transform: scale(1.1);
+}
+
+.slider-container {
+    margin-top: 8px;
+    padding-left: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: opacity 0.3s ease;
+}
+
+.slider-container input[type="range"] {
+    width: 100%;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.slider-container input[type="range"]:disabled {
+    cursor: not-allowed;
+}
+
+.preset-btn {
+    padding: 3px 6px;
+    font-size: 0.75em;
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.preset-btn:hover:not(:disabled) {
+    background: var(--accent-color);
+    color: white;
+}
+
+.preset-btn:disabled {
+    border-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.disabled-controls {
+    opacity: 0.4;
+    pointer-events: none;
+}
