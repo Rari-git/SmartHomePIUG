@@ -4,12 +4,106 @@
     <meta charset="UTF-8">
     <title>SmartHome - Camere</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* --- Design Unificat pentru Termostate și Senzori --- */
+        .thermostat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .climate-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s;
+            border-bottom: 5px solid var(--success-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 250px;
+            box-sizing: border-box;
+        }
+        .climate-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+        .climate-display {
+            margin: 10px 0 5px 0;
+            user-select: none;
+        }
+        .climate-value {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        .climate-unit {
+            font-size: 1.2em;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-left: 2px;
+        }
+        .climate-status {
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .climate-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .ctrl-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: var(--bg-primary);
+            color: var(--text-color);
+            font-size: 1.6em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, color 0.15s, transform 0.1s;
+            user-select: none;
+        }
+        .ctrl-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .ctrl-btn:active {
+            transform: scale(0.9);
+        }
+
+        .sensor-action-btn {
+            padding: 12px 14px;
+            font-size: 0.9em;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s, opacity 0.2s;
+            border: none;
+        }
+        .sensor-action-btn:hover {
+            opacity: 0.9;
+        }
+        .sensor-action-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
 </head>
 <body>
     <nav>
         <h2>SmartHome</h2>
         <a href="index.html">🏠 Home</a>
-        <a href="camere.html">🛋️ Camere</a>
+        <a href="camere.html" style="color: var(--accent-color); font-weight: bold;">🛋️ Camere</a>
         <a href="harta.html">🗺️ Hartă Casă</a>
         <a href="securitate.html">🛡️ Securitate</a>
         <a href="pericole.html">🚨 Pericole</a> 
@@ -17,110 +111,205 @@
     </nav>
 
     <main>
-        <h1>Monitorizare și Control Camere</h1>
+        <h1>Monitorizare Climatică și Camere</h1>
+        <p>Gestiune centralizată și optimizare ecologică a temperaturii, umidității și ventilației pe zone ambientale.</p>
         
         <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; justify-content: space-around; text-align: center; border-left: 5px solid var(--accent-color); flex-wrap: wrap; gap: 15px;">
             <div>
-                <h4 style="margin: 0; color: var(--text-color); opacity: 0.7;">🌡️ Temp. Generală</h4>
-                <h2 style="margin: 10px 0; color: var(--accent-color);"><span id="widget-temp">22</span>°C</h2>
+                <h4 style="margin: 0; color: var(--text-color); opacity: 0.7;">🌡️ Temperatură Medie Casă</h4>
+                <h2 style="margin: 10px 0; color: var(--accent-color); font-size: 1.8em;"><span id="widget-temp">22.0</span>°C</h2>
             </div>
             <div>
-                <h4 style="margin: 0; color: var(--text-color); opacity: 0.7;">💧 Umiditate Medie</h4>
-                <h2 style="margin: 10px 0; color: var(--accent-color);"><span id="widget-umiditate">45</span>%</h2>
+                <h4 style="margin: 0; color: var(--text-color); opacity: 0.7;">💧 Umiditate Ambient Reală</h4>
+                <h2 style="margin: 10px 0; color: var(--accent-color); font-size: 1.8em;"><span id="widget-umiditate">45</span>%</h2>
             </div>
             <div>
-                <h4 style="margin: 0; color: var(--text-color); opacity: 0.7;">🍃 Calitate Aer (CO2)</h4>
-                <h2 style="margin: 10px 0; color: var(--accent-color);"><span id="widget-co2">450</span> ppm</h2>
+                <h4 style="margin: 0; color: var(--text-color); opacity: 0.7;">🍃 Calitate Aer In-Door</h4>
+                <h2 style="margin: 10px 0; color: var(--accent-color); font-size: 1.8em;"><span id="widget-co2">450</span> ppm</h2>
             </div>
         </div>
 
-        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 300px;">
-                <div class="form-group">
-                    <h3>🌡️ Setare Temperatură Generală</h3>
-                    <p>Temperatura curentă în casă este:</p>
-                    <h2 style="color: var(--accent-color); font-size: 2.5em; margin: 10px 0;">
-                        <span id="tempCurenta">22</span>°C
-                    </h2>
-                    <label for="tempInput">Setează valoare nouă (15 - 30):</label>
-                    <input type="number" id="tempInput" placeholder="Ex: 22">
-                    <button onclick="valideazaTemperatura()">Actualizează</button>
-                    <p id="tempError" class="error-msg"></p>
-                    <p id="tempSuccess" class="success-msg"></p>
-                </div>
-
-                <div class="form-group">
-                    <h3>💧 Monitorizare Umiditate</h3>
-                    <p>Umiditatea medie în casă este:</p>
-                    <h2 style="color: var(--accent-color); font-size: 2.5em; margin: 10px 0;" id="umiditateCurenta">45%</h2>
-                    <p style="font-size: 0.9em; font-weight: bold;">
-                        Stare: <span id="stareUmiditate" style="color: var(--success-color);">Optimă</span>
-                    </p>
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                        <button onclick="actualizeazaSenzori()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
-                            🔄 Verifică Senzorii
-                        </button>
-                        <button onclick="pornesteDezumidificator()" style="background-color: var(--accent-color); color: white; border: none; width: 100%;">
-                            💨 Pornește Dezumidificatorul
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+            
+            <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 20px; order: 1;">
+                <h2 style="margin-top: 0;">📊 Senzori Autonomi</h2>
+                
+                <div class="climate-card" id="card-umiditate" style="border-color: var(--success-color);">
+                    <h3 style="margin: 0; opacity: 0.8;">💧 Umiditate Casă</h3>
+                    <div class="climate-display">
+                        <span class="climate-value" id="umiditateCurenta">45%</span>
+                    </div>
+                    <div class="climate-status">Stare: <span id="stareUmiditate" style="color: var(--success-color); font-weight: bold;">Optimă</span></div>
+                    <div>
+                        <button class="sensor-action-btn" onclick="pornesteDezumidificator()" style="background-color: var(--accent-color); color: white; width: 100%;">
+                            💨 Pornește Dezumidificator
                         </button>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <h3>🍃 Calitatea Aerului (CO2)</h3>
-                    <p>Nivelul de dioxid de carbon:</p>
-                    <h2 style="color: var(--accent-color); font-size: 2.5em; margin: 10px 0;"><span id="co2Curent">450</span> ppm</h2>
-                    <p style="font-size: 0.9em; font-weight: bold;">
-                        Stare: <span id="stareCO2" style="color: var(--success-color);">Excelentă</span>
-                    </p>
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                        <button onclick="actualizeazaSenzorCO2()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
-                            🔄 Verifică Aerul
-                        </button>
-                        <button onclick="deschideGeamurile()" style="background-color: var(--success-color); color: white; border: none; width: 100%;">
+                <div class="climate-card" id="card-co2" style="border-color: var(--success-color);">
+                    <h3 style="margin: 0; opacity: 0.8;">🍃 Calitate Aer</h3>
+                    <div class="climate-display">
+                        <span class="climate-value" id="co2Curent">450</span><span class="climate-unit">ppm</span>
+                    </div>
+                    <div class="climate-status">Stare: <span id="stareCO2" style="color: var(--success-color); font-weight: bold;">Excelentă</span></div>
+                    <div>
+                        <button class="sensor-action-btn" onclick="deschideGeamurile()" style="background-color: var(--success-color); color: white; width: 100%;">
                             🪟 Pornește Ventilația
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <div style="flex: 2; min-width: 400px;">
-                <h1>Control Temperatură pe Camere</h1>
-                <div class="grid">
-                    <div class="form-group">
-                        <h3>🛋️ Living</h3>
-                        <p>Temperatura actuală: <strong id="temp-living">21</strong>°C</p>
-                        <input type="number" id="input-living" placeholder="Ex: 22">
-                        <button onclick="valideazaTemperaturaCameră('living')">Setează Living</button>
-                        <p id="error-living" class="error-msg"></p>
+            </div>
+            
+            <div style="flex: 2; min-width: 400px; order: 2;">
+                <h2 style="margin-top: 0;">🎛️ Panouri Termostat pe Camere</h2>
+                <div class="thermostat-grid">
+                    
+                    <div class="climate-card" id="card-living">
+                        <h3 style="margin: 0; opacity: 0.8;">🛋️ Living Room</h3>
+                        <div class="climate-display">
+                            <span class="climate-value" id="temp-living">21</span><span class="climate-unit">°C</span>
+                        </div>
+                        <div class="climate-status" id="status-living">Optim</div>
+                        <div class="climate-controls">
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('living', 'minus')">−</button>
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('living', 'plus')">+</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <h3>🛏️ Dormitor</h3>
-                        <p>Temperatura actuală: <strong id="temp-dormitor">19</strong>°C</p>
-                        <input type="number" id="input-dormitor" placeholder="Ex: 20">
-                        <button onclick="valideazaTemperaturaCameră('dormitor')">Setează Dormitor</button>
-                        <p id="error-dormitor" class="error-msg"></p>
+
+                    <div class="climate-card" id="card-dormitor">
+                        <h3 style="margin: 0; opacity: 0.8;">🛏️ Dormitor</h3>
+                        <div class="climate-display">
+                            <span class="climate-value" id="temp-dormitor">19</span><span class="climate-unit">°C</span>
+                        </div>
+                        <div class="climate-status" id="status-dormitor">Optim</div>
+                        <div class="climate-controls">
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('dormitor', 'minus')">−</button>
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('dormitor', 'plus')">+</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <h3>🍳 Bucătărie</h3>
-                        <p>Temperatura actuală: <strong id="temp-bucatarie">23</strong>°C</p>
-                        <input type="number" id="input-bucatarie" placeholder="Ex: 21">
-                        <button onclick="valideazaTemperaturaCameră('bucatarie')">Setează Bucătărie</button>
-                        <p id="error-bucatarie" class="error-msg"></p>
+
+                    <div class="climate-card" id="card-bucatarie">
+                        <h3 style="margin: 0; opacity: 0.8;">🍳 Bucătărie</h3>
+                        <div class="climate-display">
+                            <span class="climate-value" id="temp-bucatarie">23</span><span class="climate-unit">°C</span>
+                        </div>
+                        <div class="climate-status" id="status-bucatarie">Optim</div>
+                        <div class="climate-controls">
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('bucatarie', 'minus')">−</button>
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('bucatarie', 'plus')">+</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <h3>🚿 Baie</h3>
-                        <p>Temperatura actuală: <strong id="temp-baie">24</strong>°C</p>
-                        <input type="number" id="input-baie" placeholder="Ex: 25">
-                        <button onclick="valideazaTemperaturaCameră('baie')">Setează Baie</button>
-                        <p id="error-baie" class="error-msg"></p>
+
+                    <div class="climate-card" id="card-baie">
+                        <h3 style="margin: 0; opacity: 0.8;">🚿 Baie</h3>
+                        <div class="climate-display">
+                            <span class="climate-value" id="temp-baie">24</span><span class="climate-unit">°C</span>
+                        </div>
+                        <div class="climate-status" id="status-baie">Optim</div>
+                        <div class="climate-controls">
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('baie', 'minus')">−</button>
+                            <button class="ctrl-btn" onclick="ajusteazăClimăCameră('baie', 'plus')">+</button>
+                        </div>
                     </div>
+
                 </div>
             </div>
+
         </div>
     </main>
 
     <script src="js/main.js"></script>
     <script src="js/validation.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
+            
+            camere.forEach(camera => {
+                let salvata = localStorage.getItem(`temp-${camera}`);
+                if (!salvata) {
+                    if(camera === 'living') salvata = "21";
+                    if(camera === 'dormitor') salvata = "19";
+                    if(camera === 'bucatarie') salvata = "23";
+                    if(camera === 'baie') salvata = "24";
+                    localStorage.setItem(`temp-${camera}`, salvata);
+                }
+                
+                const elem = document.getElementById(`temp-${camera}`);
+                if (elem) elem.innerText = salvata;
+                actualizeazăCuloriTermostat(camera, parseFloat(salvata));
+            });
+            
+            calculeazăMediaClimaticăGenerala();
+
+            // --- SIMULARE AUTOMATĂ SENZORI (Euristica 1) ---
+            // Aici configurăm ca senzorii să citească date noi automat o dată la 60 de secunde (1 minut)
+            setInterval(() => {
+                if (typeof actualizeazaSenzori === "function") {
+                    actualizeazaSenzori();
+                }
+                if (typeof actualizeazaSenzorCO2 === "function") {
+                    actualizeazaSenzorCO2();
+                }
+            }, 60000); // 60000 milisecunde = 1 minut (Dacă vrei exact 2 minute, poți schimba valoarea în 120000)
+        });
+
+        function ajusteazăClimăCameră(camera, directie) {
+            const displayElem = document.getElementById(`temp-${camera}`);
+            if (!displayElem) return;
+
+            let valoareAcum = parseFloat(displayElem.innerText);
+            let nouaValoare = directie === 'plus' ? valoareAcum + 1 : valoareAcum - 1;
+
+            if (nouaValoare < 15) nouaValoare = 15;
+            if (nouaValoare > 30) nouaValoare = 30;
+
+            displayElem.innerText = nouaValoare;
+            localStorage.setItem(`temp-${camera}`, nouaValoare);
+
+            actualizeazăCuloriTermostat(camera, nouaValoare);
+            calculeazăMediaClimaticăGenerala();
+
+            if (typeof showToast === "function") {
+                showToast(`Temperatura în ${camera.charAt(0).toUpperCase() + camera.slice(1)} a fost modificată la ${nouaValoare}°C.`);
+            }
+        }
+
+        function actualizeazăCuloriTermostat(camera, temperatura) {
+            const card = document.getElementById(`card-${camera}`);
+            const status = document.getElementById(`status-${camera}`);
+            if (!card || !status) return;
+
+            if (temperatura <= 19) {
+                status.innerText = "Răcoare (Eco)";
+                status.style.color = "#3498db";
+                card.style.borderColor = "#3498db";
+            } else if (temperatura >= 20 && temperatura <= 24) {
+                status.innerText = "Confortabil";
+                status.style.color = "var(--success-color)";
+                card.style.borderColor = "var(--success-color)";
+            } else {
+                status.innerText = "Călduros (High)";
+                status.style.color = "#e67e22";
+                card.style.borderColor = "#e67e22";
+            }
+        }
+
+        function calculeazăMediaClimaticăGenerala() {
+            const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
+            let suma = 0;
+
+            camere.forEach(camera => {
+                const val = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
+                suma += val;
+            });
+
+            const media = (suma / camere.length).toFixed(1);
+            const widget = document.getElementById('widget-temp');
+            if (widget) widget.innerText = media;
+        }
+    </script>
 </body>
 </html>

@@ -4,6 +4,66 @@
     <meta charset="UTF-8">
     <title>SmartHome - Securitate</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .security-panel {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .security-badge {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            border-top: 5px solid var(--success-color);
+            transition: all 0.3s ease;
+        }
+        .numpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 220px;
+            margin: 20px auto;
+        }
+        .numpad-btn {
+            background: var(--bg-primary);
+            color: var(--text-color);
+            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 1.3em;
+            font-weight: bold;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            margin: 0 auto;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .numpad-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+        .numpad-btn:active {
+            transform: scale(0.9);
+        }
+        .security-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .security-actions button {
+            flex: 1;
+            padding: 12px;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -11,19 +71,53 @@
         <a href="index.html">🏠 Home</a>
         <a href="camere.html">🛋️ Camere</a>
         <a href="harta.html">🗺️ Hartă Casă</a>
-        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="securitate.html" style="color: var(--accent-color); font-weight: bold;">🛡️ Securitate</a>
         <a href="pericole.html">🚨 Pericole</a>
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
         <h1>Sisteme de Securitate</h1>
-        <div class="form-group">
-            <h3>Dezactivare Sistem Alarmă</h3>
-            <label for="pinInput">Introdu codul PIN (4 cifre):</label>
-            <input type="password" id="pinInput" placeholder="****" maxlength="4">
-            <button onclick="valideazaPIN()">Dezactivează Alarmă</button>
-            <p id="pinError" class="error-msg">❌ Eroare: PIN-ul trebuie să conțină exact 4 cifre!</p>
-            <p id="pinSuccess" class="success-msg">✅ Sistemul a fost dezactivat!</p>
+        <p>Panou central de monitorizare perimetrală și control al sistemului de alarmă anti-efracție.</p>
+
+        <div class="security-panel">
+            
+            <div class="security-badge" id="panel-badge">
+                <div id="security-icon" style="font-size: 3.5em; margin-bottom: 10px;">🛡️</div>
+                <h3 style="margin: 0; opacity: 0.7;">Stare Sistem</h3>
+                <h2 id="security-status-text" style="font-size: 2em; margin: 10px 0; color: var(--success-color);">Armată & Sigură</h2>
+                <p id="security-details" style="font-size: 0.9em; opacity: 0.8; margin: 0;">Toți senzorii perimetrali sunt activi.</p>
+            </div>
+
+            <div class="form-group" style="max-width: 350px; flex: 1; min-width: 280px; text-align: center;">
+                <h3 style="margin-top: 0;">Introducere Cod Securitate</h3>
+                
+                <input type="password" id="pinInput" placeholder="••••" maxlength="4" readonly 
+                       style="text-align: center; font-size: 1.8em; letter-spacing: 5px; width: 80%; padding: 8px; margin-bottom: 5px;">
+                
+                <p id="pinError" class="error-msg" style="margin: 5px 0;"></p>
+                <p id="pinSuccess" class="success-msg" style="margin: 5px 0;"></p>
+
+                <div class="numpad-container">
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('1')">1</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('2')">2</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('3')">3</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('4')">4</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('5')">5</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('6')">6</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('7')">7</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('8')">8</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('9')">9</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('⌫')" style="color: var(--error-color);">⌫</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('0')">0</div>
+                    <div class="numpad-btn" onclick="apasăTastăNumpad('C')" style="color: var(--error-color); font-size: 1em;">C</div>
+                </div>
+
+                <div class="security-actions">
+                    <button onclick="proceseazăAcțiuneAlarmă('armează')" style="background-color: var(--success-color);">🔒 Armează</button>
+                    <button onclick="proceseazăAcțiuneAlarmă('dezactivează')" style="background-color: var(--error-color);">🔓 Dezactivează</button>
+                </div>
+            </div>
+
         </div>
     </main>
 

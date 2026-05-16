@@ -2,8 +2,56 @@
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Pericole & Alarme</title>
+    <title>SmartHome - Pericole</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .perils-container {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .peril-card {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 280px;
+            max-width: 380px;
+            border-top: 5px solid var(--success-color);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .peril-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .peril-status {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .peril-instructions {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .peril-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .peril-actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -12,40 +60,120 @@
         <a href="camere.html">🛋️ Camere</a>
         <a href="harta.html">🗺️ Hartă Casă</a>
         <a href="securitate.html">🛡️ Securitate</a>
-        <a href="pericole.html">🚨 Pericole</a>
+        <a href="pericole.html" style="color: var(--accent-color); font-weight: bold;">🚨 Pericole</a>
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
-        <h1>Monitorizare Pericole și Alarme</h1>
-        <p>Alerte critice ale sistemului. Acțiunile de aici au prioritate maximă.</p>
-        <div class="grid">
-            <div class="card form-group" id="card-inundatie" style="transition: background-color 0.3s; text-align: left; cursor: default;">
-                <h3 style="margin-top: 0;">💧 Senzor Inundație (Baie)</h3>
-                <p>Stare curentă:</p>
-                <h2 style="color: var(--success-color); font-size: 2.5em; margin: 10px 0;" id="stareInundatie">USCAT</h2>
-                <button onclick="simuleazaInundatie()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
-                    🌊 Simulează Scurgere Apă
-                </button>
-                <button id="btn-reset-inundatie" onclick="reseteazaInundatie()" style="display: none; background-color: var(--success-color); color: white; width: 100%; margin-top: 10px; border: none;">
-                    ✅ Oprește Valva Principală
-                </button>
+        <h1>Senzori de Pericole și Alerte</h1>
+        <p>Monitorizarea în timp real a senzorilor tehnici de siguranță împotriva incendiilor și inundațiilor accidentale.</p>
+
+        <div class="perils-container">
+            
+            <div class="peril-card" id="card-incendiu">
+                <div>
+                    <div class="peril-icon" id="icon-incendiu">🛡️</div>
+                    <h3 style="margin: 0; opacity: 0.7;">Senzor Fum (Bucătarie)</h3>
+                    <div class="peril-status" id="stareIncendiu" style="color: var(--success-color);">SIGUR</div>
+                    <p class="peril-instructions" id="detaliiIncendiu">Nivel de particule și gaz în parametri normali.</p>
+                </div>
+                <div class="peril-actions">
+                    <button id="btn-sim-incendiu" onclick="simuleazaIncendiu()" style="background-color: var(--accent-color);">🔥 Simulează Fum</button>
+                    <button id="btn-reset-incendiu" onclick="reseteazaIncendiu()" style="background-color: var(--success-color); display: none;">✅ Resetează</button>
+                </div>
             </div>
-            <div class="card form-group" id="card-incendiu" style="transition: background-color 0.3s; text-align: left; cursor: default;">
-                <h3 style="margin-top: 0;">🔥 Senzor Fum și CO (Bucătărie)</h3>
-                <p>Stare curentă:</p>
-                <h2 style="color: var(--success-color); font-size: 2.5em; margin: 10px 0;" id="stareIncendiu">SIGUR</h2>
-                <p id="detaliiIncendiu" style="font-size: 0.9em;">Nivel de particule și gaz în parametri normali.</p>
-                <button onclick="simuleazaIncendiu()" style="background-color: transparent; border: 2px solid var(--accent-color); color: var(--text-color); width: 100%;">
-                    🚬 Simulează Fum
-                </button>
-                <button id="btn-reset-incendiu" onclick="reseteazaIncendiu()" style="display: none; background-color: var(--success-color); color: white; width: 100%; margin-top: 10px; border: none;">
-                    ✅ Pornește Ventilația & Oprește Alarma
-                </button>
+
+            <div class="peril-card" id="card-inundatie">
+                <div>
+                    <div class="peril-icon" id="icon-inundatie">🛡️</div>
+                    <h3 style="margin: 0; opacity: 0.7;">Senzor Inundație (Baie)</h3>
+                    <div class="peril-status" id="stareInundatie" style="color: var(--success-color);">USCAT</div>
+                    <p class="peril-instructions" id="detaliiInundatie">Senzorul de podea nu detectează prezența lichidelor.</p>
+                </div>
+                <div class="peril-actions">
+                    <button id="btn-sim-inundatie" onclick="simuleazaInundatie()" style="background-color: var(--accent-color);">💧 Simulează Apă</button>
+                    <button id="btn-reset-inundatie" onclick="reseteazaInundatie()" style="background-color: var(--success-color); display: none;">✅ Resetează</button>                </div>
             </div>
+
         </div>
     </main>
 
     <script src="js/main.js"></script>
     <script src="js/validation.js"></script>
+    <script>
+        // Funcție automată executată la deschiderea paginii pentru sincronizare perfectă (Euristica 1)
+        document.addEventListener('DOMContentLoaded', () => {
+            const inundatieActive = localStorage.getItem('pericolInundatie') === 'true';
+            const incendiuActive = localStorage.getItem('pericolIncendiu') === 'true';
+
+            if (incendiuActive) {
+                // Dacă este alertă salvată de fum, randează direct starea roșie critică
+                const stareElem = document.getElementById('stareIncendiu');
+                const cardElem = document.getElementById('card-incendiu');
+                const iconElem = document.getElementById('icon-incendiu');
+                const btnSim = document.getElementById('btn-sim-incendiu');
+                const btnReset = document.getElementById('btn-reset-incendiu');
+                const detaliiElem = document.getElementById('detaliiIncendiu');
+
+                stareElem.innerText = "PERICOL FUM!";
+                stareElem.style.color = "white";
+                iconElem.innerText = "🚨";
+                detaliiElem.innerText = "CRITIC: Nivel ridicat de monoxid de carbon detectat!";
+                detaliiElem.style.fontWeight = "bold";
+                cardElem.style.backgroundColor = "var(--error-color)";
+                cardElem.style.color = "white";
+                cardElem.style.borderTop = "none";
+                btnSim.style.display = "none";
+                if(btnReset) btnReset.style.display = "block";
+                document.body.classList.add('alarm-flash');
+            }
+
+            if (inundatieActive) {
+                // Dacă este alertă salvată de inundație, randează direct starea albastră/roșie critică
+                const stareElem = document.getElementById('stareInundatie');
+                const cardElem = document.getElementById('card-inundatie');
+                const iconElem = document.getElementById('icon-inundatie');
+                const btnSim = document.getElementById('btn-sim-inundatie');
+                const btnReset = document.querySelector('[onclick="reseteazaInundatie()"]');
+                const detaliiElem = document.getElementById('detaliiInundatie');
+
+                stareElem.innerText = "INUNDAȚIE!";
+                stareElem.style.color = "white";
+                iconElem.innerText = "🚨";
+                detaliiElem.innerText = "CRITIC: Scurgere masivă de apă detectată pe podeaua băii!";
+                detaliiElem.style.fontWeight = "bold";
+                cardElem.style.backgroundColor = "var(--error-color)";
+                cardElem.style.color = "white";
+                cardElem.style.borderTop = "none";
+                btnSim.style.display = "none";
+                if(btnReset) btnReset.style.display = "block";
+                document.body.classList.add('alarm-flash');
+            }
+        });
+
+        // Interceptăm funcțiile din validation.js pentru a actualiza instantaneu elementele specifice acestei pagini
+        const origSimInundatie = window.simuleazaInundatie;
+        window.simuleazaInundatie = function() {
+            origSimInundatie();
+            location.reload(); // Reîncărcare rapidă pentru a aplica șablonul vizual sincronizat de DOM
+        }
+
+        const origResetInundatie = window.reseteazaInundatie;
+        window.reseteazaInundatie = function() {
+            origResetInundatie();
+            location.reload();
+        }
+
+        const origSimIncendiu = window.simuleazaIncendiu;
+        window.simuleazaIncendiu = function() {
+            origSimIncendiu();
+            location.reload();
+        }
+
+        const origResetIncendiu = window.reseteazaIncendiu;
+        window.reseteazaIncendiu = function() {
+            origResetIncendiu();
+            location.reload();
+        }
+    </script>
 </body>
 </html>

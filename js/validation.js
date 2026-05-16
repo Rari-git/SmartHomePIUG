@@ -1,7 +1,212 @@
+function apasăTastăNumpad(valoare) {
+    const input = document.getElementById('pinInput');
+    if (!input) return;
+
+    document.getElementById('pinError').style.display = 'none';
+    document.getElementById('pinSuccess').style.display = 'none';
+
+    if (valoare === 'C') {
+        input.value = "";
+    } else if (valoare === '⌫') {
+        input.value = input.value.slice(0, -1);
+    } else {
+        if (input.value.length < 4) {
+            input.value += valoare;
+        }
+    }
+}
+
+function proceseazăAcțiuneAlarmă(acțiune) {
+    const input = document.getElementById('pinInput');
+    const errorMsg = document.getElementById('pinError');
+    const successMsg = document.getElementById('pinSuccess');
+    
+    if (!input) return;
+
+    errorMsg.style.display = 'none';
+    successMsg.style.display = 'none';
+
+    if (input.value.length !== 4) {
+        errorMsg.innerText = "❌ Codul PIN trebuie să aibă 4 cifre.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
+    const pinCorect = "1234";
+
+    if (input.value !== pinCorect) {
+        errorMsg.innerText = "❌ Cod PIN incorect! Încearcă din nou.";
+        errorMsg.style.display = 'block';
+        input.value = "";
+        if (typeof showToast === "function") showToast("Eroare: Încercare eșuată de acces la sistemul de alarmă!");
+        return;
+    }
+
+    if (acțiune === 'armează') {
+        localStorage.setItem('alarmaDezactivata', 'false');
+        successMsg.innerText = "🔒 Alarma a fost armată cu succes!";
+        successMsg.style.display = 'block';
+        if (typeof showToast === "function") showToast("Sistem de alarmă Armat.");
+    } else if (acțiune === 'dezactivează') {
+        if (confirm("Ești sigur că vrei să DEZACTIVEZI sistemul de alarmă general?")) {
+            localStorage.setItem('alarmaDezactivata', 'true');
+            successMsg.innerText = "🔓 Sistemul a fost dezactivat!";
+            successMsg.style.display = 'block';
+            if (typeof showToast === "function") showToast("Sistem de alarmă Dezactivat.");
+        }
+    }
+
+    input.value = "";
+    actualizeazăEcranSecuritate();
+}
+
+function actualizeazăEcranSecuritate() {
+    const badge = document.getElementById('panel-badge');
+    const statusText = document.getElementById('security-status-text');
+    const iconText = document.getElementById('security-icon');
+    const detailsText = document.getElementById('security-details');
+
+    if (!statusText) return;
+
+    const alDezactivata = localStorage.getItem('alarmaDezactivata') === 'true';
+
+    if (alDezactivata) {
+        statusText.innerText = "Dezactivată";
+        statusText.style.color = "var(--error-color)";
+        if(iconText) iconText.innerText = "🔓";
+        if(detailsText) detailsText.innerText = "Atenție: Casa este vulnerabilă în acest moment.";
+        if(badge) badge.style.borderTop = "5px solid var(--error-color)";
+    } else {
+        statusText.innerText = "Armată & Sigură";
+        statusText.style.color = "var(--success-color)";
+        if(iconText) iconText.innerText = "🛡️";
+        if(detailsText) detailsText.innerText = "Toți senzorii perimetrali sunt activi.";
+        if(badge) badge.style.borderTop = "5px solid var(--success-color)";
+    }
+}
+
+// --- SIMULARE INUNDAȚIE EFICIENTĂ ȘI SIGURĂ (Fără crash-uri în pagini secundare) ---
+function simuleazaInundatie() {
+    localStorage.setItem('pericolInundatie', 'true');
+    document.body.classList.add('alarm-flash'); 
+
+    const stareElem = document.getElementById('stareInundatie');
+    const cardElem = document.getElementById('card-inundatie');
+    const btnReset = document.getElementById('btn-reset-inundatie');
+    const btnSim = document.getElementById('btn-sim-inundatie');
+
+    if (stareElem) {
+        stareElem.innerText = "INUNDAȚIE!";
+        stareElem.style.color = "white";
+    }
+    if (cardElem) {
+        cardElem.style.backgroundColor = "var(--error-color)";
+        cardElem.style.color = "white";
+        cardElem.style.borderTop = "none";
+    }
+    if (btnReset) btnReset.style.display = "block";
+    if (btnSim) btnSim.style.display = "none";
+
+    if (typeof showToast === "function") {
+        showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.");
+    }
+}
+
+function reseteazaInundatie() {
+    localStorage.setItem('pericolInundatie', 'false');
+    document.body.classList.remove('alarm-flash');
+
+    const stareElem = document.getElementById('stareInundatie');
+    const cardElem = document.getElementById('card-inundatie');
+    const btnReset = document.getElementById('btn-reset-inundatie');
+    const btnSim = document.getElementById('btn-sim-inundatie');
+    
+    if (stareElem) {
+        stareElem.innerText = "USCAT";
+        stareElem.style.color = "var(--success-color)";
+    }
+    if (cardElem) {
+        cardElem.style.backgroundColor = "var(--card-bg)";
+        cardElem.style.color = "var(--text-color)";
+        cardElem.style.borderTop = "5px solid var(--accent-color)";
+    }
+    if (btnReset) btnReset.style.display = "none";
+    if (btnSim) btnSim.style.display = "block";
+
+    if (typeof showToast === "function") {
+        showToast("✅ Problema a fost rezolvată. Valva de apă a fost repornită.");
+    }
+}
+
+// --- SIMULARE INCENDIU SIGURĂ ---
+function simuleazaIncendiu() {
+    localStorage.setItem('pericolIncendiu', 'true');
+    document.body.classList.add('alarm-flash');
+
+    const stareElem = document.getElementById('stareIncendiu');
+    const cardElem = document.getElementById('card-incendiu');
+    const btnReset = document.getElementById('btn-reset-incendiu');
+    const btnSim = document.getElementById('btn-sim-incendiu');
+    const detaliiElem = document.getElementById('detaliiIncendiu');
+    
+    if (stareElem) {
+        stareElem.innerText = "PERICOL FUM!";
+        stareElem.style.color = "white";
+    }
+    if (detaliiElem) {
+        detaliiElem.innerText = "CRITIC: Nivel ridicat de monoxid de carbon detectat!";
+        detaliiElem.style.fontWeight = "bold";
+    }
+    if (cardElem) {
+        cardElem.style.backgroundColor = "var(--error-color)";
+        cardElem.style.color = "white";
+        cardElem.style.borderTop = "none";
+    }
+    if (btnReset) btnReset.style.display = "block";
+    if (btnSim) btnSim.style.display = "none";
+
+    if (typeof showToast === "function") {
+        showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.");
+    }
+}
+
+function reseteazaIncendiu() {
+    localStorage.setItem('pericolIncendiu', 'false');
+    document.body.classList.remove('alarm-flash');
+
+    const stareElem = document.getElementById('stareIncendiu');
+    const cardElem = document.getElementById('card-incendiu');
+    const btnReset = document.getElementById('btn-reset-incendiu');
+    const btnSim = document.getElementById('btn-sim-incendiu');
+    const detaliiElem = document.getElementById('detaliiIncendiu');
+    
+    if (stareElem) {
+        stareElem.innerText = "SIGUR";
+        stareElem.style.color = "var(--success-color)";
+    }
+    if (detaliiElem) {
+        detaliiElem.innerText = "Nivel de particule și gaz în parametri normali.";
+        detaliiElem.style.fontWeight = "normal";
+    }
+    if (cardElem) {
+        cardElem.style.backgroundColor = "var(--card-bg)";
+        cardElem.style.color = "var(--text-color)";
+        cardElem.style.borderTop = "5px solid var(--accent-color)";
+    }
+    if (btnReset) btnReset.style.display = "none";
+    if (btnSim) btnSim.style.display = "block";
+
+    if (typeof showToast === "function") {
+        showToast("✅ Aer curat. Sistemul de alarmă a fost dezactivat.");
+    }
+}
+
 function valideazaTemperatura() {
     const input = document.getElementById('tempInput').value;
     const errorMsg = document.getElementById('tempError');
     const successMsg = document.getElementById('tempSuccess');
+    
+    if (!errorMsg || !successMsg) return;
     
     errorMsg.style.display = 'none';
     successMsg.style.display = 'none';
@@ -13,7 +218,8 @@ function valideazaTemperatura() {
         successMsg.innerText = `✅ Temperatura a fost setată la ${input}°C.`;
         successMsg.style.display = 'block';
         
-        document.getElementById('tempCurenta').innerText = input;
+        const tempCur = document.getElementById('tempCurenta');
+        if (tempCur) tempCur.innerText = input;
         
         const widgetTemp = document.getElementById('widget-temp');
         if (widgetTemp) widgetTemp.innerText = input;
@@ -35,6 +241,7 @@ function valideazaTemperaturaCameră(camera) {
     const displayElem = document.getElementById(displayId);
     const errorElem = document.getElementById(errorId);
     
+    if (!errorElem || !displayElem) return;
     errorElem.style.display = 'none';
 
     if (inputVal === "" || isNaN(inputVal)) {
@@ -66,6 +273,7 @@ function valideazaTemperaturaCameră(camera) {
 function actualizeazaSenzori() {
     const displayElem = document.getElementById('umiditateCurenta');
     const stareElem = document.getElementById('stareUmiditate');
+    if (!displayElem || !stareElem) return;
     
     let valoareCurenta = parseInt(displayElem.innerText);
     let variatie = Math.floor(Math.random() * 5) - 2; 
@@ -95,6 +303,7 @@ function actualizeazaSenzori() {
 function actualizeazaSenzorCO2() {
     const displayElem = document.getElementById('co2Curent');
     const stareElem = document.getElementById('stareCO2');
+    if (!displayElem || !stareElem) return;
     
     let valoareCurenta = parseInt(displayElem.innerText);
     let variatie = Math.floor(Math.random() * 200) - 50; 
@@ -123,95 +332,10 @@ function actualizeazaSenzorCO2() {
     }
 }
 
-function simuleazaInundatie() {
-    const stareElem = document.getElementById('stareInundatie');
-    const cardElem = document.getElementById('card-inundatie');
-    const btnReset = document.getElementById('btn-reset-inundatie');
-    
-    stareElem.innerText = "INUNDAȚIE!";
-    stareElem.style.color = "white";
-    cardElem.style.backgroundColor = "var(--error-color)";
-    cardElem.style.color = "white";
-    cardElem.style.borderTop = "none";
-    btnReset.style.display = "block";
-    
-    document.body.classList.add('alarm-flash'); 
-    localStorage.setItem('pericolInundatie', 'true');
-
-    if (typeof showToast === "function") {
-        showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.");
-    }
-}
-
-function reseteazaInundatie() {
-    const stareElem = document.getElementById('stareInundatie');
-    const cardElem = document.getElementById('card-inundatie');
-    const btnReset = document.getElementById('btn-reset-inundatie');
-    
-    stareElem.innerText = "USCAT";
-    stareElem.style.color = "var(--success-color)";
-    cardElem.style.backgroundColor = "var(--card-bg)";
-    cardElem.style.color = "var(--text-color)";
-    cardElem.style.borderTop = "5px solid var(--accent-color)";
-    btnReset.style.display = "none";
-    
-    document.body.classList.remove('alarm-flash');
-    localStorage.setItem('pericolInundatie', 'false');
-
-    if (typeof showToast === "function") {
-        showToast("✅ Problema a fost rezolvată. Valva de apă a fost repornită.");
-    }
-}
-
-function simuleazaIncendiu() {
-    const stareElem = document.getElementById('stareIncendiu');
-    const cardElem = document.getElementById('card-incendiu');
-    const btnReset = document.getElementById('btn-reset-incendiu');
-    const detaliiElem = document.getElementById('detaliiIncendiu');
-    
-    stareElem.innerText = "PERICOL FUM!";
-    stareElem.style.color = "white";
-    detaliiElem.innerText = "CRITIC: Nivel ridicat de monoxid de carbon detectat!";
-    detaliiElem.style.fontWeight = "bold";
-    cardElem.style.backgroundColor = "var(--error-color)";
-    cardElem.style.color = "white";
-    cardElem.style.borderTop = "none";
-    btnReset.style.display = "block";
-    
-    document.body.classList.add('alarm-flash');
-    localStorage.setItem('pericolIncendiu', 'true');
-
-    if (typeof showToast === "function") {
-        showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.");
-    }
-}
-
-function reseteazaIncendiu() {
-    const stareElem = document.getElementById('stareIncendiu');
-    const cardElem = document.getElementById('card-incendiu');
-    const btnReset = document.getElementById('btn-reset-incendiu');
-    const detaliiElem = document.getElementById('detaliiIncendiu');
-    
-    stareElem.innerText = "SIGUR";
-    stareElem.style.color = "var(--success-color)";
-    detaliiElem.innerText = "Nivel de particule și gaz în parametri normali.";
-    detaliiElem.style.fontWeight = "normal";
-    cardElem.style.backgroundColor = "var(--card-bg)";
-    cardElem.style.color = "var(--text-color)";
-    cardElem.style.borderTop = "5px solid var(--accent-color)";
-    btnReset.style.display = "none";
-    
-    document.body.classList.remove('alarm-flash');
-    localStorage.setItem('pericolIncendiu', 'false');
-
-    if (typeof showToast === "function") {
-        showToast("✅ Aer curat. Sistemul de alarmă a fost dezactivat.");
-    }
-}
-
 function pornesteDezumidificator() {
     const displayElem = document.getElementById('umiditateCurenta');
     const stareElem = document.getElementById('stareUmiditate');
+    if (!displayElem || !stareElem) return;
     
     let valoareCurenta = parseInt(displayElem.innerText);
     let nouaUmiditate = valoareCurenta - 8;
@@ -242,6 +366,7 @@ function pornesteDezumidificator() {
 function deschideGeamurile() {
     const displayElem = document.getElementById('co2Curent');
     const stareElem = document.getElementById('stareCO2');
+    if (!displayElem || !stareElem) return;
     
     let valoareCurenta = parseInt(displayElem.innerText);
     let nouaValoare = valoareCurenta - 150;
@@ -269,36 +394,12 @@ function deschideGeamurile() {
     }
 }
 
-function valideazaPIN() {
-    const input = document.getElementById('pinInput').value;
-    const errorMsg = document.getElementById('pinError');
-    const successMsg = document.getElementById('pinSuccess');
-    
-    errorMsg.style.display = 'none';
-    successMsg.style.display = 'none';
-
-    const pinRegex = /^[0-9]{4}$/;
-
-    if (!pinRegex.test(input)) {
-        errorMsg.innerText = "❌ PIN-ul introdus trebuie să conțină exact 4 cifre.";
-        errorMsg.style.display = 'block';
-    } else {
-        if(confirm("Ești sigur că vrei să DEZACTIVEZI sistemul de alarmă?")) {
-            successMsg.style.display = 'block';
-            showToast('Alarma a fost dezactivată.');
-            localStorage.setItem('alarmaDezactivata', 'true');
-            document.getElementById('pinInput').value = "";
-        } else {
-            showToast('Dezactivarea alarmei a fost anulată.');
-        }
-    }
-}
-
 function valideazaNume() {
     const input = document.getElementById('numeInput').value;
     const errorMsg = document.getElementById('numeError');
     const successMsg = document.getElementById('numeSuccess');
     
+    if (!errorMsg || !successMsg) return;
     errorMsg.style.display = 'none';
     successMsg.style.display = 'none';
 
@@ -314,6 +415,7 @@ function valideazaNume() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    actualizeazăEcranSecuritate();
     const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
     camere.forEach(camera => {
         const salvata = localStorage.getItem(`temp-${camera}`);
