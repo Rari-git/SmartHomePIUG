@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Statistici</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border-top: 5px solid var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Home</a>
+        <a href="scene.html">🎭 Scene</a>
+        <a href="accesorii.html">🛋️ Accesorii</a>
+        <a href="automatizari.html">🤖 Automatizări</a>
+        <a href="statistici.html" style="color: var(--accent-color); font-weight: bold;">📈 Statistici</a>
+        <a href="camere.html">🌡️ Climă & Camere</a>
+        <a href="harta.html">🗺️ Hartă Casă</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="pericole.html">🚨 Pericole</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
+            <h1 style="margin: 0;">Analiză și Statistici</h1>
+        </div>
+        <p>Monitorizează consumul de energie și istoricul climatic al locuinței tale.</p>
+
+        <div class="hk-grid-wide">
+            <div class="chart-container" style="grid-column: span 2;">
+                <h3 style="margin-top: 0;">⚡ Consum Energie (Ultimele 7 zile)</h3>
+                <canvas id="energyChart" height="100"></canvas>
+            </div>
+
+            <div class="chart-container" style="grid-column: span 2; border-top-color: var(--success-color);">
+                <h3 style="margin-top: 0;">🌡️ Istoric Temperatură & CO2 (Azi)</h3>
+                <canvas id="climateChart" height="100"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configurarea Graficului de Energie (Bar Chart)
+            const ctxEnergy = document.getElementById('energyChart').getContext('2d');
+            new Chart(ctxEnergy, {
+                type: 'bar',
+                data: {
+                    labels: ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă', 'Duminică'],
+                    datasets: [{
+                        label: 'Consum Zilnic (kWh)',
+                        data: [12.5, 14.2, 11.8, 15.3, 13.9, 18.2, 16.5],
+                        backgroundColor: '#3498db',
+                        borderRadius: 5
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            // Configurarea Graficului Climatic (Line Chart)
+            const ctxClimate = document.getElementById('climateChart').getContext('2d');
+            new Chart(ctxClimate, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [
+                        {
+                            label: 'Temperatură Medie (°C)',
+                            data: [20, 19, 21, 23, 24, 22, 21],
+                            borderColor: '#e74c3c',
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Nivel CO2 (ppm)',
+                            data: [420, 450, 600, 800, 750, 900, 500],
+                            borderColor: '#2ecc71',
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '°C' } },
+                        y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'ppm' } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

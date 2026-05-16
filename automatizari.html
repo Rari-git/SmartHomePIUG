@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHome - Automatizări</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <h2>SmartHome</h2>
+        <a href="index.html">🏠 Home</a>
+        <a href="scene.html">🎭 Scene</a>
+        <a href="accesorii.html">🛋️ Accesorii</a>
+        <a href="automatizari.html" style="color: var(--accent-color); font-weight: bold;">🤖 Automatizări</a>
+        <a href="statistici.html">📈 Statistici</a>
+        <a href="camere.html">🌡️ Climă & Camere</a>
+        <a href="harta.html">🗺️ Hartă Casă</a>
+        <a href="securitate.html">🛡️ Securitate</a>
+        <a href="pericole.html">🚨 Pericole</a>
+        <a href="setari.html">⚙️ Setări</a>
+    </nav>
+    <main>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center;">
+                <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
+                <h1 style="margin: 0;">Motor Automatizări</h1>
+            </div>
+            <button onclick="deschideModalAutomatizare()" style="background: var(--accent-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">➕ Regulă Nouă</button>
+        </div>
+        <p>Creează reguli de tip <strong>DACĂ (Condiție) ➔ ATUNCI (Acțiune)</strong> pentru a face casa cu adevărat inteligentă.</p>
+
+        <div id="automations-list" class="hk-grid-wide" style="margin-top: 30px;">
+            </div>
+    </main>
+
+    <div id="popup-automatizare" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-btn" onclick="document.getElementById('popup-automatizare').classList.remove('active');">&times;</span>
+            <h2 style="color: var(--accent-color); margin-top: 0;">Creează Automatizare</h2>
+            
+            <div style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h3 style="margin-top: 0; color: #e67e22;">1. DACĂ (Trigger)</h3>
+                <label>Când acest senzor/dispozitiv:</label>
+                <select id="auto-trigger-dev" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;"></select>
+                
+                <label style="display: block; margin-top: 10px;">Devine:</label>
+                <select id="auto-trigger-state" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;">
+                    <option value="Activ">Activ / Detectează</option>
+                    <option value="Deschis">Deschis</option>
+                    <option value="Pornit">Pornit</option>
+                </select>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; color: var(--success-color);">2. ATUNCI (Acțiune)</h3>
+                <label>Modifică acest dispozitiv:</label>
+                <select id="auto-action-dev" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;"></select>
+                
+                <label style="display: block; margin-top: 10px;">În starea:</label>
+                <select id="auto-action-state" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;">
+                    <option value="Pornit">Pornit / Aprins</option>
+                    <option value="Oprit">Oprit / Stins</option>
+                    <option value="Blocat">Blocat</option>
+                </select>
+            </div>
+
+            <button onclick="salveazaAutomatizare()" style="width: 100%; padding: 15px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">💾 Salvează Regula</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/counter.js"></script>
+</body>
+</html>

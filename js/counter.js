@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(document.getElementById('all-scenes-container')) randareScene();
     if(document.getElementById('all-accessories-container')) randareAccesorii();
     if(document.getElementById('security-devices-container')) randareSecuritate();
+    if(document.getElementById('automations-list')) randareAutomatizari();
     actualizeazaStatusGlobal();
 });
 
@@ -81,6 +82,7 @@ function initFavorites() {
     if (!localStorage.getItem('favAcc')) localStorage.setItem('favAcc', JSON.stringify(['becuri_1', 'tv_0', 'incuietori_0', 'camereVideo_0']));
     if (!localStorage.getItem('favScenes')) localStorage.setItem('favScenes', JSON.stringify(['s_morning', 's_night']));
     if (!localStorage.getItem('motionLogs')) localStorage.setItem('motionLogs', JSON.stringify([]));
+    if (!localStorage.getItem('userAutomations')) localStorage.setItem('userAutomations', JSON.stringify([]));
 }
 
 function incarcaNumeCasa() {
@@ -94,11 +96,7 @@ function toggleFavorite(id, type, event) {
     if (favs.includes(id)) favs = favs.filter(item => item !== id);
     else favs.push(id);
     localStorage.setItem(type === 'scene' ? 'favScenes' : 'favAcc', JSON.stringify(favs));
-    
-    if(document.getElementById('fav-scenes-container')) randareHome();
-    if(document.getElementById('all-scenes-container')) randareScene();
-    if(document.getElementById('all-accessories-container')) randareAccesorii();
-    if(document.getElementById('security-devices-container')) randareSecuritate();
+    reincarcaInterfata();
 }
 
 function toggleStareDispozitiv(cat, index, event) {
@@ -107,22 +105,12 @@ function toggleStareDispozitiv(cat, index, event) {
     
     const disp = subDispozitive[cat][index];
     
-    if (cat === 'incuietori') {
-        if(disp.stare === "Blocat") {
-            if(!confirm("Ești sigur că vrei să deblochezi ușa principală?")) return;
-            disp.stare = "Deblocat";
-        } else {
-            disp.stare = "Blocat";
-        }
-    } else if (cat === 'aspirator') {
-        disp.stare = disp.stare === "La Bază" ? "Curăță" : "La Bază";
-    } else if (cat === 'jaluzele') {
-        disp.stare = disp.stare === "Închis" ? "Deschis" : "Închis";
-    } else if (cat === 'senzoriContact') {
-        disp.stare = disp.stare === "Închis" ? "Deschis" : "Închis";
-    } else if (cat === 'camereVideo') {
-        disp.stare = disp.stare === "Standby" ? "LIVE" : "Standby";
-    } else if (cat === 'purificator') {
+    if (cat === 'incuietori') disp.stare = disp.stare === "Blocat" ? "Deblocat" : "Blocat";
+    else if (cat === 'aspirator') disp.stare = disp.stare === "La Bază" ? "Curăță" : "La Bază";
+    else if (cat === 'jaluzele') disp.stare = disp.stare === "Închis" ? "Deschis" : "Închis";
+    else if (cat === 'senzoriContact') disp.stare = disp.stare === "Închis" ? "Deschis" : "Închis";
+    else if (cat === 'camereVideo') disp.stare = disp.stare === "Standby" ? "LIVE" : "Standby";
+    else if (cat === 'purificator') {
         if(disp.stare === "Oprit") disp.stare = "Auto";
         else if(disp.stare === "Auto") disp.stare = "Boost";
         else disp.stare = "Oprit";
@@ -138,11 +126,97 @@ function toggleStareDispozitiv(cat, index, event) {
         disp.stare = disp.stare === "Pornit" ? "Oprit" : "Pornit";
     }
     
-    actualizeazaStatusGlobal();
-    if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
-    if(document.getElementById('all-accessories-container')) randareAccesorii();
-    if(document.getElementById('security-devices-container')) randareSecuritate();
+    verificaReguliAutomatizare(cat, index, disp.stare);
+    reincarcaInterfata();
 }
+
+// --- NOUL MOTOR DE AUTOMATIZARE (IF / THEN LOGIC) ---
+function verificaReguliAutomatizare(triggerCat, triggerIdx, newState) {
+    const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    rules.forEach(rule => {
+        if (rule.tCat === triggerCat && rule.tIdx === triggerIdx.toString() && rule.tState === newState) {
+            // Regula s-a declanșat! Executăm acțiunea!
+            const actionDisp = subDispozitive[rule.aCat][rule.aIdx];
+            if (actionDisp) {
+                actionDisp.stare = rule.aState;
+                if (typeof showToast === "function") showToast(`🤖 Automatizare executată: ${actionDisp.nume} a fost modificat!`);
+            }
+        }
+    });
+}
+
+function deschideModalAutomatizare() {
+    const modal = document.getElementById('popup-automatizare');
+    const selectTrigger = document.getElementById('auto-trigger-dev');
+    const selectAction = document.getElementById('auto-action-dev');
+    
+    let optionsHTML = '';
+    Object.keys(subDispozitive).forEach(cat => {
+        subDispozitive[cat].forEach((disp, idx) => {
+            optionsHTML += `<option value="${cat}_${idx}">${disp.icon} ${disp.nume} (${disp.camera})</option>`;
+        });
+    });
+    
+    selectTrigger.innerHTML = optionsHTML;
+    selectAction.innerHTML = optionsHTML;
+    modal.classList.add('active');
+}
+
+function salveazaAutomatizare() {
+    const tVal = document.getElementById('auto-trigger-dev').value.split('_');
+    const tState = document.getElementById('auto-trigger-state').value;
+    const aVal = document.getElementById('auto-action-dev').value.split('_');
+    const aState = document.getElementById('auto-action-state').value;
+
+    const rule = {
+        id: Date.now(),
+        tCat: tVal[0], tIdx: tVal[1], tState: tState,
+        aCat: aVal[0], aIdx: aVal[1], aState: aState,
+        descriere: `DACĂ ${subDispozitive[tVal[0]][tVal[1]].nume} este ${tState} ➔ ${subDispozitive[aVal[0]][aVal[1]].nume} devine ${aState}`
+    };
+
+    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    rules.push(rule);
+    localStorage.setItem('userAutomations', JSON.stringify(rules));
+
+    document.getElementById('popup-automatizare').classList.remove('active');
+    randareAutomatizari();
+    if (typeof showToast === "function") showToast("Regulă de automatizare salvată!");
+}
+
+function stergeAutomatizare(id) {
+    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    rules = rules.filter(r => r.id !== id);
+    localStorage.setItem('userAutomations', JSON.stringify(rules));
+    randareAutomatizari();
+}
+
+function randareAutomatizari() {
+    const container = document.getElementById('automations-list');
+    if (!container) return;
+    const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    
+    if (rules.length === 0) {
+        container.innerHTML = `<p style="opacity: 0.6;">Nu ai creat nicio automatizare încă.</p>`;
+        return;
+    }
+
+    let html = '';
+    rules.forEach(rule => {
+        html += `
+            <div class="hk-card" style="height: auto; padding: 20px; border-left: 5px solid var(--accent-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-weight: bold; font-size: 1.1em;">⚙️ Regulă Activă</div>
+                    <button onclick="stergeAutomatizare(${rule.id})" style="background: var(--error-color); color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px;">Șterge</button>
+                </div>
+                <div style="margin-top: 15px; opacity: 0.9; line-height: 1.5;">${rule.descriere}</div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// --- Restul funcțiilor de randare UX/UI ---
 
 function genereazaListaNotificari() {
     let notificari = [];
@@ -150,7 +224,6 @@ function genereazaListaNotificari() {
     if (becuriAprinse > 0) notificari.push(`💡 ${becuriAprinse} ${becuriAprinse === 1 ? 'lumină aprinsă' : 'lumini aprinse'}`);
 
     if (subDispozitive.electrocasnice[0] && subDispozitive.electrocasnice[0].stare === "Pornit") notificari.push(`🧺 Mașina de spălat funcționează`);
-    if (subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === "Curăță") notificari.push(`🤖 Robotul aspiră locuința`);
     if (subDispozitive.incuietori[0] && subDispozitive.incuietori[0].stare === "Deblocat") notificari.push(`🚪 Avertisment: Ușa este deblocată!`);
 
     if (subDispozitive.senzoriContact) {
@@ -205,7 +278,7 @@ function deschidePopupToateNotificarile() {
 }
 
 function construiesteCardHTML(disp, cat, idx, isFav) {
-    const isActive = disp.stare === "Pornit" || disp.stare === "Curăță" || disp.stare === "Deblocat" || disp.stare === "Activ" || disp.stare === "Deschis" || disp.stare === "LIVE" || disp.stare === "Auto" || disp.stare === "Boost";
+    const isActive = ['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare);
     const idUnic = `${cat}_${idx}`;
     return `
         <div class="hk-card ${isActive ? 'is-active' : ''}" onclick="toggleStareDispozitiv('${cat}', ${idx}, event)">
@@ -233,6 +306,14 @@ function construiesteScenaHTML(scena, isFav) {
             <div class="hk-state" style="margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${scena.descriere}</div>
         </div>
     `;
+}
+
+function reincarcaInterfata() {
+    actualizeazaStatusGlobal();
+    if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
+    if(document.getElementById('all-scenes-container')) randareScene();
+    if(document.getElementById('all-accessories-container')) randareAccesorii();
+    if(document.getElementById('security-devices-container')) randareSecuritate();
 }
 
 function randareHome() {
@@ -283,27 +364,19 @@ function randareScene() {
     document.getElementById('all-scenes-container').innerHTML = html;
 }
 
-// --- NOU: RANDARE SPECIFICĂ PENTRU TABUL DE SECURITATE ---
 function randareSecuritate() {
     const container = document.getElementById('security-devices-container');
     if (!container) return;
-
     const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
     let html = '';
-
-    // Filtrăm DOAR categoriile relevante pentru securitate perimetrală
-    const categoriiSecuritate = ['camereVideo', 'senzoriMiscare', 'senzoriContact', 'incuietori'];
-
-    categoriiSecuritate.forEach(cat => {
+    ['camereVideo', 'senzoriMiscare', 'senzoriContact', 'incuietori'].forEach(cat => {
         if (subDispozitive[cat]) {
             subDispozitive[cat].forEach((disp, idx) => {
-                const isFav = favAcc.includes(`${cat}_${idx}`);
-                html += construiesteCardHTML(disp, cat, idx, isFav);
+                html += construiesteCardHTML(disp, cat, idx, favAcc.includes(`${cat}_${idx}`));
             });
         }
     });
-
-    container.innerHTML = html || '<p style="opacity:0.5;">Niciun dispozitiv de securitate găsit.</p>';
+    container.innerHTML = html;
 }
 
 function executaScena(id) {
@@ -312,8 +385,7 @@ function executaScena(id) {
         localStorage.setItem('activeScene', id);
         scena.action();
         if (typeof showToast === "function") showToast(`Scena "${scena.nume}" a fost activată!`);
-        if(document.getElementById('fav-scenes-container')) randareHome();
-        if(document.getElementById('all-scenes-container')) randareScene();
+        reincarcaInterfata();
     }
 }
 
@@ -341,16 +413,6 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
             <div style="background: #111; border-radius: 8px; height: 200px; display:flex; align-items:center; justify-content:center; color:white; position:relative; margin-bottom: 15px; overflow: hidden;">
                 ${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em; animation: pulse 1s infinite;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}
             </div>
-            <button style="background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); padding: 10px; border-radius: 8px; width: 100%; font-weight: bold;">🎤 Apasă pentru a vorbi</button>
-        `;
-    }
-
-    if (categorie === 'luminiRGB') {
-        contentHtml += `
-            <div style="margin: 15px 0;">
-                <label>Alege Culoarea Benzii LED:</label>
-                <input type="color" value="${disp.culoare || '#ffffff'}" onchange="subDispozitive['${categorie}'][${elementIndex}].culoare = this.value; if(document.getElementById('all-accessories-container')) randareAccesorii();" style="width: 100%; height: 45px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px;">
-            </div>
         `;
     }
 
@@ -375,8 +437,7 @@ function stingeTotGlobal() {
         else if(cat === 'jaluzele') d.stare = "Închis"; 
         else d.stare = "Oprit"; 
     })); 
-    actualizeazaStatusGlobal(); 
-    if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); } 
+    reincarcaInterfata();
 }
 
 function aplicaMod(mod) {
@@ -398,10 +459,7 @@ function aplicaMod(mod) {
     } else if (mod === 'movie') {
         subDispozitive.jaluzele.forEach(d => d.stare = "Închis"); 
         if(subDispozitive.tv[0]) subDispozitive.tv[0].stare = "Pornit"; 
-        if(subDispozitive.luminiRGB[0]) { 
-            subDispozitive.luminiRGB[0].stare = "Pornit"; 
-            subDispozitive.luminiRGB[0].culoare = "#2980b9"; 
-        }
+        if(subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#2980b9"; }
         subDispozitive.becuri.forEach(d => d.stare = "Oprit"); 
     } else if (mod === 'focus') {
         subDispozitive.becuri[0].stare = "Pornit";
@@ -411,11 +469,7 @@ function aplicaMod(mod) {
         if(subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#e67e22"; }
     }
 
-    actualizeazaStatusGlobal(); 
-    if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
-    if(document.getElementById('all-scenes-container')) randareScene();
-    if(document.getElementById('all-accessories-container')) randareAccesorii();
-    if(document.getElementById('security-devices-container')) randareSecuritate();
+    reincarcaInterfata();
 }
 
 function actualizeazaStatusGlobal() {
@@ -431,10 +485,9 @@ function inchidePopup() {
     const modal = document.getElementById('popup-dispozitive');
     if (modal) modal.classList.remove('active');
 }
-
 window.onclick = function(event) {
-    const modal = document.getElementById('popup-dispozitive');
-    if (event.target === modal) {
-        modal.classList.remove('active');
-    }
+    const m1 = document.getElementById('popup-dispozitive');
+    const m2 = document.getElementById('popup-automatizare');
+    if (event.target === m1) m1.classList.remove('active');
+    if (event.target === m2) m2.classList.remove('active');
 }
