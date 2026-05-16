@@ -8,9 +8,8 @@
         .map-wrapper {
             position: relative;
             width: 100%;
-            max-width: 650px; /* Dimensiune optimă și proporțională cu restul site-ului */
+            max-width: 650px;
             margin: 30px auto 0 auto;
-            border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             overflow: visible;
         }
@@ -19,17 +18,13 @@
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 12px;
             transition: filter 0.3s ease;
         }
 
-        /* --- Magia pentru Dark Mode --- */
-        /* Inversează culorile imaginii SVG (albul devine negru, negrul devine alb) */
         body.dark-mode .blueprint-image {
             filter: invert(1) brightness(0.9) contrast(1.1);
         }
 
-        /* Punctele interactive (Hotspots) */
         .map-hotspot {
             position: absolute;
             width: 38px;
@@ -73,21 +68,39 @@
             
             <img src="Home.svg" alt="Schița Casei" class="blueprint-image">
             
-            <div class="map-hotspot" style="top: 25%; left: 30%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri')" title="Lumini Dormitor">💡</div>
-            <div class="map-hotspot" style="top: 2%; left: 31%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele')" title="Jaluzele Dormitor">🪟</div>
+            <div class="map-hotspot" style="top: 30%; left: 35%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 0)" title="Bec Dormitor">💡</div>
+            <div class="map-hotspot" style="top: 2%; left: 33%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 0)" title="Draperie Dormitor">🪟</div>
+            <div class="map-hotspot" style="top: 20%; left: 28%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 0)" title="Boxă Dormitor">🎵</div>
+            <div class="map-hotspot" style="top: 40%; left: 15%;" onclick="deschideMeniuDispozitive('cat_tv', 'tv', 0)" title="TV Dormitor">📺</div>
+            <div class="map-hotspot" style="top: 21%; left: 50%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 0)" title="Priză Dormitor">🔌</div>
+            <div class="map-hotspot" style="top: 40%; left: 3%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-dormitor')" title="Climatizare Dormitor">🌡️</div>
 
-            <div class="map-hotspot" style="top: 62%; left: 15%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri')" title="Lumini Baie">💡</div>
-            <div class="map-hotspot" style="top: 60%; left: 30%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio')" title="Audio Baie">🎵</div>
+            <div class="map-hotspot" style="top: 60%; left: 37%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 2)" title="Bec Baie">💡</div>
+            <div class="map-hotspot" style="top: 60%; left: 28%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 3)" title="Boxă Baie">🎵</div>
+            <div class="map-hotspot" style="top: 53%; left: 2%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 3)" title="Draperie Baie">🪟</div>
+            <div class="map-hotspot" style="top: 69%; left: 43%;" onclick="deschideMeniuDispozitive('cat_electrocasnice', 'electrocasnice', 0)" title="Mașină Spălat Baie">🧺</div>
+            <div class="map-hotspot" style="top: 69%; left: 50%;" onclick="deschideMeniuDispozitive('cat_electrocasnice', 'electrocasnice', 1)" title="Uscător Baie">💨</div>
+            <div class="map-hotspot" style="top: 69%; left: 20%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 2)" title="Priză Baie">🔌</div>
+            <div class="map-hotspot" style="top: 52%; left: 48%; border-color: #e74c3c;" onclick="deschideMeniuDispozitive('cat_pericole', 'senzori-baie')" title="Senzor Inundație Baie">💧</div>
+            <div class="map-hotspot" style="top: 69%; left: 13%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-baie')" title="Climatizare Baie">🌡️</div>
 
-            <div class="map-hotspot" style="top: 86%; left: 22%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri')" title="Lumini Bucătărie">💡</div>
-            <div class="map-hotspot" style="top: 80%; left: 46%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize')" title="Prize Bucătărie">🔌</div>
+            <div class="map-hotspot" style="top: 83%; left: 25%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 3)" title="Bec Bucătărie">💡</div>
+            <div class="map-hotspot" style="top: 83%; left: 33%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 4)" title="Boxă Bucătărie">🎵</div>
+            <div class="map-hotspot" style="top: 89%; left: 50%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 3)" title="Priză Bucătărie">🔌</div>
+            <div class="map-hotspot" style="top: 80%; left: 11%; border-color: #e74c3c;" onclick="deschideMeniuDispozitive('cat_pericole', 'senzori-bucatarie')" title="Senzor Fum Bucătărie">🔥</div>
+            <div class="map-hotspot" style="top: 89%; left: 3%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-bucatarie')" title="Climatizare Bucătărie">🌡️</div>
 
-            <div class="map-hotspot" style="top: 6%; left: 76%;" onclick="deschideMeniuDispozitive('cat_tv', 'tv')" title="Televizor Living">📺</div>
-            <div class="map-hotspot" style="top: 32%; left: 83%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri')" title="Lumini Living">💡</div>
-            <div class="map-hotspot" style="top: 15%; left: 87%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio')" title="Audio Living">🎵</div>
-            <div class="map-hotspot" style="top: 90%; left: 70%;" onclick="deschideMeniuDispozitive('cat_aspirator', 'aspirator')" title="Aspirator Robot">🤖</div>
+            <div class="map-hotspot" style="top: 40%; left: 75%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 1)" title="Bec Living">💡</div>
+            <div class="map-hotspot" style="top: 35%; left: 92%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 1)" title="Draperie 1 Living">🪟</div>
+            <div class="map-hotspot" style="top: 75%; left: 92%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 2)" title="Draperie 2 Living">🪟</div>
+            <div class="map-hotspot" style="top: 50%; left: 75%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 1)" title="Boxă Living">🎵</div>
+            <div class="map-hotspot" style="top: 11%; left: 82%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 2)" title="Sistem Audio Living">🔊</div>
+            <div class="map-hotspot" style="top: 5%; left: 77%;" onclick="deschideMeniuDispozitive('cat_tv', 'tv', 1)" title="TV Living">📺</div>
+            <div class="map-hotspot" style="top: 90%; left: 91%;" onclick="deschideMeniuDispozitive('cat_aspirator', 'aspirator', 0)" title="Robot Curățenie">🤖</div>
+            <div class="map-hotspot" style="top: 70%; left: 60%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 1)" title="Priză Living">🔌</div>
+            <div class="map-hotspot" style="top: 42%; left: 60%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-living')" title="Climatizare Living">🌡️</div>
 
-            <div class="map-hotspot" style="top: 86%; left: 63%; border-color: var(--error-color);" onclick="deschideMeniuDispozitive('cat_incuietori', 'incuietori')" title="Ușă Intrare">🚪</div>
+            <div class="map-hotspot" style="top: 79%; left: 1%; border-color: var(--accent-color);" onclick="deschideMeniuDispozitive('cat_incuietori', 'incuietori', 0)" title="Ușă Principală">🚪</div>
 
         </div>
     </main>

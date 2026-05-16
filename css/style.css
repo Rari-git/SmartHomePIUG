@@ -193,12 +193,16 @@ button:hover {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
+    overflow-y: auto;
+    padding: 40px 10px;
     align-items: center;
     justify-content: center;
 }
 
 .modal.active {
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .modal-content {
@@ -212,6 +216,7 @@ button:hover {
     border-top: 5px solid var(--accent-color);
     position: relative;
     animation: modalSlideIn 0.3s ease-out;
+    margin: auto;
 }
 
 .close-btn {
