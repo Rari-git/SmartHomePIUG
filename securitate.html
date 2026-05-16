@@ -48,7 +48,7 @@
         <a href="index.html">🏠 Home</a>
         <a href="scene.html">🎭 Scene</a>
         <a href="accesorii.html">🛋️ Accesorii</a>
-        <a href="camere.html">🌡️ Climă Camere</a>
+        <a href="camere.html">🌡️ Climă & Camere</a>
         <a href="harta.html">🗺️ Hartă Casă</a>
         <a href="securitate.html" style="color: var(--accent-color); font-weight: bold;">🛡️ Securitate</a>
         <a href="pericole.html">🚨 Pericole</a>
@@ -56,7 +56,7 @@
     </nav>
     <main>
         <div style="display: flex; align-items: center; margin-bottom: 20px;">
-            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
+            <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
             <h1 style="margin: 0;">Sisteme de Securitate</h1>
         </div>
         <p>Panou central de monitorizare perimetrală și control al sistemului de alarmă anti-efracție.</p>
@@ -95,9 +95,28 @@
                 </div>
             </div>
         </div>
+
+        <hr style="border: 0; border-top: 2px solid rgba(0,0,0,0.05); margin: 40px 0;">
+
+        <h2 class="hk-section-title">📹 Echipamente de Supraveghere și Detecție</h2>
+        <p style="margin-bottom: 20px; opacity: 0.8;">Monitorizează camerele video live, senzorii de mișcare și statusul geamurilor/ușilor.</p>
+        
+        <div id="security-devices-container" class="hk-grid"></div>
+
     </main>
+
+    <div id="popup-dispozitive" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="inchidePopup()">&times;</span>
+            <div style="display: flex; align-items: center; gap: 15px; margin-top: 0; margin-bottom: 20px;">
+                <h2 id="modal-titlu" style="margin: 0; color: var(--accent-color);"></h2>
+            </div>
+            <div id="modal-continut"></div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
     <script src="js/validation.js"></script>
+    <script src="js/counter.js"></script>
 </body>
 </html>

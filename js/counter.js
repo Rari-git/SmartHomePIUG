@@ -7,17 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if(document.getElementById('all-scenes-container')) randareScene();
     if(document.getElementById('all-accessories-container')) randareAccesorii();
+    if(document.getElementById('security-devices-container')) randareSecuritate();
     actualizeazaStatusGlobal();
 });
 
-// --- LISTA DE SCENE ACTUALIZATĂ CU "I'M HOME" ȘI "MOVIETIME" ---
 const scenesDB = [
     { id: 's_morning', nume: "🌅 Good Morning", descriere: "Deschide jaluzelele, pornește cafeaua.", action: () => aplicaMod('morning') },
     { id: 's_night', nume: "🌙 Good Night", descriere: "Oprește luminile, armează ușile.", action: () => aplicaMod('night') },
     { id: 's_away', nume: "👋 Leaving Home", descriere: "Oprește tot, robotul începe curățenia.", action: () => aplicaMod('away') },
-    { id: 's_home', nume: "🏠 I'm Home", descriere: "Dezactivează alarma, deschide jaluzelele și lumina.", action: () => aplicaMod('home') },
-    { id: 's_movie', nume: "🎬 Movie Time", descriere: "Draperii închise, TV pornit, ambient albastru.", action: () => aplicaMod('movie') },
-    { id: 's_focus', nume: "📖 Focus", descriere: "Lumină birou, purificator pornit.", action: () => aplicaMod('focus') },
+    { id: 's_home', nume: "🏠 I'm Home", descriere: "Dezactivează alarma, deschide jaluzelele.", action: () => aplicaMod('home') },
+    { id: 's_movie', nume: "🎬 movieTime", descriere: "Draperii închise, TV pornit, ambient albastru.", action: () => aplicaMod('movie') },
+    { id: 's_focus', nume: "📖 Focus / Citit", descriere: "Lumină birou, purificator pornit.", action: () => aplicaMod('focus') },
     { id: 's_dinner', nume: "🍽️ Dinner Time", descriere: "Lumini calde în living și bucătărie.", action: () => aplicaMod('dinner') }
 ];
 
@@ -98,6 +98,7 @@ function toggleFavorite(id, type, event) {
     if(document.getElementById('fav-scenes-container')) randareHome();
     if(document.getElementById('all-scenes-container')) randareScene();
     if(document.getElementById('all-accessories-container')) randareAccesorii();
+    if(document.getElementById('security-devices-container')) randareSecuritate();
 }
 
 function toggleStareDispozitiv(cat, index, event) {
@@ -107,7 +108,12 @@ function toggleStareDispozitiv(cat, index, event) {
     const disp = subDispozitive[cat][index];
     
     if (cat === 'incuietori') {
-        disp.stare = disp.stare === "Blocat" ? "Deblocat" : "Blocat";
+        if(disp.stare === "Blocat") {
+            if(!confirm("Ești sigur că vrei să deblochezi ușa principală?")) return;
+            disp.stare = "Deblocat";
+        } else {
+            disp.stare = "Blocat";
+        }
     } else if (cat === 'aspirator') {
         disp.stare = disp.stare === "La Bază" ? "Curăță" : "La Bază";
     } else if (cat === 'jaluzele') {
@@ -135,6 +141,7 @@ function toggleStareDispozitiv(cat, index, event) {
     actualizeazaStatusGlobal();
     if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
     if(document.getElementById('all-accessories-container')) randareAccesorii();
+    if(document.getElementById('security-devices-container')) randareSecuritate();
 }
 
 function genereazaListaNotificari() {
@@ -178,17 +185,18 @@ function deschidePopupToateNotificarile() {
     const modal = document.getElementById('popup-dispozitive');
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
+
     if (!modal || !titlu || !continental) return;
     titlu.innerText = "🔔 Toate Notificările Casei";
     
-    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px;">`;
+    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left;">`;
     genereazaListaNotificari().forEach(notif => {
         html += `<div class="notification-item" style="padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><span>${notif}</span></div>`;
     });
     html += `</div>
         <div style="margin-top: 10px;">
             <button onclick="localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); inchidePopup();" 
-                    style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
                 🗑️ Șterge Istoric Mișcare
             </button>
         </div>`;
@@ -275,6 +283,29 @@ function randareScene() {
     document.getElementById('all-scenes-container').innerHTML = html;
 }
 
+// --- NOU: RANDARE SPECIFICĂ PENTRU TABUL DE SECURITATE ---
+function randareSecuritate() {
+    const container = document.getElementById('security-devices-container');
+    if (!container) return;
+
+    const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
+    let html = '';
+
+    // Filtrăm DOAR categoriile relevante pentru securitate perimetrală
+    const categoriiSecuritate = ['camereVideo', 'senzoriMiscare', 'senzoriContact', 'incuietori'];
+
+    categoriiSecuritate.forEach(cat => {
+        if (subDispozitive[cat]) {
+            subDispozitive[cat].forEach((disp, idx) => {
+                const isFav = favAcc.includes(`${cat}_${idx}`);
+                html += construiesteCardHTML(disp, cat, idx, isFav);
+            });
+        }
+    });
+
+    container.innerHTML = html || '<p style="opacity:0.5;">Niciun dispozitiv de securitate găsit.</p>';
+}
+
 function executaScena(id) {
     const scena = scenesDB.find(s => s.id === id);
     if(scena) {
@@ -308,7 +339,7 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
     if (categorie === 'camereVideo') {
         contentHtml += `
             <div style="background: #111; border-radius: 8px; height: 200px; display:flex; align-items:center; justify-content:center; color:white; position:relative; margin-bottom: 15px; overflow: hidden;">
-                ${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}
+                ${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em; animation: pulse 1s infinite;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}
             </div>
             <button style="background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); padding: 10px; border-radius: 8px; width: 100%; font-weight: bold;">🎤 Apasă pentru a vorbi</button>
         `;
@@ -338,7 +369,6 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
     modal.classList.add('active');
 }
 
-// --- LOGICA DE EXECUTARE AUTOMATĂ A MODURILOR INTEGRATE ---
 function stingeTotGlobal() { 
     Object.keys(subDispozitive).forEach(cat => subDispozitive[cat].forEach(d => { 
         if (cat === 'incuietori') d.stare = "Blocat"; 
@@ -350,7 +380,7 @@ function stingeTotGlobal() {
 }
 
 function aplicaMod(mod) {
-    stingeTotGlobal(); // Orice scenă resetează mai întâi casa, apoi aplică regulile ei particulare
+    stingeTotGlobal();
 
     if (mod === 'morning') {
         subDispozitive.jaluzele.forEach(d => d.stare = "Deschis");
@@ -359,20 +389,20 @@ function aplicaMod(mod) {
     } else if (mod === 'away') {
         if(subDispozitive.aspirator[0]) subDispozitive.aspirator[0].stare = "Curăță";
         if(subDispozitive.camereVideo) subDispozitive.camereVideo.forEach(d => d.stare = "LIVE");
-        localStorage.setItem('alarmaDezactivata', 'false'); // Armează securitatea
+        localStorage.setItem('alarmaDezactivata', 'false'); 
     } else if (mod === 'home') {
-        localStorage.setItem('alarmaDezactivata', 'true'); // Dezactivează automat alarma
+        localStorage.setItem('alarmaDezactivata', 'true'); 
         if(subDispozitive.incuietori[0]) subDispozitive.incuietori[0].stare = "Deblocat";
         subDispozitive.jaluzele.forEach(d => d.stare = "Deschis");
-        if(subDispozitive.becuri[1]) subDispozitive.becuri[1].stare = "Pornit"; // Aprinde lumina pe hol / living
+        if(subDispozitive.becuri[1]) subDispozitive.becuri[1].stare = "Pornit"; 
     } else if (mod === 'movie') {
-        subDispozitive.jaluzele.forEach(d => d.stare = "Închis"); // Trage toate jaluzelele
-        if(subDispozitive.tv[0]) subDispozitive.tv[0].stare = "Pornit"; // Aprinde televizorul principal
+        subDispozitive.jaluzele.forEach(d => d.stare = "Închis"); 
+        if(subDispozitive.tv[0]) subDispozitive.tv[0].stare = "Pornit"; 
         if(subDispozitive.luminiRGB[0]) { 
             subDispozitive.luminiRGB[0].stare = "Pornit"; 
-            subDispozitive.luminiRGB[0].culoare = "#2980b9"; // Culoare albastră cinematică ambientala
+            subDispozitive.luminiRGB[0].culoare = "#2980b9"; 
         }
-        subDispozitive.becuri.forEach(d => d.stare = "Oprit"); // Se asigură că restul luminilor albe sunt stinse
+        subDispozitive.becuri.forEach(d => d.stare = "Oprit"); 
     } else if (mod === 'focus') {
         subDispozitive.becuri[0].stare = "Pornit";
         if(subDispozitive.purificator[0]) subDispozitive.purificator[0].stare = "Boost";
@@ -385,6 +415,7 @@ function aplicaMod(mod) {
     if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
     if(document.getElementById('all-scenes-container')) randareScene();
     if(document.getElementById('all-accessories-container')) randareAccesorii();
+    if(document.getElementById('security-devices-container')) randareSecuritate();
 }
 
 function actualizeazaStatusGlobal() {
@@ -399,4 +430,11 @@ function actualizeazaStatusGlobal() {
 function inchidePopup() {
     const modal = document.getElementById('popup-dispozitive');
     if (modal) modal.classList.remove('active');
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('popup-dispozitive');
+    if (event.target === modal) {
+        modal.classList.remove('active');
+    }
 }
