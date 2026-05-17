@@ -292,3 +292,117 @@ function adaugaInLog(mesaj) {
     localStorage.setItem('smartHomeLogs', JSON.stringify(logs.slice(0, 30)));
     if (document.getElementById('logs-container')) randareStatisticiLogs();
 }
+
+// Comută o automatizare între activat și dezactivat (la apăsarea switch-ului)
+function comutaAutomatizare(id) {
+    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    const rule = rules.find(r => r.id === id);
+    if (rule) {
+        rule.active = !rule.active;
+        localStorage.setItem('userAutomations', JSON.stringify(rules));
+        randareAutomatizari();
+    }
+}
+
+// Șterge definitiv o regulă din listă
+function stergeAutomatizare(id) {
+    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    localStorage.setItem('userAutomations', JSON.stringify(rules.filter(r => r.id !== id)));
+    randareSabloane();
+    randareAutomatizari();
+}
+
+// Adaugă o regulă instanțiată rapid dintr-un șablon recomandat
+function adaugaSugestie(idSugestie) {
+    const sug = sabloaneRecomandate.find(s => s.idSugestie === idSugestie);
+    if(!sug) return;
+    
+    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    let nouaRegula = {
+        id: Date.now(),
+        active: true,
+        lastRun: "Niciodată",
+        idSugestie: sug.idSugestie,
+        tipTrigger: sug.tipTrigger,
+        descriere: sug.descriere,
+        aCat: sug.aCat,
+        aIdx: sug.aIdx,
+        aState: sug.aState
+    };
+    
+    if (sug.tipTrigger === 'timp') {
+        nouaRegula.tOra = sug.tOra;
+    } else {
+        nouaRegula.tCat = sug.tCat;
+        nouaRegula.tIdx = sug.tIdx;
+        nouaRegula.tState = sug.tState;
+    }
+    
+    rules.unshift(nouaRegula);
+    localStorage.setItem('userAutomations', JSON.stringify(rules));
+    randareSabloane();
+    randareAutomatizari();
+}
+
+// Deschide și populează modalul de creare automatizări manuale cu lista de opțiuni
+function deschideModalAutomatizare() {
+    const modal = document.getElementById('popup-automatizare');
+    if(!modal) return;
+    
+    const selectTrigger = document.getElementById('auto-trigger-dev');
+    const selectAction = document.getElementById('auto-action-dev');
+    let optionsHTML = '';
+    
+    Object.keys(subDispozitive).forEach(cat => {
+        (subDispozitive[cat] || []).forEach((disp, idx) => {
+            optionsHTML += `<option value="${cat}_${idx}">${disp.nume} (${disp.camera || 'Casă'})</option>`;
+        });
+    });
+    
+    if(selectTrigger) selectTrigger.innerHTML = optionsHTML;
+    if(selectAction) selectAction.innerHTML = optionsHTML;
+    
+    modal.classList.add('active');
+}
+
+// Salvează regula configurată manual din interiorul modalului
+function salveazaAutomatizare() {
+    const esteTimp = typeof modTriggerCurent !== 'undefined' && modTriggerCurent === 'timp';
+    const aVal = document.getElementById('auto-action-dev').value.split('_');
+    const aState = document.getElementById('auto-action-state').value;
+    const actionNume = subDispozitive[aVal[0]][aVal[1]].nume;
+    
+    let rule = {
+        id: Date.now(),
+        active: true,
+        lastRun: "Niciodată",
+        aCat: aVal[0],
+        aIdx: aVal[1],
+        aState: aState
+    };
+
+    if (esteTimp) {
+        const ora = document.getElementById('auto-trigger-timp').value;
+        if (!ora) return;
+        rule.tipTrigger = 'timp';
+        rule.tOra = ora;
+        rule.descriere = `⏰ Zilnic la ora ${ora} ➔ ${actionNume} devine ${aState}`;
+    } else {
+        const tVal = document.getElementById('auto-trigger-dev').value.split('_');
+        const tState = document.getElementById('auto-trigger-state').value;
+        rule.tipTrigger = 'disp';
+        rule.tCat = tVal[0];
+        rule.tIdx = tVal[1];
+        rule.tState = tState;
+        rule.descriere = `DACĂ ${subDispozitive[tVal[0]][tVal[1]].nume} este ${tState} ➔ ${actionNume} devine ${aState}`;
+    }
+
+    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+    rules.unshift(rule);
+    localStorage.setItem('userAutomations', JSON.stringify(rules));
+    
+    // Închidem modalul și redesenăm elementele
+    document.getElementById('popup-automatizare').classList.remove('active');
+    randareSabloane();
+    randareAutomatizari();
+}

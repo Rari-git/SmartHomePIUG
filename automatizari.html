@@ -15,8 +15,62 @@
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
             <h1>Reguli de Automatizare</h1>
         </div>
-        <div id="automation-list-container"></div>
+
+        <h2 class="hk-section-title">💡 Șabloane Recomandate</h2>
+        <div style="position: relative; display: flex; align-items: center; margin-bottom: 30px;">
+            <button onclick="scrollCarousel(-1)" style="position: absolute; left: -15px; z-index: 10; background: var(--card-bg); border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold;">‹</button>
+            <div id="sabloane-carousel" style="display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding: 10px 5px; width: 100%; scrollbar-width: none; -ms-overflow-style: none;"></div>
+            <button onclick="scrollCarousel(1)" style="position: absolute; right: -15px; z-index: 10; background: var(--card-bg); border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold;">›</button>
+        </div>
+
+        <h2 class="hk-section-title">🤖 Automatizările Tale</h2>
+        <div id="automations-list" class="hk-grid-wide"></div>
     </main>
+
+    <div id="popup-automatizare" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <span class="close-btn" onclick="document.getElementById('popup-automatizare').classList.remove('active')">&times;</span>
+            <h2 style="margin-top: 0; margin-bottom: 25px; color: var(--accent-color);">🤖 Regulă Nouă</h2>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
+                <button id="tab-disp" onclick="schimbaTabTrigger('disp')" class="filter-btn active" style="flex: 1; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600;">Dispozitiv</button>
+                <button id="tab-timp" onclick="schimbaTabTrigger('timp')" class="filter-btn" style="flex: 1; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600;">Timp / Oră</button>
+            </div>
+
+            <div id="trigger-disp-container" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Dacă acest dispozitiv:</label>
+                <select id="auto-trigger-dev" class="form-input" style="margin-bottom: 12px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;"></select>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Trece în starea:</label>
+                <select id="auto-trigger-state" class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;">
+                    <option value="Pornit">Pornit / Deschis / LIVE</option>
+                    <option value="Oprit">Oprit / Închis / Standby</option>
+                    <option value="Activ">Mișcare Detectată (Activ)</option>
+                    <option value="Inactiv">Liniște (Inactiv)</option>
+                </select>
+            </div>
+
+            <div id="trigger-timp-container" style="margin-bottom: 20px; display: none;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">La ora exactă:</label>
+                <input type="time" id="auto-trigger-timp" class="form-input" value="08:00" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;">
+            </div>
+
+            <div style="margin-bottom: 25px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Atunci execută acțiunea pe:</label>
+                <select id="auto-action-dev" class="form-input" style="margin-bottom: 12px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;"></select>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Setează starea:</label>
+                <select id="auto-action-state" class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;">
+                    <option value="Pornit">Pornit</option>
+                    <option value="Oprit">Oprit</option>
+                    <option value="Deschis">Deschis</option>
+                    <option value="Închis">Închis</option>
+                    <option value="Blocat">Blocat / Armat</option>
+                </select>
+            </div>
+
+            <button onclick="salveazaAutomatizare()" style="width: 100%; padding: 15px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">💾 Salvează Regula</button>
+        </div>
+    </div>
+
     <smart-modal></smart-modal>
     <script src="js/main.js"></script>
     <script src="js/data.js"></script>

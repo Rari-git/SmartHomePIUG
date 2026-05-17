@@ -1,5 +1,5 @@
-let tipIstoricCurent = 'energie';
-let perioadaIstoricaCurenta = '7z';
+let dashTipCurent = 'energie';
+let dashPerioadaCurenta = '7z';
 
 function reincarcaInterfata() {
     actualizeazaStatusGlobal();
@@ -8,14 +8,101 @@ function reincarcaInterfata() {
     if(document.getElementById('all-accessories-container')) randareAccesorii();
     if(document.getElementById('security-devices-container')) randareSecuritate();
     if(document.getElementById('automations-list')) { randareAutomatizari(); randareSabloane(); }
+    if(document.getElementById('dashboard-grafic-content')) randareGraficDashboard();
     if(document.getElementById('logs-container')) randareStatisticiLogs();
+}
+
+function schimbaTipGraficDashboard(tip) {
+    dashTipCurent = tip;
+    document.getElementById('btn-tip-energie').classList.toggle('active', tip === 'energie');
+    document.getElementById('btn-tip-clima').classList.toggle('active', tip === 'clima');
+    randareGraficDashboard();
+}
+
+function schimbaPerioadaDashboard(perioada) {
+    dashPerioadaCurenta = perioada;
+    ['1z', '7z', '30z', '6l', '1an'].forEach(p => {
+        const btn = document.getElementById(`btn-dash-${p}`);
+        if(btn) btn.classList.toggle('active', p === perioada);
+    });
+    randareGraficDashboard();
+}
+
+function randareGraficDashboard() {
+    const container = document.getElementById('dashboard-grafic-content');
+    if (!container) return;
+    
+    let date = [];
+    if (dashTipCurent === 'energie') {
+        if (dashPerioadaCurenta === '1z') {
+            date = [{e: '00:00 - 06:00', v: 1.2}, {e: '06:00 - 12:00', v: 4.5}, {e: '12:00 - 18:00', v: 3.8}, {e: '18:00 - 00:00', v: 6.2}];
+        } else if (dashPerioadaCurenta === '7z') {
+            date = [{e: 'Luni', v: 14}, {e: 'Marți', v: 15}, {e: 'Miercuri', v: 13}, {e: 'Joi', v: 17}, {e: 'Vineri', v: 16}, {e: 'Sâmbătă', v: 22}, {e: 'Duminică', v: 20}];
+        } else if (dashPerioadaCurenta === '30z') {
+            date = [{e: 'Săpt. 1', v: 110}, {e: 'Săpt. 2', v: 125}, {e: 'Săpt. 3', v: 105}, {e: 'Săpt. 4', v: 140}];
+        } else if (dashPerioadaCurenta === '6l') {
+            date = [{e: 'Decembrie', v: 480}, {e: 'Ianuarie', v: 520}, {e: 'Februarie', v: 460}, {e: 'Martie', v: 390}, {e: 'Aprilie', v: 310}, {e: 'Mai', v: 240}];
+        } else if (dashPerioadaCurenta === '1an') {
+            date = [{e: 'Trim. 1', v: 1460}, {e: 'Trim. 2', v: 980}, {e: 'Trim. 3', v: 820}, {e: 'Trim. 4', v: 1240}];
+        }
+        
+        let maxVal = Math.max(...date.map(d => d.v), 1);
+        let html = '<div style="display: flex; flex-direction: column; gap: 14px;">';
+        date.forEach(p => {
+            let procent = (p.v / maxVal) * 100;
+            html += `<div style="display: flex; align-items: center; gap: 15px;"><div style="width: 110px; font-weight: 600; font-size: 0.9em; opacity: 0.8;">${p.e}</div><div style="flex: 1; background: rgba(0,0,0,0.05); height: 16px; border-radius: 8px; overflow: hidden;"><div style="background: var(--accent-color); width: ${procent}%; height: 100%; border-radius: 8px; transition: width 0.3s;"></div></div><div style="width: 80px; text-align: right; font-weight: 700; color: var(--accent-color);">${p.v} kWh</div></div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        
+    } else {
+        if (dashPerioadaCurenta === '1z') {
+            date = [{e: '00:00 - 06:00', t: 19, u: 50}, {e: '06:00 - 12:00', t: 22, u: 45}, {e: '12:00 - 18:00', t: 24, u: 40}, {e: '18:00 - 00:00', t: 21, u: 48}];
+        } else if (dashPerioadaCurenta === '7z') {
+            date = [{e: 'Luni', t: 21.5, u: 44}, {e: 'Marți', t: 22, u: 46}, {e: 'Miercuri', t: 20.8, u: 50}, {e: 'Joi', t: 23.4, u: 42}, {e: 'Vineri', t: 22, u: 45}, {e: 'Sâmbătă', t: 24.1, u: 40}, {e: 'Duminică', t: 22.6, u: 47}];
+        } else if (dashPerioadaCurenta === '30z') {
+            date = [{e: 'Săpt. 1', t: 21.2, u: 45}, {e: 'Săpt. 2', t: 22.1, u: 44}, {e: 'Săpt. 3', t: 21.8, u: 48}, {e: 'Săpt. 4', t: 22.5, u: 42}];
+        } else if (dashPerioadaCurenta === '6l') {
+            date = [{e: 'Decembrie', t: 18.5, u: 55}, {e: 'Ianuarie', t: 19, u: 53}, {e: 'Februarie', t: 19.5, u: 50}, {e: 'Martie', t: 21.2, u: 46}, {e: 'Aprilie', t: 22.8, u: 44}, {e: 'Mai', t: 24.1, u: 42}];
+        } else if (dashPerioadaCurenta === '1an') {
+            date = [{e: 'Trim. 1', t: 19.1, u: 51}, {e: 'Trim. 2', t: 22.4, u: 44}, {e: 'Trim. 3', t: 25.2, u: 41}, {e: 'Trim. 4', t: 20.5, u: 49}];
+        }
+        
+        let maxT = Math.max(...date.map(d => d.t), 1);
+        let maxU = Math.max(...date.map(d => d.u), 1);
+        let html = '<div style="display: flex; flex-direction: column; gap: 16px;">';
+        date.forEach(p => {
+            let prT = (p.t / maxT) * 100;
+            let prU = (p.u / maxU) * 100;
+            html += `
+                <div style="display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid rgba(0,0,0,0.03); padding-bottom: 8px;">
+                    <div style="font-weight: 700; font-size: 0.9em; opacity: 0.9; margin-bottom: 2px;">${p.e}</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 0.8em; font-weight: bold; width: 45px; opacity: 0.7;">Temp:</span>
+                        <div style="flex: 1; background: rgba(0,0,0,0.04); height: 10px; border-radius: 5px; overflow: hidden;">
+                            <div style="background: var(--warning-color); width: ${prT}%; height: 100%; border-radius: 5px;"></div>
+                        </div>
+                        <span style="font-size: 0.85em; font-weight: bold; width: 55px; color: var(--warning-color); text-align: right;">${p.t}°C</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 0.8em; font-weight: bold; width: 45px; opacity: 0.7;">Umid:</span>
+                        <div style="flex: 1; background: rgba(0,0,0,0.04); height: 10px; border-radius: 5px; overflow: hidden;">
+                            <div style="background: #3498db; width: ${prU}%; height: 100%; border-radius: 5px;"></div>
+                        </div>
+                        <span style="font-size: 0.85em; font-weight: bold; width: 55px; color: #3498db; text-align: right;">${p.u}%</span>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
 }
 
 function randareHome() {
     const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
     const favScenes = JSON.parse(localStorage.getItem('favScenes')) || [];
     
-    // 1. Randare Accesorii exact în ordinea din localStorage
     let accHtml = '';
     favAcc.forEach(idSalvat => {
         const [cat, idx] = idSalvat.split('_');
@@ -26,7 +113,6 @@ function randareHome() {
     const accContainer = document.getElementById('fav-accessories-container');
     if (accContainer) accContainer.innerHTML = accHtml || '<p style="opacity:0.5;">Niciun accesoriu favorit.</p>';
 
-    // 2. Randare Scene
     let sceneHtml = '';
     favScenes.forEach(idScena => {
         const scena = scenesDB.find(s => s.id === idScena);
@@ -35,7 +121,6 @@ function randareHome() {
     const sceneContainer = document.getElementById('fav-scenes-container');
     if (sceneContainer) sceneContainer.innerHTML = sceneHtml || '<p style="opacity:0.5;">Nicio scenă favorită.</p>';
 
-    // 3. Inițializare sistem Drag & Drop
     setTimeout(() => {
         if (typeof Sortable !== 'undefined') {
             if (accContainer && accContainer.children.length > 0) {
@@ -114,7 +199,7 @@ function randareSabloane() {
     
     sabloaneRecomandate.forEach(sug => {
         if (!activeIds.includes(sug.idSugestie)) {
-            html += `<div class="suggestion-card" style="border-top: 5px solid ${sug.culoare};"><div style="font-size: 2em; margin-bottom: 10px; line-height: 1;">${sug.icon}</div><strong style="font-size: 1.1em; color: ${sug.culoare};">${sug.nume}</strong><p style="font-size: 0.85em; opacity: 0.8; margin: 10px 0; flex: 1; line-height: 1.4;">${sug.descriereScurta}</p><button class="add-sug-btn" onclick="adaugaSugestie('${sug.idSugestie}')">+ Adaugă Regula</button></div>`;
+            html += `<div class="suggestion-card" style="border-top: 5px solid ${sug.culoare}; min-width: 250px; flex-shrink: 0; box-sizing: border-box; background: var(--card-bg); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between;"><div style="font-size: 2em; margin-bottom: 10px; line-height: 1;">${sug.icon}</div><strong style="font-size: 1.1em; color: ${sug.culoare};">${sug.nume}</strong><p style="font-size: 0.85em; opacity: 0.8; margin: 10px 0; flex: 1; line-height: 1.4;">${sug.descriereScurta}</p><button class="add-sug-btn" onclick="adaugaSugestie('${sug.idSugestie}')" style="width:100%; background: var(--accent-color); color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">+ Adaugă Regula</button></div>`;
             counter++;
         }
     });
@@ -129,7 +214,7 @@ function randareAutomatizari() {
     rules.forEach(rule => {
         html += `<div class="hk-card" style="height: auto; padding: 20px; border-left: 5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}; opacity: ${rule.active ? '1' : '0.5'}; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;"><div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px; margin-bottom: 10px;"><div style="font-weight: bold; font-size: 1.1em; color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div style="display: flex; align-items: center; gap: 15px;"><label class="toggle-switch"><input type="checkbox" onchange="comutaAutomatizare(${rule.id})" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button onclick="stergeAutomatizare(${rule.id})" style="background: transparent; color: var(--error-color); font-size: 1.3em; border: none; cursor: pointer; padding: 0;"><i class="ph-bold ph-trash"></i></button></div></div><div style="font-size: 1em; line-height: 1.5; font-weight: 500; flex: 1;">${rule.descriere}</div><div style="margin-top: 15px; font-size: 0.8em; color: gray; font-weight: bold;"><i class="ph-bold ph-clock-counter-clockwise"></i> Ultima rulare: ${rule.lastRun || 'Niciodată'}</div></div>`;
     });
-    html += `<div class="hk-card card-add-new" onclick="deschideModalAutomatizare()"><div class="plus-icon"><i class="ph-bold ph-plus"></i></div><div style="font-size: 1.1em; font-weight: bold;">Regulă Nouă</div><div style="font-size: 0.85em; margin-top: 5px;">Configurare complet manuală</div></div>`;
+    html += `<div class="hk-card card-add-new" onclick="deschideModalAutomatizare()" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px; border: 2px dashed var(--accent-color); background:transparent;"><div class="plus-icon" style="font-size:2em; color:var(--accent-color);"><i class="ph-bold ph-plus"></i></div><div style="font-size: 1.1em; font-weight: bold; color:var(--accent-color); margin-top:5px;">Regulă Nouă</div><div style="font-size: 0.85em; opacity:0.7; margin-top: 5px;">Configurare complet manuală</div></div>`;
     container.innerHTML = html;
 }
 
@@ -141,7 +226,7 @@ function randareStatisticiLogs() {
         container.innerHTML = `<p style="opacity: 0.5; font-style: italic; text-align: center; padding: 20px;">Niciun eveniment înregistrat încă.</p>`;
         return;
     }
-    container.innerHTML = logs.map(log => `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 16px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-left: 4px solid var(--accent-color);"><span style="font-weight: 500; font-size: 0.95em;">${log.text}</span><span style="font-size: 0.8em; opacity: 0.6; font-weight: bold; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 4px; white-space: nowrap; margin-left: 10px;"><i class="ph-bold ph-clock"></i> ${log.ora}</span></div>`).join('');
+    container.innerHTML = logs.map(log => `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px 16px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-left: 4px solid var(--accent-color); margin-bottom:8px;"><span style="font-weight: 500; font-size: 0.95em;">${log.text}</span><span style="font-size: 0.8em; opacity: 0.6; font-weight: bold; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 4px; white-space: nowrap; margin-left: 10px;"><i class="ph-bold ph-clock"></i> ${log.ora}</span></div>`).join('');
 }
 
 function construiesteCardHTML(disp, cat, idx, isFav) {
@@ -277,10 +362,10 @@ function deschidePopupAudioPornit() {
 function deschidePopupCreareScena() {
     const modal = document.getElementById('popup-dispozitive');
     const titlu = document.getElementById('modal-titlu');
-    const continut = document.getElementById('modal-continut');
-    if(!modal || !continut) return;
+    const continental = document.getElementById('modal-continut');
+    if(!modal || !continental) return;
     titlu.innerHTML = "🎭 Creare Scenă Nouă";
-    continut.innerHTML = `<div class="form-row"><label>Numele Scenei:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="ex: Party Mode, Relaxare..."></div><div class="form-row"><label>Emoji sugestiv:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Distracție</option><option value="🍃">🍃 Relaxare / Fresh</option><option value="💻">💻 Birou / Work</option></select></div><div class="form-row"><label>Descriere scurtă:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="ex: Oprește toate electronicele din casă."></div><div class="form-row"><label>Șablon comportament:</label><select id="custom-scene-template" class="form-input"><option value="away">Mod Plecat (Închide tot + Alarme active)</option><option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option><option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option></select></div><button onclick="salveazaScenaCustomNoua()" style="background: var(--success-color); color: white; width: 100%; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; font-size: 1em;">💾 Creează Scena</button>`;
+    continental.innerHTML = `<div class="form-row"><label>Numele Scenei:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="ex: Party Mode, Relaxare..."></div><div class="form-row"><label>Emoji sugestiv:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Distracție</option><option value="🍃">🍃 Relaxare / Fresh</option><option value="💻">💻 Birou / Work</option></select></div><div class="form-row"><label>Descriere scurtă:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="ex: Oprește toate electronicele din casă."></div><div class="form-row"><label>Șablon comportament:</label><select id="custom-scene-template" class="form-input"><option value="away">Mod Plecat (Închide tot + Alarme active)</option><option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option><option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option></select></div><button onclick="salveazaScenaCustomNoua()" style="background: var(--success-color); color: white; width: 100%; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; font-size: 1em;">💾 Creează Scena</button>`;
     modal.classList.add('active');
 }
 
@@ -308,33 +393,6 @@ function deschidePopupToateNotificarile() {
     html += `</div><div style="margin-top: 10px;"><button onclick="localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); inchidePopup();" style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button></div>`;
     continental.innerHTML = html;
     modal.classList.add('active');
-}
-
-function deschidePopupIstoric(tip) {
-    tipIstoricCurent = tip;
-    perioadaIstoricaCurenta = '7z'; 
-    const modal = document.getElementById('popup-istoric');
-    const titlu = document.getElementById('istoric-titlu');
-    if (titlu) titlu.innerHTML = tip === 'energie' ? '<i class="ph-bold ph-lightning"></i> Istoric Consum Energie' : '<i class="ph-bold ph-thermometer"></i> Istoric Climă Medie';
-    modal.classList.add('active');
-    genereazaTabelIstoric();
-}
-
-function schimbaPerioadaIstoric(perioada) {
-    perioadaIstoricaCurenta = perioada;
-    document.querySelectorAll('.time-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`btn-period-${perioada}`).classList.add('active');
-    genereazaTabelIstoric();
-}
-
-function genereazaTabelIstoric() {
-    const container = document.getElementById('istoric-grafic-content');
-    if (!container) return;
-    let intervale = perioadaIstoricaCurenta === '7z' ? ['Ieri', 'Acum 2 zile', 'Acum 3 zile'] : ['Interval lung 1', 'Interval lung 2'];
-    let html = `<table style="width: 100%; border-collapse: collapse; font-size: 0.95em; text-align: left;"><thead><tr style="border-bottom: 2px solid rgba(0,0,0,0.1); font-weight: bold;"><th style="padding: 10px 5px;">Interval Timp</th><th style="padding: 10px 5px; text-align: right;">Total</th></tr></thead><tbody>`;
-    intervale.forEach((perioada) => { html += `<tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding: 10px 5px;">${perioada}</td><td style="padding: 10px 5px; text-align: right; color: var(--accent-color); font-weight: bold;">Generat automat</td></tr>`; });
-    html += `</tbody></table>`;
-    container.innerHTML = html;
 }
 
 function inchidePopup() {

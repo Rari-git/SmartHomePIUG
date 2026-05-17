@@ -21,19 +21,19 @@ function schimbaCuloareAccent(color) {
 }
 
 function showToast(mesaj, cuUndo = false, actiuneUndo = null) {
-    let container = document.getElementById('toast-container');
+    let container = document.querySelector('.toast-container');
     if (!container) {
         container = document.createElement('div');
-        container.id = 'toast-container';
+        container.className = 'toast-container';
         document.body.appendChild(container);
     }
 
     const toast = document.createElement('div');
-    toast.className = 'toast';
+    toast.className = 'toast-notification';
     
-    let htmlContent = `<span>${mesaj}</span>`;
+    let htmlContent = `✨ <span>${mesaj}</span>`;
     if (cuUndo) {
-        htmlContent += `<button class="undo-btn">Anulează (Undo)</button>`;
+        htmlContent += `<button class="undo-btn" style="background: rgba(255,255,255,0.2); color: inherit; border: none; padding: 4px 8px; border-radius: 4px; margin-left: 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;">Undo</button>`;
     }
 
     toast.innerHTML = htmlContent;
@@ -48,7 +48,16 @@ function showToast(mesaj, cuUndo = false, actiuneUndo = null) {
     }
 
     setTimeout(() => {
-        if (document.body.contains(toast)) toast.remove();
+        toast.classList.add('show');
+    }, 50);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.style.transform = 'translateY(-20px)';
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            toast.remove();
+        }, 400);
     }, 4000);
 }
 
@@ -70,19 +79,16 @@ function toggleHelp() {
     }
 }
 
-// --- Logica pentru Meniul Lateral (Sidebar Hamburger) ---
 function toggleNav() {
     const nav = document.querySelector('nav');
     let backdrop = document.getElementById('nav-backdrop');
 
-    // Dacă fundalul protector pentru meniu nu există, îl creăm separat cu un ID unic
     if (!backdrop) {
         backdrop = document.createElement('div');
         backdrop.id = 'nav-backdrop';
         backdrop.className = 'nav-backdrop';
         document.body.appendChild(backdrop);
         
-        // Închide doar meniul lateral dacă se dă click pe fundalul lui specific
         backdrop.onclick = () => {
             nav.classList.remove('active');
             backdrop.classList.remove('active');
@@ -98,44 +104,7 @@ function toggleNav() {
     }
 }
 
-function showToast(mesaj) {
-    // 1. Verificăm dacă există containerul pe ecran, dacă nu, îl creăm
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-
-    // 2. Creăm elementul notificării sub formă de balon/cadran
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.innerHTML = `✨ <span>${mesaj}</span>`;
-
-    // 3. Îl punem în container
-    container.appendChild(toast);
-
-    // 4. Îi dăm un mic timeout ca browserul să poată rula animația de slide-in
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 50);
-
-    // 5. După 4 secunde, pornim animația de dispariție și îl ștergem din pagină
-    setTimeout(() => {
-        toast.classList.remove('show');
-        toast.style.transform = 'translateY(-20px)';
-        toast.style.opacity = '0';
-        
-        // Așteptăm să se termine tranziția CSS înainte de a-l șterge complet din HTML
-        setTimeout(() => {
-            toast.remove();
-        }, 400);
-    }, 4000);
-}
-
-// Activarea Tranzițiilor Native între pagini (View Transitions API)
 document.addEventListener('DOMContentLoaded', () => {
-    // Injectăm tag-ul meta în <head> pentru a permite cross-document transitions
     if (!document.querySelector('meta[name="view-transition"]')) {
         const metaVT = document.createElement('meta');
         metaVT.name = 'view-transition';
