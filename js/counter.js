@@ -2,10 +2,10 @@ let intervalVacanta = null;
 
 // Extrase perfecte din folderele tale "assets"
 const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="currentColor" class="hk-svg-icon">
-  <rect x="0" y="5" width="100" height="28" rx="4" />
-  <rect x="4" y="38" width="92" height="25" rx="3" />
-  <rect x="4" y="68" width="92" height="25" rx="3" />
-  <rect x="4" y="98" width="92" height="25" rx="3" />
+  <rect x="0" y="5" width="100" height="18" rx="4" />
+  <rect x="4" y="38" width="92" height="12" rx="3" />
+  <rect x="4" y="68" width="92" height="12" rx="3" />
+  <rect x="4" y="98" width="92" height="12" rx="3" />
 </svg>`;
 
 const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon">
@@ -14,16 +14,20 @@ const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 
   <line x1="12" y1="60" x2="88" y2="60" />
 </svg>`;
 
-const scenesDB = [
-    { id: 's_morning', nume: "🌅 Good Morning", descriere: "Deschide jaluzelele, pornește cafeaua.", action: () => aplicaMod('morning') },
-    { id: 's_night', nume: "🌙 Good Night", descriere: "Oprește luminile, armează ușile.", action: () => aplicaMod('night') },
-    { id: 's_away', nume: "👋 Leaving Home", descriere: "Oprește tot, robotul începe curățenia.", action: () => aplicaMod('away') },
-    { id: 's_home', nume: "🏠 I'm Home", descriere: "Dezactivează alarma, deschide jaluzelele.", action: () => aplicaMod('home') },
-    { id: 's_movie', nume: "🎬 Movie Time", descriere: "Draperii închise, TV pornit, ambient albastru.", action: () => aplicaMod('movie') },
-    { id: 's_focus', nume: "📖 Focus / Citit", descriere: "Lumină birou, purificator pornit.", action: () => aplicaMod('focus') },
-    { id: 's_dinner', nume: "🍽️ Dinner Time", descriere: "Lumini calde în living și bucătărie.", action: () => aplicaMod('dinner') },
-    { id: 's_vacation', nume: "🧳 Vacation Mode", descriere: "Simulare prezență și securitate.", action: () => aplicaMod('vacation') }
+// Baza de date pentru scene (combină cele implicite cu cele create de tine)
+const defaultScenes = [
+    { id: 's_morning', nume: "🌅 Good Morning", descriere: "Deschide jaluzelele, pornește cafeaua.", action: "morning" },
+    { id: 's_night', nume: "🌙 Good Night", descriere: "Oprește luminile, armează ușile.", action: "night" },
+    { id: 's_away', nume: "👋 Leaving Home", descriere: "Oprește tot, robotul începe curățenia.", action: "away" },
+    { id: 's_home', nume: "🏠 I'm Home", descriere: "Dezactivează alarma, deschide jaluzelele.", action: "home" },
+    { id: 's_movie', nume: "🎬 Movie Time", descriere: "Draperii închise, TV pornit, ambient albastru.", action: "movie" },
+    { id: 's_focus', nume: "📖 Focus / Citit", descriere: "Lumină birou, purificator pornit.", action: "focus" },
+    { id: 's_dinner', nume: "🍽️ Dinner Time", descriere: "Lumini calde în living și bucătărie.", action: "dinner" },
+    { id: 's_vacation', nume: "🧳 Vacation Mode", descriere: "Simulare prezență și securitate.", action: "vacation" }
 ];
+
+let customScenesList = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
+let scenesDB = [...defaultScenes, ...customScenesList];
 
 const sabloaneRecomandate = [
     { idSugestie: 'sug_1', icon: '<i class="ph-bold ph-clock"></i>', nume: 'Rutina de Dimineață', descriereScurta: 'Deschide jaluzelele în living zilnic la ora 07:00.', culoare: '#f1c40f',
@@ -77,7 +81,6 @@ function initFavorites() {
         const saved = localStorage.getItem('smartHomeData');
         subDispozitive = saved ? JSON.parse(saved) : null;
 
-        // Auto-heal logic la v6 forțează curățarea automată ca să încarce noua Fereastră!
         if (!subDispozitive || !subDispozitive.becuri || !localStorage.getItem('design_svg_assets_v6')) {
             subDispozitive = JSON.parse(JSON.stringify(defaultDispozitive));
             localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
@@ -474,40 +477,6 @@ function deschidePopupToateNotificarile() {
     modal.classList.add('active');
 }
 
-function deschidePopupToateNotificarile() {
-    const modal = document.getElementById('popup-dispozitive');
-    const titlu = document.getElementById('modal-titlu');
-    const continental = document.getElementById('modal-continut');
-    if (!modal || !titlu || !continental) return;
-    titlu.innerHTML = "🔔 Toate Notificările Casei";
-    
-    const toateNotificarile = genereazaListaNotificari();
-    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left;">`;
-    toateNotificarile.forEach(notif => {
-        if (notif.id === "notif_lumini") {
-            html += `
-                <div class="notification-item" onclick="deschidePopupLuminiAprinse()" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                    <span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; font-weight: bold;">(Apasă pentru detalii)</span></span>
-                </div>`;
-        } else if (notif.id === "notif_audio") {
-            html += `
-                <div class="notification-item" onclick="deschidePopupAudioPornit()" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                    <span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; font-weight: bold;">(Apasă pentru detalii)</span></span>
-                </div>`;
-        } else {
-            html += `<div class="notification-item" style="padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><span>${notif.text}</span></div>`;
-        }
-    });
-    html += `</div>
-        <div style="margin-top: 10px;">
-            <button onclick="localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); inchidePopup();" style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
-                <i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare
-            </button>
-        </div>`;
-    continental.innerHTML = html;
-    modal.classList.add('active');
-}
-
 function construiesteCardHTML(disp, cat, idx, isFav) {
     const isActive = ['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare);
     const idUnic = `${cat}_${idx}`;
@@ -528,9 +497,11 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
 
 function construiesteScenaHTML(scena, isFav) {
     const isActive = localStorage.getItem('activeScene') === scena.id;
+    const esteCustom = !scena.id.startsWith('s_'); 
     return `
         <div class="hk-card ${isActive ? 'is-active' : ''}" style="height: 90px;" onclick="executaScena('${scena.id}')">
             <div class="hk-controls">
+                ${esteCustom ? `<button class="hk-btn" onclick="stergeScenaCustom('${scena.id}', event)" style="color: var(--error-color); margin-right: 2px;"><i class="ph-bold ph-trash"></i></button>` : ''}
                 <button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${scena.id}', 'scene', event)"><i class="ph-fill ph-star"></i></button>
             </div>
             <div class="hk-name" style="font-size: 1.1em; margin-bottom: 5px;">${scena.nume}</div>
@@ -642,6 +613,7 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
     titlu.innerHTML = `${disp.icon} ${disp.nume}`;
     let contentHtml = '';
 
+    // Aici a fost aplicată modificarea: reîncarcă pop-up-ul în loc să îl închidă!
     if (categorie === 'prize') {
         const consumCurent = calculeazaConsumPriza(disp);
         contentHtml = `
@@ -649,12 +621,12 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
                 <div style="font-size: 1.1em; font-weight: bold; opacity: 0.8; margin-bottom: 5px;">Consum Curent în ${disp.camera}</div>
                 <div style="font-size: 3.5em; font-weight: bold; color: var(--accent-color); margin: 10px 0;">${consumCurent} W</div>
                 <div style="font-size: 0.9em; opacity: 0.7; margin-bottom: 20px;">Dispozitive conectate: <br><strong>${disp.detalii}</strong></div>
-                <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); inchidePopup();" style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Alimentare Priză: ${disp.stare}</button>
+                <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); deschideMeniuDispozitive('none', '${categorie}', ${elementIndex});" style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Alimentare Priză: ${disp.stare}</button>
             </div>`;
     } else {
         contentHtml = `
             <div style="margin-bottom: 20px; text-align:center;">
-                <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); inchidePopup();" style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Schimbă Stare (Curent: ${disp.stare})</button>
+                <button class="sensor-action-btn" onclick="toggleStareDispozitiv('${categorie}', ${elementIndex}); deschideMeniuDispozitive('none', '${categorie}', ${elementIndex});" style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Schimbă Stare (Curent: ${disp.stare})</button>
             </div>`;
         if (categorie === 'camereVideo') {
             contentHtml += `
@@ -832,45 +804,7 @@ function deschidePopupLuminiAprinse() {
     
     if (!areLumini) {
         html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate luminile au fost stinse!</div>`;
-        setTimeout(inchidePopup, 1000); 
-    }
-    
-    continental.innerHTML = html;
-    modal.classList.add('active');
-}
-
-function deschidePopupAudioPornit() {
-    const modal = document.getElementById('popup-dispozitive');
-    const titlu = document.getElementById('modal-titlu');
-    const continental = document.getElementById('modal-continut');
-    if (!modal || !titlu || !continental) return;
-    
-    titlu.innerHTML = "<i class='ph-fill ph-speaker-high'></i> Sisteme Audio Active";
-    let html = `<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px 0;">`;
-    let areAudio = false;
-    
-    (subDispozitive.audio || []).forEach((boxa, idx) => {
-        if (boxa.stare === "Pornit") {
-            areAudio = true;
-            html += `
-                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='var(--bg-primary)'" onclick="deschideMeniuDispozitive('none', 'audio', ${idx}); event.stopPropagation();">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em; color: var(--accent-color);"><i class="ph-fill ph-speaker-high"></i></span>
-                        <div>
-                            <strong style="display:block;">${boxa.nume}</strong>
-                            <span style="font-size: 0.85em; opacity: 0.6;">${boxa.camera} • Volum: ${boxa.valoare}%</span>
-                        </div>
-                    </div>
-                    <button onclick="toggleStareDispozitiv('audio', ${idx}, event); deschidePopupAudioPornit();" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Oprește</button>
-                </div>`;
-        }
-    });
-    
-    html += `</div>`;
-    
-    if (!areAudio) {
-        html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate sistemele audio au fost oprite!</div>`;
-        setTimeout(inchidePopup, 1000); 
+        // Eliminat setTimeout pentru a lăsa fereastra deschisă
     }
     
     continental.innerHTML = html;
@@ -1047,17 +981,16 @@ function calculeazaConsumPriza(disp) {
     return consumReal;
 }
 
-// Funcția care rulează o scenă și o marchează ca fiind "Activă"
+// Funcția care rulează o scenă (implicită sau creată)
 function executaScena(idScena) {
-    // 1. Salvăm în memorie faptul că această scenă este cea activă acum
     localStorage.setItem('activeScene', idScena);
-    
-    // 2. Căutăm scena în baza de date (scenesDB)
     const scena = scenesDB.find(s => s.id === idScena);
-    
-    // 3. Dacă o găsim, îi executăm acțiunile (va rula funcția aplicaMod specifică)
     if (scena && scena.action) {
-        scena.action();
+        if(typeof scena.action === 'function') {
+            scena.action();
+        } else {
+            aplicaMod(scena.action); // Pentru scenele custom salvate ca string
+        }
     }
 }
 
@@ -1098,7 +1031,7 @@ function deschidePopupAudioPornit() {
     
     if (!areAudio) {
         html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate sistemele audio au fost oprite!</div>`;
-        setTimeout(inchidePopup, 1000); 
+        // Eliminat setTimeout pentru a lăsa fereastra deschisă
     }
     
     continental.innerHTML = html;
@@ -1138,7 +1071,7 @@ function deschidePopupCreareScena() {
         <div class="popup-field">
             <label>Șablon comportament (Rutina generată):</label>
             <select id="custom-scene-template">
-                <option value="away">Mod Plecat (Închide tout + Alarme active)</option>
+                <option value="away">Mod Plecat (Închide tot + Alarme active)</option>
                 <option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option>
                 <option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option>
                 <option value="movie">Mod Ambient Cinematic (Lumini colorate/TV)</option>
@@ -1149,4 +1082,58 @@ function deschidePopupCreareScena() {
         </button>
     `;
     modal.classList.add('active');
+}
+
+// Salvează scena personalizată
+function salveazaScenaCustomNoua() {
+    const nume = document.getElementById('custom-scene-name').value.trim();
+    const emoji = document.getElementById('custom-scene-emoji').value;
+    const desc = document.getElementById('custom-scene-desc').value.trim();
+    const actiuneMod = document.getElementById('custom-scene-template').value;
+    
+    if (!nume || !desc) {
+        alert("Te rog completează numele și descrierea scenei!");
+        return;
+    }
+    
+    const nouaScena = {
+        id: 'cust_' + Date.now(), 
+        nume: `${emoji} ${nume}`,
+        descriere: desc,
+        action: actiuneMod
+    };
+    
+    let list = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
+    list.push(nouaScena);
+    localStorage.setItem('smartHomeCustomScenes', JSON.stringify(list));
+    
+    customScenesList = list;
+    scenesDB = [...defaultScenes, ...customScenesList];
+    
+    inchidePopup();
+    reincarcaInterfata();
+}
+
+// Șterge scena personalizată
+function stergeScenaCustom(idScena, event) {
+    if(event) event.stopPropagation(); 
+    
+    if(confirm("Sigur vrei să ștergi această scenă personalizată?")) {
+        let list = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
+        list = list.filter(s => s.id !== idScena);
+        localStorage.setItem('smartHomeCustomScenes', JSON.stringify(list));
+        
+        let favs = JSON.parse(localStorage.getItem('favScenes')) || [];
+        favs = favs.filter(id => id !== idScena);
+        localStorage.setItem('favScenes', JSON.stringify(favs));
+        
+        if (localStorage.getItem('activeScene') === idScena) {
+            localStorage.removeItem('activeScene');
+        }
+        
+        customScenesList = list;
+        scenesDB = [...defaultScenes, ...customScenesList];
+        
+        reincarcaInterfata();
+    }
 }
