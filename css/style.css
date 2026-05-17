@@ -1,37 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Paleta Apple HomeKit - Light Mode */
+    /* Paleta Apple HomeKit - Light Mode cu efect Glass */
     --bg-primary: #f2f2f7; 
-    --card-bg: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.75); /* Carduri semi-transparente pentru a lăsa apa să se vadă */
     --text-color: #1c1c1e;
-    --text-muted: #8e8e93;
+    --text-muted: #6c6c70;
     --accent-color: #007aff; /* Apple Blue */
     --success-color: #34c759; /* Apple Green */
     --error-color: #ff3b30; /* Apple Red */
     --warning-color: #ff9500; /* Apple Orange */
     --card-radius: 20px;
-    --shadow-soft: 0 8px 24px rgba(0,0,0,0.04);
+    --shadow-soft: 0 8px 32px rgba(0, 100, 200, 0.08); /* Umbră ușor albăstruie */
 }
 
 body.dark-mode {
     /* Paleta Apple HomeKit - Dark Mode */
     --bg-primary: #000000;
-    --card-bg: #1c1c1e;
+    --card-bg: rgba(28, 28, 30, 0.75);
     --text-color: #f2f2f7;
     --text-muted: #98989d;
-    --shadow-soft: 0 8px 24px rgba(0,0,0,0.4);
+    --shadow-soft: 0 8px 32px rgba(0,0,0,0.5);
 }
 
 body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: var(--bg-primary);
+    
+    /* 🌊 AICI ESTE IMAGINEA NOUĂ CU APĂ CALMĂ ALB/ALBASTRU DESCHIS */
+    background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
+    background-size: cover;
+    
     color: var(--text-color);
     display: flex;
     min-height: 100vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease;
     -webkit-font-smoothing: antialiased;
+}
+
+body.dark-mode {
+    /* În Dark Mode punem o umbră peste imagine ca să nu ne deranjeze ochii noaptea */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
+    background-size: cover;
 }
 
 main {
@@ -53,8 +63,8 @@ nav {
     width: 240px;
     height: 100vh;
     background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     padding: 20px;
     box-shadow: 5px 0 25px rgba(0,0,0,0.1);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -124,6 +134,16 @@ nav a:hover, nav a.active {
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    /* Dăm un mic background blur textului ca să fie mereu lizibil peste valurile de apă */
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 4px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+body.dark-mode .hk-section-title {
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .hk-grid {
@@ -142,7 +162,6 @@ nav a:hover, nav a.active {
     border-radius: var(--card-radius);
     padding: 16px;
     box-shadow: var(--shadow-soft);
-    overflow: visible;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -150,17 +169,25 @@ nav a:hover, nav a.active {
     cursor: pointer;
     position: relative;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s;
-    border: none;
+    
+    /* GLASSMORPHISM - Sticla mată Apple */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
+body.dark-mode .hk-card { border-color: rgba(255, 255, 255, 0.1); }
 
 .hk-grid-wide .hk-card {
     aspect-ratio: auto;
     height: 110px;
 }
 
+/* Cardurile Active devin albastre, dar păstrează o peliculă fină de sticlă */
 .hk-card.is-active {
-    background: var(--card-bg);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    background: rgba(0, 122, 255, 0.9) !important; 
+    color: #ffffff !important;
+    box-shadow: 0 8px 30px rgba(0, 122, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .hk-card:active {
@@ -168,22 +195,15 @@ nav a:hover, nav a.active {
 }
 
 .hk-icon {
-    position: a;
     font-size: 1.8em;
     color: var(--text-muted);
-    align-items: center;
-    justify-content: center;
     transition: color 0.3s ease;
 }
 
-.hk-card.is-active .hk-icon {
-    color: var(--warning-color);
-}
-
-.hk-card.is-active[onclick*="'prize'"] .hk-icon,
-.hk-card.is-active[onclick*="'purificator'"] .hk-icon,
-.hk-card.is-active[onclick*="'electrocasnice'"] .hk-icon {
-    color: var(--accent-color);
+.hk-card.is-active .hk-icon,
+.hk-card.is-active .hk-name,
+.hk-card.is-active .hk-state {
+    color: #ffffff !important;
 }
 
 .hk-name {
@@ -213,7 +233,7 @@ nav a:hover, nav a.active {
 .hk-card:hover .hk-controls { opacity: 1; }
 
 .hk-btn {
-    background: var(--bg-primary);
+    background: rgba(255, 255, 255, 0.5);
     border: none;
     border-radius: 50%;
     width: 30px;
@@ -226,16 +246,29 @@ nav a:hover, nav a.active {
     color: var(--text-muted);
     transition: background 0.2s, color 0.2s;
 }
+.hk-card.is-active .hk-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
 .hk-btn:hover { background: rgba(0,0,0,0.1); color: var(--text-color); }
-.hk-star.is-fav { color: var(--warning-color); opacity: 1 !important; }
+.hk-star.is-fav { color: var(--warning-color) !important; opacity: 1 !important; }
 
+/* Containere cu aspect de sticlă mată (Stats, Notificări) */
 .notification-container, .stats-card, .danger-panel, .settings-card {
     background: var(--card-bg);
     border-radius: var(--card-radius);
     padding: 24px;
     margin-bottom: 25px;
     box-shadow: var(--shadow-soft);
-    border: none;
+    border: 1px solid rgba(255,255,255,0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+}
+body.dark-mode .notification-container, 
+body.dark-mode .stats-card, 
+body.dark-mode .danger-panel, 
+body.dark-mode .settings-card { 
+    border-color: rgba(255,255,255,0.1); 
 }
 
 .notification-item {
@@ -248,7 +281,6 @@ nav a:hover, nav a.active {
     font-weight: 500;
 }
 body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05); }
-
 .notification-item:last-child { border-bottom: none; }
 
 .see-more-btn {
@@ -258,12 +290,13 @@ body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05);
     padding: 15px 0 0 0; font-size: 0.9em;
 }
 
+/* Modale / Popups cu blur HomeKit */
 .modal {
     display: none; position: fixed; z-index: 2000; left: 0; top: 0;
     width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     align-items: center; justify-content: center;
 }
 .modal.active { display: flex; }
@@ -276,6 +309,9 @@ body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05);
     width: 90%; max-width: 400px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     position: relative;
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     animation: modalScaleIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -303,11 +339,13 @@ svg.hk-svg-icon {
     width: 1em;
     height: 1em;
     color: var(--text-muted);
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
     transition: color 0.3s ease;
-    display: block;
 }
 
-/* Forțăm cardurile de jaluzele și ferestre să rămână albe/gri la fundal */
+/* Forțăm cardurile de jaluzele și ferestre să rămână albe/gri, ca să nu se înroșească/albăstrească tot boxul */
 .hk-card.is-active[onclick*="'jaluzele'"],
 .hk-card.is-active[onclick*="'senzoriContact'"] {
     background: var(--card-bg) !important;
@@ -315,13 +353,13 @@ svg.hk-svg-icon {
     box-shadow: var(--shadow-soft) !important;
 }
 
-/* Când Draperia devine DESCHISĂ -> SVG devine Portocaliu Apple */
+/* Când Draperia devine DESCHISĂ -> doar liniile SVG devin Portocaliu Apple */
 .hk-card.is-active[onclick*="'jaluzele'"] svg.hk-svg-icon,
 .hk-card.is-active[onclick*="'jaluzele'"] .hk-icon {
     color: var(--warning-color) !important;
 }
 
-/* Când Fereastra devine DESCHISĂ -> SVG devine Albastru Cyan soft Apple */
+/* Când Fereastra devine DESCHISĂ -> doar liniile SVG devin Albastru Cyan soft Apple */
 .hk-card.is-active[onclick*="'senzoriContact'"] svg.hk-svg-icon,
 .hk-card.is-active[onclick*="'senzoriContact'"] .hk-icon {
     color: #5ac8fa !important;
