@@ -2,6 +2,8 @@ let intervalVacanta = null;
 let customScenesList = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
 let scenesDB = [...defaultScenes, ...customScenesList];
 let subDispozitive = {};
+let pinCurentIntrodus = "";
+let modAlarmaActiune = "";
 
 document.addEventListener('DOMContentLoaded', () => {
     initFavorites();
@@ -38,6 +40,99 @@ function salveazaStarea() {
 function incarcaNumeCasa() {
     const titluCasa = document.getElementById('nume-casa-global');
     if (titluCasa) titluCasa.innerText = localStorage.getItem('numeCasaSalvat') || "My Home";
+}
+
+function deschidePopupPin(mod) {
+    modAlarmaActiune = mod;
+    pinCurentIntrodus = "";
+    const modal = document.getElementById('popup-pin-alarma');
+    const display = document.getElementById('pin-display');
+    const error = document.getElementById('pin-error-msg');
+    if (display) display.innerText = "";
+    if (error) error.style.display = "none";
+    if (modal) modal.classList.add('active');
+}
+
+function inchidePopupPin() {
+    const modal = document.getElementById('popup-pin-alarma');
+    if (modal) modal.classList.remove('active');
+}
+
+function apasatTastaPin(tasta) {
+    const display = document.getElementById('pin-display');
+    const error = document.getElementById('pin-error-msg');
+    if (error) error.style.display = "none";
+
+    if (tasta === 'C') {
+        pinCurentIntrodus = "";
+    } else if (tasta === '⌫') {
+        pinCurentIntrodus = pinCurentIntrodus.slice(0, -1);
+    } else {
+        if (pinCurentIntrodus.length < 4) {
+            pinCurentIntrodus += tasta;
+        }
+    }
+
+    if (display) display.innerText = "•".repeat(pinCurentIntrodus.length);
+
+    if (pinCurentIntrodus.length === 4) {
+        setTimeout(verificaCodPinIntrodus, 200);
+    }
+}
+
+function verificaCodPinIntrodus() {
+    const pinSalvat = localStorage.getItem('codPinAlarma') || "1234";
+    if (pinCurentIntrodus === pinSalvat) {
+        inchidePopupPin();
+        if (modAlarmaActiune === 'armat') {
+            executaSecurizareTotala();
+        } else if (modAlarmaActiune === 'dezarmat') {
+            localStorage.setItem('alarmaDezactivata', 'true');
+            if (subDispozitive.incuietori) subDispozitive.incuietori.forEach(u => u.stare = "Deblocat");
+            if (subDispozitive.senzoriMiscare) subDispozitive.senzoriMiscare.forEach(s => s.stare = "Inactiv");
+            salveazaStarea();
+            if (typeof adaugaInLog === 'function') adaugaInLog("🛡️ Securitate: Sistem dezarmat prin cod PIN.");
+            if (typeof showToast === 'function') showToast("Sistemul de securitate a fost dezarmat.");
+        } else if (modAlarmaActiune === 'scena_home') {
+            localStorage.setItem('alarmaDezactivata', 'true');
+            localStorage.setItem('activeScene', 's_home');
+            const scena = scenesDB.find(s => s.id === 's_home');
+            if (scena && scena.action) typeof scena.action === 'function' ? scena.action() : aplicaMod(scena.action);
+            if (typeof adaugaInLog === 'function') adaugaInLog("🎭 Scenă: S-a activat scena I'm Home după confirmare PIN.");
+            if (typeof showToast === 'function') showToast("Scena I'm Home a fost activată.");
+        }
+        reincarcaInterfata();
+    } else {
+        pinCurentIntrodus = "";
+        const display = document.getElementById('pin-display');
+        const error = document.getElementById('pin-error-msg');
+        if (display) display.innerText = "";
+        if (error) error.style.display = "block";
+    }
+}
+
+function salveazaCodPinNou() {
+    const pinVechiInput = document.getElementById('input-pin-vechi');
+    const pinNouInput = document.getElementById('input-pin-nou');
+    if (!pinVechiInput || !pinNouInput) return;
+
+    const pinVechi = pinVechiInput.value;
+    const pinNou = pinNouInput.value;
+    const pinSalvat = localStorage.getItem('codPinAlarma') || "1234";
+
+    if (pinVechi !== pinSalvat) {
+        if (typeof showToast === 'function') showToast("❌ Codul PIN actual este incorect!");
+        return;
+    }
+    if (pinNou.length !== 4 || isNaN(pinNou)) {
+        if (typeof showToast === 'function') showToast("❌ Codul nou trebuie să aibă 4 cifre!");
+        return;
+    }
+
+    localStorage.setItem('codPinAlarma', pinNou);
+    pinVechiInput.value = "";
+    pinNouInput.value = "";
+    if (typeof showToast === 'function') showToast("✅ Codul PIN a fost actualizat cu succes.");
 }
 
 function toggleFavorite(id, type, event) {
@@ -163,6 +258,7 @@ function stergeAutomatizare(id) {
     randareSabloane(); randareAutomatizari();
 }
 
+// FIX: Suport complet pentru activarea și dezactivarea din comutator
 function comutaAutomatizare(id) {
     let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     const rule = rules.find(r => r.id === id);
@@ -242,6 +338,10 @@ function calculeazaConsumPriza(disp) {
 }
 
 function executaScena(idScena) {
+    if (idScena === 's_home' && localStorage.getItem('alarmaDezactivata') !== 'true') {
+        deschidePopupPin('scena_home');
+        return;
+    }
     localStorage.setItem('activeScene', idScena);
     const scena = scenesDB.find(s => s.id === idScena);
     if (scena && scena.action) typeof scena.action === 'function' ? scena.action() : aplicaMod(scena.action);
@@ -283,7 +383,8 @@ function executaSecurizareTotala() {
     if (subDispozitive.camereVideo) subDispozitive.camereVideo.forEach(c => c.stare = "LIVE");
     localStorage.setItem('alarmaDezactivata', 'false');
     salveazaStarea(); reincarcaInterfata();
-    if (typeof adaugaInLog === 'function') adaugaInLog("🛡️ Securitate: S-a efectuat o securizare totală.");
+    if (typeof adaugaInLog === 'function') adaugaInLog("🛡️ Securitate: S-a efectuat o securizare totală instantă.");
+    if (typeof showToast === 'function') showToast("Securizarea totală rapidă a fost activată.");
 }
 
 function adaugaInLog(mesaj) {
@@ -291,118 +392,4 @@ function adaugaInLog(mesaj) {
     logs.unshift({ text: mesaj, ora: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) });
     localStorage.setItem('smartHomeLogs', JSON.stringify(logs.slice(0, 30)));
     if (document.getElementById('logs-container')) randareStatisticiLogs();
-}
-
-// Comută o automatizare între activat și dezactivat (la apăsarea switch-ului)
-function comutaAutomatizare(id) {
-    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    const rule = rules.find(r => r.id === id);
-    if (rule) {
-        rule.active = !rule.active;
-        localStorage.setItem('userAutomations', JSON.stringify(rules));
-        randareAutomatizari();
-    }
-}
-
-// Șterge definitiv o regulă din listă
-function stergeAutomatizare(id) {
-    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    localStorage.setItem('userAutomations', JSON.stringify(rules.filter(r => r.id !== id)));
-    randareSabloane();
-    randareAutomatizari();
-}
-
-// Adaugă o regulă instanțiată rapid dintr-un șablon recomandat
-function adaugaSugestie(idSugestie) {
-    const sug = sabloaneRecomandate.find(s => s.idSugestie === idSugestie);
-    if(!sug) return;
-    
-    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    let nouaRegula = {
-        id: Date.now(),
-        active: true,
-        lastRun: "Niciodată",
-        idSugestie: sug.idSugestie,
-        tipTrigger: sug.tipTrigger,
-        descriere: sug.descriere,
-        aCat: sug.aCat,
-        aIdx: sug.aIdx,
-        aState: sug.aState
-    };
-    
-    if (sug.tipTrigger === 'timp') {
-        nouaRegula.tOra = sug.tOra;
-    } else {
-        nouaRegula.tCat = sug.tCat;
-        nouaRegula.tIdx = sug.tIdx;
-        nouaRegula.tState = sug.tState;
-    }
-    
-    rules.unshift(nouaRegula);
-    localStorage.setItem('userAutomations', JSON.stringify(rules));
-    randareSabloane();
-    randareAutomatizari();
-}
-
-// Deschide și populează modalul de creare automatizări manuale cu lista de opțiuni
-function deschideModalAutomatizare() {
-    const modal = document.getElementById('popup-automatizare');
-    if(!modal) return;
-    
-    const selectTrigger = document.getElementById('auto-trigger-dev');
-    const selectAction = document.getElementById('auto-action-dev');
-    let optionsHTML = '';
-    
-    Object.keys(subDispozitive).forEach(cat => {
-        (subDispozitive[cat] || []).forEach((disp, idx) => {
-            optionsHTML += `<option value="${cat}_${idx}">${disp.nume} (${disp.camera || 'Casă'})</option>`;
-        });
-    });
-    
-    if(selectTrigger) selectTrigger.innerHTML = optionsHTML;
-    if(selectAction) selectAction.innerHTML = optionsHTML;
-    
-    modal.classList.add('active');
-}
-
-// Salvează regula configurată manual din interiorul modalului
-function salveazaAutomatizare() {
-    const esteTimp = typeof modTriggerCurent !== 'undefined' && modTriggerCurent === 'timp';
-    const aVal = document.getElementById('auto-action-dev').value.split('_');
-    const aState = document.getElementById('auto-action-state').value;
-    const actionNume = subDispozitive[aVal[0]][aVal[1]].nume;
-    
-    let rule = {
-        id: Date.now(),
-        active: true,
-        lastRun: "Niciodată",
-        aCat: aVal[0],
-        aIdx: aVal[1],
-        aState: aState
-    };
-
-    if (esteTimp) {
-        const ora = document.getElementById('auto-trigger-timp').value;
-        if (!ora) return;
-        rule.tipTrigger = 'timp';
-        rule.tOra = ora;
-        rule.descriere = `⏰ Zilnic la ora ${ora} ➔ ${actionNume} devine ${aState}`;
-    } else {
-        const tVal = document.getElementById('auto-trigger-dev').value.split('_');
-        const tState = document.getElementById('auto-trigger-state').value;
-        rule.tipTrigger = 'disp';
-        rule.tCat = tVal[0];
-        rule.tIdx = tVal[1];
-        rule.tState = tState;
-        rule.descriere = `DACĂ ${subDispozitive[tVal[0]][tVal[1]].nume} este ${tState} ➔ ${actionNume} devine ${aState}`;
-    }
-
-    let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    rules.unshift(rule);
-    localStorage.setItem('userAutomations', JSON.stringify(rules));
-    
-    // Închidem modalul și redesenăm elementele
-    document.getElementById('popup-automatizare').classList.remove('active');
-    randareSabloane();
-    randareAutomatizari();
 }

@@ -285,7 +285,15 @@ function actualizeazaStatusGlobal() {
     let consumTotal = 150; 
     if (subDispozitive.prize) subDispozitive.prize.forEach(priză => { consumTotal += calculeazaConsumPriza(priză); });
     con.innerText = (consumTotal/1000).toFixed(2) + " kW";
-    sec.innerText = localStorage.getItem('alarmaDezactivata') === 'true' ? "Dezactivată" : "Armată";
+    
+    const esteDezarmat = localStorage.getItem('alarmaDezactivata') === 'true';
+    sec.innerText = esteDezarmat ? "Dezactivată" : "Armată";
+
+    const txtSecuritateAlarma = document.getElementById('txt-status-alarma');
+    if(txtSecuritateAlarma) {
+        txtSecuritateAlarma.innerText = esteDezarmat ? "Sistem Dezarmat" : "Sistem Armat";
+        txtSecuritateAlarma.style.color = esteDezarmat ? "var(--error-color)" : "var(--success-color)";
+    }
 }
 
 function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
@@ -409,7 +417,9 @@ window.onclick = function(event) {
     const m1 = document.getElementById('popup-dispozitive');
     const m2 = document.getElementById('popup-automatizare');
     const m3 = document.getElementById('popup-istoric');
+    const m4 = document.getElementById('popup-pin-alarma');
     if (event.target === m1) m1.classList.remove('active');
     if (event.target === m2) m2.classList.remove('active');
     if (event.target === m3) m3.classList.remove('active');
+    if (event.target === m4) m4.classList.remove('active');
 }

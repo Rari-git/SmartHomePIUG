@@ -16,40 +16,23 @@
             <h1>Sistem de Securitate</h1>
         </div>
 
-        <div class="security-grid-container">
-            <div class="security-badge-card">
+        <div class="security-grid-container" style="display: grid; grid-template-columns: 1fr; max-width: 500px; margin: 0 auto;">
+            <div class="security-badge-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.4); display: flex; flex-direction: column; gap: 20px;">
                 <div>
                     <h3 class="m-0">Scut de Protecție Global</h3>
                     <div class="flex-row flex-center" style="margin: 20px 0; justify-content: flex-start;">
                         <span id="shield-icon-huge" style="font-size: 4em;">🛡️</span>
                         <div>
                             <h4 class="text-muted m-0" style="text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Status Sistem</h4>
-                            <h2 class="text-success m-0" id="txt-status-alarma" style="margin-top: 5px;">Sistem Armat</h2>
+                            <h2 class="m-0" id="txt-status-alarma" style="margin-top: 5px;">Sistem Armat</h2>
                         </div>
                     </div>
                 </div>
-                <div class="flex-row" style="margin: 0; gap: 10px;">
-                    <button id="btn-armare-total" class="btn-full" onclick="schimbaStareSecuritate('armat')" style="background: var(--success-color); color: white; flex: 1;">Armează</button>
-                    <button id="btn-dezarmare-total" class="btn-full" onclick="schimbaStareSecuritate('dezarmat')" style="background: var(--error-color); color: white; flex: 1;">Dezarmează</button>
+                <div class="flex-row" style="margin: 0; gap: 10px; display: flex; width: 100%;">
+                    <button id="btn-armare-total" class="btn-full" onclick="deschidePopupPin('armat')" style="background: var(--success-color); color: white; flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Armează</button>
+                    <button id="btn-dezarmare-total" class="btn-full" onclick="deschidePopupPin('dezarmat')" style="background: var(--error-color); color: white; flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Dezarmează</button>
                 </div>
-            </div>
-
-            <div class="security-form-card">
-                <h3>Setări Cod Alarmă PIN</h3>
-                <div style="display: flex; flex-direction: column; gap: 15px; margin: 15px 0;">
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <label style="font-weight: 600; font-size: 0.9em;">Codul de Siguranță Actual</label>
-                        <input type="password" id="input-pin-vechi" class="form-input" placeholder="****" maxlength="4" style="text-align: center; letter-spacing: 4px;">
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <label style="font-weight: 600; font-size: 0.9em;">Introduceți Codul Nou (4 cifre)</label>
-                        <input type="password" id="input-pin-nou" class="form-input" placeholder="****" maxlength="4" style="text-align: center; letter-spacing: 4px;">
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="btn-full" onclick="salveazaCodPinNou()" style="background: var(--text-color); color: var(--bg-primary);">💾 Actualizează Cod PIN</button>
-                    <button class="btn-full" onclick="if(typeof executaSecurizareTotala === 'function') executaSecurizareTotala();" style="background: var(--accent-color); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">⚡ Securizare Rapidă Casă</button>
-                </div>
+                <button class="btn-full" onclick="executaSecurizareTotala()" style="background: var(--accent-color); color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 1em;">⚡ Securizare Rapidă Casă</button>
             </div>
         </div>
 

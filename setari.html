@@ -28,6 +28,21 @@
         </div>
 
         <div class="settings-card">
+            <h3>Setări Cod Alarmă PIN</h3>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin: 15px 0;">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-weight: 600; font-size: 0.9em;">Codul de Siguranță Actual</label>
+                    <input type="password" id="input-pin-vechi" class="form-input" placeholder="****" maxlength="4" style="text-align: center; letter-spacing: 4px;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-weight: 600; font-size: 0.9em;">Introduceți Codul Nou (4 cifre)</label>
+                    <input type="password" id="input-pin-nou" class="form-input" placeholder="****" maxlength="4" style="text-align: center; letter-spacing: 4px;">
+                </div>
+            </div>
+            <button onclick="salveazaCodPinNou()" style="background: var(--text-color); color: var(--bg-primary); padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">💾 Actualizează Cod PIN</button>
+        </div>
+
+        <div class="settings-card">
             <h3>Preferințe Afișaj & Interfață</h3>
             <div class="flex-between" style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
                 <div>
