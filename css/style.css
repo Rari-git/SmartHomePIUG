@@ -37,7 +37,7 @@ body {
 main {
     flex: 1;
     padding: 30px;
-    max-width: 1200px; /* Setează o lățime maximă pentru ecrane mari */
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -45,14 +45,14 @@ h1, h2, h3 {
     letter-spacing: -0.5px;
 }
 
-/* --- Meniu Lateral Retractabil (Sidebar Drawer) --- */
+/* --- Meniu Lateral Retractabil --- */
 nav {
     position: fixed;
     top: 0;
     left: -280px; 
     width: 240px;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.85); /* Apple Glassmorphism */
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     padding: 20px;
@@ -128,7 +128,6 @@ nav a:hover, nav a.active {
 
 .hk-grid {
     display: grid;
-    /* Facem cardurile pătrate, tipice iOS */
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 16px;
 }
@@ -143,24 +142,24 @@ nav a:hover, nav a.active {
     border-radius: var(--card-radius);
     padding: 16px;
     box-shadow: var(--shadow-soft);
+    overflow: visible;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    aspect-ratio: 1 / 1; /* Forțează aspectul perfect pătrat */
+    aspect-ratio: 1 / 1;
     cursor: pointer;
     position: relative;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s;
     border: none;
 }
 
-/* Cardurile late (scene) nu au aspect-ratio 1:1 */
 .hk-grid-wide .hk-card {
     aspect-ratio: auto;
     height: 110px;
 }
 
 .hk-card.is-active {
-    background: var(--card-bg); /* Rămâne alb pe fundal */
+    background: var(--card-bg);
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
@@ -168,19 +167,19 @@ nav a:hover, nav a.active {
     transform: scale(0.96);
 }
 
-/* Stilul iconițelor din card */
 .hk-icon {
+    position: a;
     font-size: 1.8em;
     color: var(--text-muted);
+    align-items: center;
+    justify-content: center;
     transition: color 0.3s ease;
 }
 
-/* Când dispozitivul este activ, iconița se aprinde la culoare */
 .hk-card.is-active .hk-icon {
-    color: var(--warning-color); /* Culoarea portocaliu-gălbuie a becurilor aprinse din iOS */
+    color: var(--warning-color);
 }
 
-/* Culoare albastră pentru prize/device-uri generale când sunt active */
 .hk-card.is-active[onclick*="'prize'"] .hk-icon,
 .hk-card.is-active[onclick*="'purificator'"] .hk-icon,
 .hk-card.is-active[onclick*="'electrocasnice'"] .hk-icon {
@@ -230,8 +229,6 @@ nav a:hover, nav a.active {
 .hk-btn:hover { background: rgba(0,0,0,0.1); color: var(--text-color); }
 .hk-star.is-fav { color: var(--warning-color); opacity: 1 !important; }
 
-
-/* --- Centru de Notificări --- */
 .notification-container, .stats-card, .danger-panel, .settings-card {
     background: var(--card-bg);
     border-radius: var(--card-radius);
@@ -261,7 +258,6 @@ body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05);
     padding: 15px 0 0 0; font-size: 0.9em;
 }
 
-/* Modale / Popups cu blur HomeKit */
 .modal {
     display: none; position: fixed; z-index: 2000; left: 0; top: 0;
     width: 100%; height: 100%;
@@ -295,7 +291,23 @@ body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05);
 }
 .close-btn:hover { color: var(--text-color); }
 
-/* Asigurăm că fundalul cardurilor active de draperii și ferestre NU se schimbă */
+/* --- STILURI PENTRU SVG-URILE DIN ASSETS --- */
+svg.hk-svg-icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.hk-card .hk-icon svg.hk-svg-icon {
+    width: 1em;
+    height: 1em;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    display: block;
+}
+
+/* Forțăm cardurile de jaluzele și ferestre să rămână albe/gri la fundal */
 .hk-card.is-active[onclick*="'jaluzele'"],
 .hk-card.is-active[onclick*="'senzoriContact'"] {
     background: var(--card-bg) !important;
@@ -303,12 +315,14 @@ body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05);
     box-shadow: var(--shadow-soft) !important;
 }
 
-/* Când Draperia este DESCHISĂ -> Doar iconița devine Portocaliu Apple */
+/* Când Draperia devine DESCHISĂ -> SVG devine Portocaliu Apple */
+.hk-card.is-active[onclick*="'jaluzele'"] svg.hk-svg-icon,
 .hk-card.is-active[onclick*="'jaluzele'"] .hk-icon {
     color: var(--warning-color) !important;
 }
 
-/* Când Fereastra este DESCHISĂ -> Doar iconița devine Cyan/Albastru deschis Apple */
+/* Când Fereastra devine DESCHISĂ -> SVG devine Albastru Cyan soft Apple */
+.hk-card.is-active[onclick*="'senzoriContact'"] svg.hk-svg-icon,
 .hk-card.is-active[onclick*="'senzoriContact'"] .hk-icon {
-    color: #5ac8fa !important; 
+    color: #5ac8fa !important;
 }
