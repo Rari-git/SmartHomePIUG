@@ -1,529 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-    --bg-primary: #f4f7f6;
-    --text-color: #333333;
-    --accent-color: #3498db;
+    /* Paleta Apple HomeKit - Light Mode */
+    --bg-primary: #f2f2f7; 
     --card-bg: #ffffff;
-    --error-color: #e74c3c;
-    --success-color: #2ecc71;
+    --text-color: #1c1c1e;
+    --text-muted: #8e8e93;
+    --accent-color: #007aff; /* Apple Blue */
+    --success-color: #34c759; /* Apple Green */
+    --error-color: #ff3b30; /* Apple Red */
+    --warning-color: #ff9500; /* Apple Orange */
+    --card-radius: 20px;
+    --shadow-soft: 0 8px 24px rgba(0,0,0,0.04);
 }
 
 body.dark-mode {
-    --bg-primary: #1a1a1a;
-    --text-color: #f4f7f6;
-    --card-bg: #2d2d2d;
+    /* Paleta Apple HomeKit - Dark Mode */
+    --bg-primary: #000000;
+    --card-bg: #1c1c1e;
+    --text-color: #f2f2f7;
+    --text-muted: #98989d;
+    --shadow-soft: 0 8px 24px rgba(0,0,0,0.4);
 }
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-color);
     display: flex;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-nav {
-    width: 220px;
-    background: var(--card-bg);
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    transition: background-color 0.3s ease;
-}
-
-nav h2 {
-    color: var(--accent-color);
-    text-align: center;
-    border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 10px;
-}
-
-nav a {
-    display: block;
-    padding: 12px;
-    margin-bottom: 10px;
-    text-decoration: none;
-    color: var(--text-color);
-    border-radius: 5px;
-    transition: background 0.2s, color 0.2s;
-}
-
-nav a:hover {
-    background: var(--accent-color);
-    color: white;
+    -webkit-font-smoothing: antialiased;
 }
 
 main {
     flex: 1;
     padding: 30px;
+    max-width: 1200px; /* Setează o lățime maximă pentru ecrane mari */
+    margin: 0 auto;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.card {
-    background: var(--card-bg);
-    padding: 30px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    border-top: 5px solid var(--accent-color);
-    transition: transform 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.form-group {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    max-width: 400px;
-}
-
-input {
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 90%;
-    background: var(--bg-primary);
-    color: var(--text-color);
-}
-
-button {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-.error-msg {
-    color: var(--error-color);
-    font-size: 0.9em;
-    display: none;
-    margin-top: 5px;
-}
-
-.success-msg {
-    color: var(--success-color);
-    font-size: 0.9em;
-    display: none;
-    margin-top: 5px;
-}
-
-#toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.toast {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    margin-top: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    animation: slideIn 0.3s ease-out;
-}
-
-.undo-btn {
-    background-color: transparent;
-    border: 1px solid white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8em;
-}
-
-.undo-btn:hover {
-    background-color: rgba(255,255,255,0.2);
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.help-box {
-    background-color: rgba(52, 152, 219, 0.1);
-    border-left: 4px solid var(--accent-color);
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-
-@keyframes flashRed {
-    0% { background-color: var(--bg-primary); }
-    50% { background-color: rgba(231, 76, 60, 0.4); }
-    100% { background-color: var(--bg-primary); }
-}
-
-.alarm-flash {
-    animation: flashRed 1.5s infinite;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    overflow-y: auto;
-    padding: 40px 10px;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal.active {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.modal-content {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    border-top: 5px solid var(--accent-color);
-    position: relative;
-    animation: modalSlideIn 0.3s ease-out;
-    margin: auto;
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 1.8em;
-    cursor: pointer;
-    color: var(--text-color);
-    opacity: 0.5;
-    transition: opacity 0.2s;
-}
-
-.close-btn:hover {
-    opacity: 1;
-}
-
-@keyframes modalSlideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 5px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-body.dark-mode .modal-list-item {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-list-item button {
-    padding: 6px 14px;
-    font-size: 0.85em;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-
-.modal-star-icon {
-    font-size: 1.5em;
-    cursor: pointer;
-    color: #ccc;
-    transition: color 0.2s, transform 0.2s;
-    user-select: none;
-    display: inline-block;
-}
-
-.modal-star-icon:hover {
-    transform: scale(1.2);
-}
-
-.modal-star-icon.pinned {
-    color: #f1c40f;
-}
-
-/* --- Stiluri pentru elementele Favorite (Pinned) --- */
-.pinned-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background-color: var(--card-bg);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-    cursor: pointer;
-    transition: transform 0.2s;
-    border: 2px solid var(--accent-color);
-}
-
-.pinned-circle:hover {
-    transform: scale(1.1);
-}
-
-.slider-container {
-    margin-top: 8px;
-    padding-left: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    transition: opacity 0.3s ease;
-}
-
-.slider-container input[type="range"] {
-    width: 100%;
-    margin: 5px 0;
-    cursor: pointer;
-}
-
-.slider-container input[type="range"]:disabled {
-    cursor: not-allowed;
-}
-
-.preset-btn {
-    padding: 3px 6px;
-    font-size: 0.75em;
-    background: transparent;
-    border: 1px solid var(--accent-color);
-    color: var(--text-color);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.preset-btn:hover:not(:disabled) {
-    background: var(--accent-color);
-    color: white;
-}
-
-.preset-btn:disabled {
-    border-color: #ccc;
-    color: #999;
-    cursor: not-allowed;
-}
-
-.disabled-controls {
-    opacity: 0.4;
-    pointer-events: none;
+h1, h2, h3 {
+    letter-spacing: -0.5px;
 }
 
 /* --- Meniu Lateral Retractabil (Sidebar Drawer) --- */
 nav {
     position: fixed;
     top: 0;
-    left: -280px; /* Ascundem meniul complet în afara ecranului la stânga */
-    width: 220px;
+    left: -280px; 
+    width: 240px;
     height: 100vh;
-    background: var(--card-bg);
+    background: rgba(255, 255, 255, 0.85); /* Apple Glassmorphism */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 20px;
-    box-shadow: 5px 0 25px rgba(0,0,0,0.3);
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Animație super-fluidă */
+    box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
     z-index: 3000;
     overflow-y: auto;
 }
 
-nav.active {
-    left: 0; /* Când are clasa .active, glisează pe ecran */
+body.dark-mode nav {
+    background: rgba(28, 28, 30, 0.85);
 }
 
-/* Fundalul întunecat care apare când meniul e deschis (Backdrop) */
-.nav-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    z-index: 2999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+nav.active { left: 0; }
+
+nav h2 {
+    color: var(--text-color);
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.nav-backdrop.active {
-    opacity: 1;
-    visibility: visible;
+nav a {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: var(--text-color);
+    border-radius: 10px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
 }
 
-/* Designul noului Buton Hamburger (☰) */
-.menu-toggle-btn {
-    background-color: var(--card-bg);
-    color: var(--accent-color);
-    border: none;
-    font-size: 1.6em;
-    cursor: pointer;
-    padding: 5px 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, background-color 0.2s;
-    user-select: none;
-}
-
-.menu-toggle-btn:hover {
-    transform: scale(1.05);
-    background-color: var(--accent-color);
+nav a:hover, nav a.active {
+    background: var(--accent-color);
     color: white;
 }
 
+.nav-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2999;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.nav-backdrop.active { opacity: 1; visibility: visible; }
+
+.menu-toggle-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 5px;
+    margin-right: 15px;
+    display: flex;
+    transition: transform 0.2s;
+}
+.menu-toggle-btn:hover { transform: scale(1.05); }
+
 /* --- Apple HomeKit Style Cards --- */
 .hk-section-title {
-    font-size: 1.3em;
-    font-weight: 700;
-    margin: 30px 0 15px 0;
-    opacity: 0.9;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 35px 0 15px 0;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
+
 .hk-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
+    /* Facem cardurile pătrate, tipice iOS */
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 16px;
 }
 .hk-grid-wide {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 15px;
+    gap: 16px;
 }
+
 .hk-card {
     background: var(--card-bg);
-    border-radius: 18px;
-    padding: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    border-radius: var(--card-radius);
+    padding: 16px;
+    box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 110px;
+    aspect-ratio: 1 / 1; /* Forțează aspectul perfect pătrat */
     cursor: pointer;
     position: relative;
-    transition: transform 0.1s, background 0.2s, color 0.2s;
-    border: 1px solid rgba(0,0,0,0.03);
-    user-select: none;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s;
+    border: none;
 }
+
+/* Cardurile late (scene) nu au aspect-ratio 1:1 */
+.hk-grid-wide .hk-card {
+    aspect-ratio: auto;
+    height: 110px;
+}
+
 .hk-card.is-active {
-    background: var(--accent-color);
-    color: white;
+    background: var(--card-bg); /* Rămâne alb pe fundal */
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
+
 .hk-card:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
+
+/* Stilul iconițelor din card */
 .hk-icon {
     font-size: 1.8em;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
 }
+
+/* Când dispozitivul este activ, iconița se aprinde la culoare */
+.hk-card.is-active .hk-icon {
+    color: var(--warning-color); /* Culoarea portocaliu-gălbuie a becurilor aprinse din iOS */
+}
+
+/* Culoare albastră pentru prize/device-uri generale când sunt active */
+.hk-card.is-active[onclick*="'prize'"] .hk-icon,
+.hk-card.is-active[onclick*="'purificator'"] .hk-icon,
+.hk-card.is-active[onclick*="'electrocasnice'"] .hk-icon {
+    color: var(--accent-color);
+}
+
 .hk-name {
     font-size: 0.95em;
     font-weight: 600;
     line-height: 1.2;
     margin-top: auto;
-}
-.hk-state {
-    font-size: 0.8em;
-    opacity: 0.7;
-    font-weight: 500;
-    margin-top: 5px;
+    color: var(--text-color);
 }
 
-/* Butoane invizibile de control pe card (Setări și Pin) */
+.hk-state {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
 .hk-controls {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 12px;
+    right: 12px;
     display: flex;
     gap: 5px;
     opacity: 0;
     transition: opacity 0.2s;
 }
-.hk-card:hover .hk-controls {
-    opacity: 1;
-}
+.hk-card:hover .hk-controls { opacity: 1; }
+
 .hk-btn {
-    background: rgba(0,0,0,0.1);
+    background: var(--bg-primary);
     border: none;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    font-size: 0.9em;
+    width: 30px;
+    height: 30px;
+    font-size: 1em;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: inherit;
+    color: var(--text-muted);
+    transition: background 0.2s, color 0.2s;
 }
-.hk-btn:hover { background: rgba(0,0,0,0.2); }
-.hk-star.is-fav { color: #f1c40f; opacity: 1 !important; }
+.hk-btn:hover { background: rgba(0,0,0,0.1); color: var(--text-color); }
+.hk-star.is-fav { color: var(--warning-color); opacity: 1 !important; }
 
-/* --- Centru de Notificări Inteligente --- */
-.notification-container {
+
+/* --- Centru de Notificări --- */
+.notification-container, .stats-card, .danger-panel, .settings-card {
     background: var(--card-bg);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: var(--card-radius);
+    padding: 24px;
     margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    border-left: 5px solid var(--accent-color);
+    box-shadow: var(--shadow-soft);
+    border: none;
 }
 
 .notification-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(0,0,0,0.05);
     font-size: 0.95em;
     font-weight: 500;
 }
+body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05); }
 
-.notification-item:last-child {
-    border-bottom: none;
-}
+.notification-item:last-child { border-bottom: none; }
 
 .see-more-btn {
-    background: none;
-    border: none;
+    background: none; border: none;
     color: var(--accent-color);
-    font-weight: bold;
-    cursor: pointer;
-    padding: 10px 0 0 0;
-    font-size: 0.9em;
-    display: inline-block;
+    font-weight: 600; cursor: pointer;
+    padding: 15px 0 0 0; font-size: 0.9em;
 }
 
-.see-more-btn:hover {
-    text-decoration: underline;
+/* Modale / Popups cu blur HomeKit */
+.modal {
+    display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center; justify-content: center;
+}
+.modal.active { display: flex; }
+
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 30px;
+    border-radius: 24px;
+    width: 90%; max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: modalScaleIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes modalScaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.close-btn {
+    position: absolute; top: 15px; right: 20px;
+    font-size: 2em; cursor: pointer; color: var(--text-muted);
+    transition: color 0.2s; line-height: 1;
+}
+.close-btn:hover { color: var(--text-color); }
+
+/* Asigurăm că fundalul cardurilor active de draperii și ferestre NU se schimbă */
+.hk-card.is-active[onclick*="'jaluzele'"],
+.hk-card.is-active[onclick*="'senzoriContact'"] {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    box-shadow: var(--shadow-soft) !important;
+}
+
+/* Când Draperia este DESCHISĂ -> Doar iconița devine Portocaliu Apple */
+.hk-card.is-active[onclick*="'jaluzele'"] .hk-icon {
+    color: var(--warning-color) !important;
+}
+
+/* Când Fereastra este DESCHISĂ -> Doar iconița devine Cyan/Albastru deschis Apple */
+.hk-card.is-active[onclick*="'senzoriContact'"] .hk-icon {
+    color: #5ac8fa !important; 
 }
