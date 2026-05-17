@@ -3,86 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Setări Generale</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .settings-card {
-            background: var(--card-bg); padding: 25px; border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 5px solid var(--accent-color);
-        }
-        .settings-card h3 { margin-top: 0; color: var(--accent-color); }
-        .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-        .form-row label { font-weight: bold; opacity: 0.8; }
-        .form-row input[type="text"] {
-            padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
-            background: var(--bg-primary); color: var(--text-color); font-size: 1em; outline: none; width: 90%; max-width: 350px;
-        }
-        .form-row input[type="text"]:focus { border-color: var(--accent-color); }
-        .btn-save {
-            background: var(--success-color); color: white; border: none; padding: 12px 25px;
-            border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1em; transition: 0.2s;
-        }
-        .btn-save:hover { opacity: 0.9; transform: scale(1.02); }
-        
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent-color); }
-        input:checked + .slider:before { transform: translateX(24px); }
-    </style>
+    <script src="js/components.js"></script>
 </head>
 <body>
-    <nav>
-        <h2>SmartHome</h2>
-        <a href="index.html">🏠 Home</a><a href="scene.html">🎭 Scene</a><a href="accesorii.html">🛋️ Accesorii</a>
-        <a href="automatizari.html">🤖 Automatizări</a><a href="statistici.html">📈 Statistici</a><a href="camere.html">🌡️ Climă Camere</a>
-        <a href="harta.html">🗺️ Hartă Casă</a><a href="securitate.html">🛡️ Securitate</a><a href="pericole.html">🚨 Pericole</a>
-        <a href="setari.html" style="color: var(--accent-color); font-weight: bold;">⚙️ Setări</a>
-    </nav>
+    <smart-nav></smart-nav>
     <main>
-        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <div class="page-header">
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-            <h1 style="margin: 0;">Setări Generale</h1>
+            <h1>Setări Sistem</h1>
         </div>
-        <p>Personalizează experiența casei tale inteligente și preferințele de interfață.</p>
 
         <div class="settings-card">
-            <h3>🏠 Identitate Locuință</h3>
-            <p style="opacity: 0.8; margin-bottom: 20px;">Numele ales va apărea pe ecranul principal (Home).</p>
+            <h3>Personalizare Casă</h3>
             <div class="form-row">
-                <label for="nume-casa-input">Denumire personalizată:</label>
-                <input type="text" id="nume-casa-input" placeholder="ex: Apartament București, Casa Mea...">
+                <label for="nume-casa-input">Numele Locuinței tale</label>
+                <div style="display: flex; gap: 10px; width: 100%;">
+                    <input type="text" id="nume-casa-input" class="form-input" placeholder="Ex: My Home, Apartament Smart">
+                    <button onclick="salveazaNumeCasa()" style="background: var(--accent-color); color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">Salvează</button>
+                </div>
             </div>
-            <button type="button" class="btn-save" onclick="salveazaNumeCasa()">Salvează Numele</button>
         </div>
 
-        <div class="settings-card" style="border-left-color: #f39c12;">
-            <h3 style="color: #f39c12;">🎨 Personalizare Interfață (UI)</h3>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <div class="settings-card">
+            <h3>Preferințe Afișaj & Interfață</h3>
+            <div class="flex-between" style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
                 <div>
-                    <strong style="font-size: 1.1em;">Mod Întunecat (Dark Mode)</strong>
-                    <div style="opacity: 0.7; font-size: 0.9em;">Protejează ochii în timpul nopții.</div>
+                    <h4 class="m-0" style="font-size: 1.1em;">Mod Întunecat (Dark Mode)</h4>
+                    <p class="text-muted m-0" style="margin-top: 4px; font-size: 0.85em;">Schimbă aspectul aplicației pentru utilizare pe timp de noapte.</p>
                 </div>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                    <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
                     <span class="slider"></span>
                 </label>
             </div>
-            
-            <div class="form-row">
-                <label>Culoare de Accent a Aplicației:</label>
-                <div style="display: flex; gap: 10px; margin-top: 5px;">
-                    <div onclick="schimbaCuloareAccent('#3498db')" style="width:35px; height:35px; border-radius:50%; background:#3498db; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#e74c3c')" style="width:35px; height:35px; border-radius:50%; background:#e74c3c; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
+
+            <div style="margin-top: 25px;">
+                <h4 class="m-0" style="font-size: 1.1em; margin-bottom: 10px;">Culoare Accent Sistem (Brand Color)</h4>
+                <div style="display: flex; gap: 15px; margin-top: 12px;">
+                    <div onclick="schimbaCuloareAccent('#007aff')" style="width:35px; height:35px; border-radius:50%; background:#007aff; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
+                    <div onclick="schimbaCuloareAccent('#ff9500')" style="width:35px; height:35px; border-radius:50%; background:#ff9500; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
+                    <div onclick="schimbaCuloareAccent('#ff3b30')" style="width:35px; height:35px; border-radius:50%; background:#ff3b30; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
                     <div onclick="schimbaCuloareAccent('#2ecc71')" style="width:35px; height:35px; border-radius:50%; background:#2ecc71; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
                     <div onclick="schimbaCuloareAccent('#9b59b6')" style="width:35px; height:35px; border-radius:50%; background:#9b59b6; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
                 </div>
             </div>
         </div>
     </main>
-
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -100,7 +69,9 @@
                 return;
             }
             localStorage.setItem('numeCasaSalvat', inputVal);
-            if (typeof showToast === 'function') showToast("Numele casei a fost actualizat cu succes!");
+            const globalElem = document.getElementById('nume-casa-global');
+            if (globalElem) globalElem.innerText = inputVal;
+            if (typeof showToast === 'function') showToast("Numele locuinței a fost salvat cu succes.");
         }
     </script>
 </body>

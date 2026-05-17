@@ -6,41 +6,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/components.js"></script>
 </head>
 <body>
-    <nav>
-        <h2>SmartHome</h2>
-        <a href="index.html" style="color: var(--accent-color); font-weight: bold;">🏠 Home</a>
-        <a href="scene.html">🎭 Scene</a>
-        <a href="accesorii.html">🛋️ Accesorii</a>
-        <a href="automatizari.html">🤖 Automatizări</a>
-        <a href="statistici.html">📈 Statistici</a>
-        <a href="camere.html">🌡️ Climă Camere</a>
-        <a href="harta.html">🗺️ Hartă Casă</a>
-        <a href="securitate.html">🛡️ Securitate</a>
-        <a href="pericole.html">🚨 Pericole</a>
-        <a href="setari.html">⚙️ Setări</a>
-    </nav>
+    <smart-nav></smart-nav>
     <main>
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 25px;">
-            <div style="display: flex; align-items: center;">
+        <div class="page-header flex-between">
+            <div class="flex-center">
                 <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
-                <h1 style="margin: 0;"><span id="nume-casa-global">My Home</span></h1>
+                <h1><span id="nume-casa-global">My Home</span></h1>
             </div>
         </div>
 
-        <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
-            <div style="flex: 1; background: var(--card-bg); padding: 15px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
-                <div><h4 style="margin: 0; opacity: 0.7;">Vremea Acum</h4><h2 style="margin: 5px 0;">28°C</h2></div>
-                <div style="font-size: 2.5em;">☀️</div>
+        <div class="flex-row">
+            <div class="widget-card">
+                <div><h4 class="widget-title">Vremea Acum</h4><h2 class="widget-value">28°C</h2></div>
+                <div class="widget-icon">☀️</div>
             </div>
-            <div style="flex: 1; background: var(--card-bg); padding: 15px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
-                <div><h4 style="margin: 0; opacity: 0.7;">Securitate</h4><h2 style="margin: 5px 0; color: var(--success-color);" id="global-securitate">Armată</h2></div>
-                <div style="font-size: 2.5em;">🛡️</div>
+            <div class="widget-card">
+                <div><h4 class="widget-title">Securitate</h4><h2 class="widget-value text-success" id="global-securitate">Armată</h2></div>
+                <div class="widget-icon">🛡️</div>
             </div>
-            <div style="flex: 1; background: var(--card-bg); padding: 15px 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
-                <div><h4 style="margin: 0; opacity: 0.7;">Consum Energetic</h4><h2 style="margin: 5px 0; color: var(--accent-color);" id="global-consum">0.00 kW</h2></div>
-                <div style="font-size: 2.5em;">⚡</div>
+            <div class="widget-card">
+                <div><h4 class="widget-title">Consum Energetic</h4><h2 class="widget-value text-accent" id="global-consum">0.00 kW</h2></div>
+                <div class="widget-icon">⚡</div>
             </div>
         </div>
 
@@ -52,18 +41,7 @@
         <h2 class="hk-section-title">Favorite Accessories</h2>
         <div class="hk-grid" id="fav-accessories-container"></div>
     </main>
-
-    <div id="popup-dispozitive" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="inchidePopup()">&times;</span>
-            <div style="display: flex; align-items: center; gap: 15px; margin-top: 0; margin-bottom: 20px;">
-                <h2 id="modal-titlu" style="margin: 0; color: var(--accent-color);"></h2>
-                <span id="modal-star" class="modal-star-icon" title="Adaugă la Acces Rapid"></span>
-            </div>
-            <div id="modal-continut"></div>
-        </div>
-    </div>
-
+    <smart-modal></smart-modal>
     <script src="js/main.js"></script>
     <script src="js/counter.js"></script>
 </body>

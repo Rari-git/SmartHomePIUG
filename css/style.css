@@ -1,45 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Paleta Apple HomeKit - Light Mode cu efect Glass */
     --bg-primary: #f2f2f7; 
-    --card-bg: rgba(255, 255, 255, 0.75); /* Carduri semi-transparente pentru a lăsa apa să se vadă */
-    --text-color: #1c1c1e;
-    --text-muted: #6c6c70;
-    --accent-color: #007aff; /* Apple Blue */
-    --success-color: #34c759; /* Apple Green */
-    --error-color: #ff3b30; /* Apple Red */
-    --warning-color: #ff9500; /* Apple Orange */
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --text-color: #000000;
+    --text-muted: #111111;
+    --accent-color: #007aff;
+    --success-color: #34c759;
+    --error-color: #ff3b30;
+    --warning-color: #ff9500;
     --card-radius: 20px;
-    --shadow-soft: 0 8px 32px rgba(0, 100, 200, 0.08); /* Umbră ușor albăstruie */
+    --shadow-soft: 0 8px 32px rgba(0, 100, 200, 0.08);
 }
 
 body.dark-mode {
-    /* Paleta Apple HomeKit - Dark Mode */
     --bg-primary: #000000;
     --card-bg: rgba(28, 28, 30, 0.75);
-    --text-color: #f2f2f7;
-    --text-muted: #98989d;
+    --text-color: #ffffff;
+    --text-muted: #ffffff;
     --shadow-soft: 0 8px 32px rgba(0,0,0,0.5);
 }
 
 body {
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    
-    /* 🌊 AICI ESTE IMAGINEA NOUĂ CU APĂ CALMĂ ALB/ALBASTRU DESCHIS */
     background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
     background-size: cover;
-    
     color: var(--text-color);
-    
     min-height: 100vh;
     transition: color 0.3s ease;
     -webkit-font-smoothing: antialiased;
 }
 
 body.dark-mode {
-    /* În Dark Mode punem o umbră peste imagine ca să nu ne deranjeze ochii noaptea */
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
     background-size: cover;
 }
@@ -49,598 +42,226 @@ main {
     padding: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    padding-bottom: 80px; 
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, p, .hk-name, .hk-state, .hk-section-title {
+    color: var(--text-color);
+    opacity: 1;
     letter-spacing: -0.5px;
 }
 
-/* --- Meniu Lateral Retractabil --- */
 nav {
-    position: fixed;
-    top: 0;
-    left: -280px; 
-    width: 240px;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    padding: 20px;
-    box-shadow: 5px 0 25px rgba(0,0,0,0.1);
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    z-index: 3000;
-    overflow-y: auto;
+    position: fixed; top: 0; left: -280px; width: 240px; height: 100vh;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+    padding: 20px; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    z-index: 3000; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
 }
-
-body.dark-mode nav {
-    background: rgba(28, 28, 30, 0.85);
-}
-
+nav::-webkit-scrollbar { display: none; width: 0; }
+body.dark-mode nav { background: rgba(28, 28, 30, 0.4); border-right: 1px solid rgba(255, 255, 255, 0.05); }
 nav.active { left: 0; }
 
 nav h2 {
-    color: var(--text-color);
-    text-align: left;
-    font-weight: 700;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+    text-align: left; font-weight: 700;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 20px; margin-bottom: 25px;
 }
 
 nav a {
-    display: block;
-    padding: 12px 15px;
-    margin-bottom: 5px;
-    text-decoration: none;
-    color: var(--text-color);
-    border-radius: 10px;
-    font-weight: 500;
-    transition: background 0.2s, color 0.2s;
+    display: block; padding: 14px 18px; margin-bottom: 8px;
+    text-decoration: none; border-radius: 12px; font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative; overflow: hidden;
 }
+nav a:last-child { margin-bottom: 50px; }
+nav a:hover { transform: translateX(8px); background: rgba(0, 0, 0, 0.04); color: var(--text-color); }
+body.dark-mode nav a:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
 
-nav a:hover, nav a.active {
-    background: var(--accent-color);
-    color: white;
+nav a.active {
+    background: var(--accent-color) !important; color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+    transform: translateX(5px) scale(1.02); font-weight: 700; letter-spacing: 0.5px;
 }
+body.dark-mode nav a.active { box-shadow: 0 4px 15px var(--accent-color) !important; opacity: 0.9 !important; }
 
 .nav-backdrop {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 2999;
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    z-index: 2999; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 .nav-backdrop.active { opacity: 1; visibility: visible; }
 
 .menu-toggle-btn {
-    background-color: transparent;
-    color: var(--text-color);
-    border: none;
-    font-size: 1.8em;
-    cursor: pointer;
-    padding: 5px;
-    margin-right: 15px;
-    display: flex;
-    transition: transform 0.2s;
+    background-color: transparent; color: var(--text-color); border: none;
+    font-size: 1.8em; cursor: pointer; padding: 5px; display: flex; transition: transform 0.2s;
 }
 .menu-toggle-btn:hover { transform: scale(1.05); }
 
-/* --- Apple HomeKit Style Cards --- */
-.hk-section-title {
-    font-size: 1.2em;
-    font-weight: 600;
-    margin: 35px 0 15px 0;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    /* Dăm un mic background blur textului ca să fie mereu lizibil peste valurile de apă */
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.5);
-    padding: 4px 12px;
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-body.dark-mode .hk-section-title {
-    background: rgba(0, 0, 0, 0.5);
-}
+/* Utility Classes (Eliminare Inline CSS) */
+.page-header { display: flex; align-items: center; margin-bottom: 20px; gap: 15px; }
+.page-header h1 { margin: 0; }
+.flex-row { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.text-muted { opacity: 0.7; margin: 0; }
+.text-success { color: var(--success-color); }
+.text-accent { color: var(--accent-color); }
+.text-error { color: var(--error-color); }
+.m-0 { margin: 0; }
+.mb-20 { margin-bottom: 20px; }
 
-.hk-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 16px;
+/* Widgets (Home) */
+.widget-card {
+    flex: 1; background: rgba(255, 255, 255, 0.65); padding: 15px 20px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.5);
+    min-width: 250px;
 }
-.hk-grid-wide {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
+body.dark-mode .widget-card { background: rgba(28, 28, 30, 0.65); border-color: rgba(255, 255, 255, 0.1); }
+.widget-value { margin: 5px 0; font-size: 1.8em; font-weight: bold; }
+.widget-icon { font-size: 2.5em; }
+
+.hk-section-title {
+    font-size: 1.2em; font-weight: 600; margin: 35px 0 15px 0; text-transform: uppercase; letter-spacing: 0.5px;
+    display: inline-block; background: rgba(255, 255, 255, 0.5); padding: 4px 12px; border-radius: 8px;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+body.dark-mode .hk-section-title { background: rgba(0, 0, 0, 0.5); }
+
+.hk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+.hk-grid-wide { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+
+.hk-card, .stats-card, .notification-container, .danger-panel, .settings-card, .climate-card, .map-wrapper, .security-badge-card, .security-form-card {
+    background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5); border-radius: var(--card-radius);
+    box-shadow: var(--shadow-soft);
+}
+body.dark-mode .hk-card, body.dark-mode .stats-card, body.dark-mode .notification-container, body.dark-mode .danger-panel, body.dark-mode .settings-card, body.dark-mode .climate-card, body.dark-mode .security-badge-card, body.dark-mode .security-form-card {
+    background: rgba(28, 28, 30, 0.65); border-color: rgba(255, 255, 255, 0.1);
 }
 
 .hk-card {
-    background: var(--card-bg);
-    border-radius: var(--card-radius);
-    padding: 16px;
-    box-shadow: var(--shadow-soft);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    aspect-ratio: 1 / 1;
-    cursor: pointer;
-    position: relative;
+    padding: 16px; display: flex; flex-direction: column; justify-content: space-between;
+    aspect-ratio: 1 / 1; cursor: pointer; position: relative;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s;
-    
-    /* GLASSMORPHISM - Sticla mată Apple */
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
 }
-body.dark-mode .hk-card { border-color: rgba(255, 255, 255, 0.1); }
+.hk-grid-wide .hk-card { aspect-ratio: auto; height: 110px; }
 
-.hk-grid-wide .hk-card {
-    aspect-ratio: auto;
-    height: 110px;
-}
-
-/* Cardurile Active devin albastre, dar păstrează o peliculă fină de sticlă */
 .hk-card.is-active {
-    background: rgba(0, 122, 255, 0.9) !important; 
-    color: #ffffff !important;
-    box-shadow: 0 8px 30px rgba(0, 122, 255, 0.3) !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: var(--accent-color) !important; border-color: var(--accent-color) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
 }
+body.dark-mode .hk-card.is-active { box-shadow: 0 4px 20px var(--accent-color) !important; }
 
-.hk-card:active {
-    transform: scale(0.96);
-}
+.hk-card:active { transform: scale(0.96); }
+.hk-icon { font-size: 1.8em; transition: color 0.3s ease; }
 
-.hk-icon {
-    font-size: 1.8em;
-    color: var(--text-muted);
-    transition: color 0.3s ease;
-}
+.hk-card.is-active .hk-icon, .hk-card.is-active .hk-name, .hk-card.is-active .hk-state, .hk-card.is-active svg.hk-svg-icon { color: #ffffff !important; }
+body.dark-mode .hk-card.is-active * { color: #ffffff !important; stroke: #ffffff !important; fill: transparent; opacity: 1 !important; }
+body.dark-mode .hk-card.is-active .hk-icon i.ph-fill, body.dark-mode .hk-card.is-active .hk-controls button i { fill: #ffffff !important; }
 
-.hk-card.is-active .hk-icon,
-.hk-card.is-active .hk-name,
-.hk-card.is-active .hk-state {
-    color: #ffffff !important;
-}
+.hk-name { font-size: 0.95em; font-weight: 600; line-height: 1.2; margin-top: auto; }
+.hk-state { font-size: 0.8em; font-weight: 500; margin-top: 4px; }
 
-.hk-name {
-    font-size: 0.95em;
-    font-weight: 600;
-    line-height: 1.2;
-    margin-top: auto;
-    color: var(--text-color);
-}
-
-.hk-state {
-    font-size: 0.8em;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-top: 4px;
-}
-
-.hk-controls {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    gap: 5px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
+.hk-controls { position: absolute; top: 12px; right: 12px; display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s; }
 .hk-card:hover .hk-controls { opacity: 1; }
 
 .hk-btn {
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 1em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    transition: background 0.2s, color 0.2s;
+    background: rgba(255, 255, 255, 0.5); border: none; border-radius: 50%;
+    width: 30px; height: 30px; font-size: 1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s;
 }
-.hk-card.is-active .hk-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-}
-.hk-btn:hover { background: rgba(0,0,0,0.1); color: var(--text-color); }
+.hk-card.is-active .hk-btn { background: rgba(255, 255, 255, 0.2); color: #ffffff; }
+.hk-btn:hover { background: rgba(0,0,0,0.1); }
 .hk-star.is-fav { color: var(--warning-color) !important; opacity: 1 !important; }
 
-/* Containere cu aspect de sticlă mată (Stats, Notificări) */
-.notification-container, .stats-card, .danger-panel, .settings-card {
-    background: var(--card-bg);
-    border-radius: var(--card-radius);
-    padding: 24px;
-    margin-bottom: 25px;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(255,255,255,0.4);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-}
-body.dark-mode .notification-container, 
-body.dark-mode .stats-card, 
-body.dark-mode .danger-panel, 
-body.dark-mode .settings-card { 
-    border-color: rgba(255,255,255,0.1); 
-}
-
-.notification-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    font-size: 0.95em;
-    font-weight: 500;
-}
+.notification-container, .stats-card, .danger-panel, .settings-card, .security-badge-card, .security-form-card { padding: 24px; margin-bottom: 25px; }
+.notification-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95em; font-weight: 500; }
 body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05); }
 .notification-item:last-child { border-bottom: none; }
+.see-more-btn { background: none; border: none; color: var(--accent-color); font-weight: 600; cursor: pointer; padding: 15px 0 0 0; font-size: 0.9em; }
 
-.see-more-btn {
-    background: none; border: none;
-    color: var(--accent-color);
-    font-weight: 600; cursor: pointer;
-    padding: 15px 0 0 0; font-size: 0.9em;
-}
-
-/* Modale / Popups cu blur HomeKit */
-.modal {
-    display: none; position: fixed; z-index: 2000; left: 0; top: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    align-items: center; justify-content: center;
-}
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); align-items: center; justify-content: center; }
 .modal.active { display: flex; }
+.modal-content { background-color: var(--card-bg); padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); position: relative; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: modalScaleIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes modalScaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.close-btn { position: absolute; top: 15px; right: 20px; font-size: 2em; cursor: pointer; transition: color 0.2s; line-height: 1; }
 
-.modal-content {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    padding: 30px;
-    border-radius: 24px;
-    width: 90%; max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.3);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    animation: modalScaleIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
+svg.hk-svg-icon { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+.hk-card .hk-icon svg.hk-svg-icon { position: relative; transition: color 0.3s ease; }
 
-@keyframes modalScaleIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
+/* === MODULE CSS (Foste Inline styles din pagini) === */
 
-.close-btn {
-    position: absolute; top: 15px; right: 20px;
-    font-size: 2em; cursor: pointer; color: var(--text-muted);
-    transition: color 0.2s; line-height: 1;
-}
-.close-btn:hover { color: var(--text-color); }
+/* Camere.html */
+.thermostat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
+.climate-card { text-align: center; border-bottom: 5px solid var(--success-color); min-height: 250px; }
+.climate-display { margin: 10px 0 5px 0; user-select: none; }
+.climate-value { font-size: 2.8em; font-weight: bold; }
+.climate-unit { font-size: 1.2em; color: var(--accent-color); font-weight: bold; margin-left: 2px; }
+.climate-status { font-size: 0.8em; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.8px; }
+.climate-controls { display: flex; justify-content: center; gap: 15px; }
+.ctrl-btn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); background: rgba(0, 0, 0, 0.05); color: var(--text-color); font-size: 1.6em; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+body.dark-mode .ctrl-btn { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
+.ctrl-btn:hover { background: var(--accent-color) !important; color: white !important; border-color: var(--accent-color) !important; }
+.ctrl-btn:active { transform: scale(0.9); }
+.hvac-btn { background-color: var(--success-color); color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; }
 
-/* --- STILURI PENTRU SVG-URILE DIN ASSETS --- */
-svg.hk-svg-icon {
-    width: 1em;
-    height: 1em;
-    display: inline-block;
-    vertical-align: middle;
-}
+/* Automatizari.html */
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--success-color); }
+input:checked + .slider:before { transform: translateX(20px); }
 
-.hk-card .hk-icon svg.hk-svg-icon {
-    width: 1em;
-    height: 1em;
-    color: var(--text-muted);
-    display: inline-block;
-    vertical-align: middle;
-    position: relative;
-    transition: color 0.3s ease;
-}
+/* Harta.html */
+.map-wrapper { position: relative; width: 100%; max-width: 650px; margin: 30px auto 0 auto; overflow: visible; padding: 0; }
+.blueprint-image { width: 100%; height: auto; display: block; border-radius: 20px; transition: filter 0.3s ease; }
+body.dark-mode .blueprint-image { filter: invert(1) brightness(0.9) contrast(1.1); }
+.map-hotspot { position: absolute; width: 38px; height: 38px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(255,255,255,0.9); border: 2px solid var(--success-color); display: flex; align-items: center; justify-content: center; font-size: 1.2em; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s, background 0.2s; user-select: none; z-index: 10; color: black; }
+.map-hotspot:hover { transform: translate(-50%, -50%) scale(1.15); background: white; }
 
-/* Forțăm cardurile de jaluzele și ferestre să rămână albe/gri, ca să nu se înroșească/albăstrească tot boxul */
-.hk-card.is-active[onclick*="'jaluzele'"],
-.hk-card.is-active[onclick*="'senzoriContact'"] {
-    background: var(--card-bg) !important;
-    color: var(--text-color) !important;
-    box-shadow: var(--shadow-soft) !important;
-}
+/* Pericole.html */
+.danger-panel { text-align: center; transition: all 0.3s ease; }
+.danger-icon { font-size: 5em; margin-bottom: 15px; display: inline-block; }
+.status-safe { border-top: 6px solid var(--success-color); }
+.status-safe .danger-icon { color: var(--success-color); }
+.status-alert-water { border-top: 6px solid #3498db; animation: pulseWater 1.5s infinite; background-color: rgba(52, 152, 219, 0.05); }
+.status-alert-fire { border-top: 6px solid #e74c3c; animation: pulseFire 1.2s infinite; background-color: rgba(231, 76, 60, 0.05); }
+@keyframes pulseWater { 0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(52, 152, 219, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); } }
+@keyframes pulseFire { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.5); } 70% { box-shadow: 0 0 0 18px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
+.btn-simulate { background: var(--bg-primary); border: 1px solid rgba(0,0,0,0.1); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; color: var(--text-color); }
+.btn-simulate:hover { background: var(--accent-color); color: white; }
+.btn-stop { background: #e74c3c; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1em; box-shadow: 0 4px 12px rgba(231,76,60,0.3); }
 
-/* Când Draperia devine DESCHISĂ -> doar liniile SVG devin Portocaliu Apple */
-.hk-card.is-active[onclick*="'jaluzele'"] svg.hk-svg-icon,
-.hk-card.is-active[onclick*="'jaluzele'"] .hk-icon {
-    color: var(--warning-color) !important;
-}
+/* Scene.html */
+.card-add-custom-scene { border: 2px dashed var(--accent-color) !important; padding: 20px; width: 100%; max-width: 400px; font-size: 1.1em; color: var(--accent-color); font-weight: bold; cursor: pointer; transition: transform 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.card-add-custom-scene:hover { transform: scale(1.01); background: rgba(255,255,255,0.85) !important; }
 
-/* Când Fereastra devine DESCHISĂ -> doar liniile SVG devin Albastru Cyan soft Apple */
-.hk-card.is-active[onclick*="'senzoriContact'"] svg.hk-svg-icon,
-.hk-card.is-active[onclick*="'senzoriContact'"] .hk-icon {
-    color: #5ac8fa !important;
-}
+/* Securitate.html */
+.security-grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 25px; width: 100%; }
+.security-badge-card, .security-form-card { display: flex; flex-direction: column; justify-content: space-between; }
+.btn-full { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95em; }
 
-/* =========================================================
-   NOUL DESIGN: GLASSMORPHISM & TEXT NEGRU & ACTIVE COLOR
-   ========================================================= */
+/* Setari.html */
+.settings-card { border-left: 5px solid var(--accent-color); }
+.form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+.form-row label { font-weight: bold; opacity: 0.8; }
+.form-input { padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; background: rgba(255,255,255,0.5); color: var(--text-color); font-size: 1em; width: 100%; box-sizing: border-box; }
 
-/* 1. Forțăm tot textul să fie negru și complet opac (fără transparențe) */
-:root {
-    --text-color: #000000 !important;
-    --text-muted: #111111 !important;
-}
+/* Statistici.html */
+.history-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+.history-modal.active { display: flex; }
+.history-modal-content { background: var(--card-bg); padding: 24px; border-radius: 16px; width: 90%; max-width: 650px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: modalScaleIn 0.25s; color: var(--text-color); }
+.time-filters { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 8px; width: max-content; }
+.filter-btn { background: transparent; border: none; padding: 6px 16px; font-weight: 600; font-size: 0.85em; border-radius: 6px; cursor: pointer; color: var(--text-color); opacity: 0.7; transition: all 0.15s; }
+.filter-btn.active { background: var(--accent-color); color: white !important; opacity: 1; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
-body, p, h1, h2, h3, h4, .hk-name, .hk-state, .hk-section-title {
-    color: var(--text-color) !important;
-    opacity: 1 !important; /* Eliminăm opacity: 0.7 de la subtitluri */
-}
-
-/* Păstrăm contrastul pentru Dark Mode (dacă folosești modul întunecat) */
-body.dark-mode, 
-body.dark-mode p, 
-body.dark-mode h1, 
-body.dark-mode h2, 
-body.dark-mode h3, 
-body.dark-mode h4, 
-body.dark-mode .hk-name, 
-body.dark-mode .hk-state {
-    color: #ffffff !important;
-    opacity: 1 !important;
-}
-
-/* 2. Facem cardurile "ușor opace" (translucide) folosind efect de blur / sticlă */
-.hk-card, 
-.stats-card, 
-.notification-container, 
-.danger-panel, 
-.settings-card, 
-.climate-card,
-.map-wrapper {
-    background: rgba(255, 255, 255, 0.65) !important; /* Alb transparent 65% */
-    backdrop-filter: blur(15px); /* Efectul de preluare a culorilor din fundal */
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.5); /* O bordură subtilă luminoasă */
-}
-
-body.dark-mode .hk-card, 
-body.dark-mode .stats-card, 
-body.dark-mode .notification-container, 
-body.dark-mode .danger-panel, 
-body.dark-mode .settings-card, 
-body.dark-mode .climate-card {
-    background: rgba(28, 28, 30, 0.65) !important; /* Negru transparent 65% */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 3. Cardurile pe care apeși (Active) preiau culoarea predominantă (Accent Color din setări) */
-.hk-card.is-active {
-    background: var(--accent-color) !important; /* Culoarea predominantă a temei */
-    border-color: var(--accent-color) !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Textul și iconițele din interiorul unui card activ devin albe pentru lizibilitate */
-.hk-card.is-active .hk-name,
-.hk-card.is-active .hk-state,
-.hk-card.is-active .hk-icon,
-.hk-card.is-active .hk-icon svg.hk-svg-icon {
-    color: #ffffff !important;
-}
-
-/* Suprascriem excepțiile vechi pentru Jaluzele și Ferestre ca să se coloreze și ele complet */
-.hk-card.is-active[onclick*="'jaluzele'"],
-.hk-card.is-active[onclick*="'senzoriContact'"] {
-    background: var(--accent-color) !important;
-}
-.hk-card.is-active[onclick*="'jaluzele'"] svg.hk-svg-icon,
-.hk-card.is-active[onclick*="'senzoriContact'"] svg.hk-svg-icon {
-    color: #ffffff !important;
-}
-
-/* =========================================================
-   NOUL DESIGN MENIU LATERAL (SIDEBAR)
-   ========================================================= */
-
-/* 1. Meniul devine Glassmorphism curat, asortat perfect */
-nav {
-    background: rgba(255, 255, 255, 0.4) !important; /* Mai transparent */
-    backdrop-filter: blur(25px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(150%) !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1) !important;
-}
-
-body.dark-mode nav {
-    background: rgba(28, 28, 30, 0.4) !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Titlul meniului mai aerisit */
-nav h2 {
-    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-    padding-bottom: 20px !important;
-    margin-bottom: 25px !important;
-}
-
-/* 2. Butoanele din meniu (link-urile) primesc un efect modern de pastilă și animație */
-nav a {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px !important;
-    margin-bottom: 8px !important;
-    padding: 14px 18px !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-}
-
-/* Hover effect - se mișcă ușor la dreapta la trecerea mouse-ului */
-nav a:hover {
-    transform: translateX(8px);
-    background: rgba(0, 0, 0, 0.04) !important;
-    color: var(--text-color) !important;
-}
-
-body.dark-mode nav a:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
-}
-
-/* 3. Link-ul ACTIV (pagina pe care ești) - Glow Effect */
-/* Selectăm automat link-ul pe care l-ai marcat tu cu style="color: var(--accent-color)" în HTML */
-nav a[style*="var(--accent-color)"] {
-    background: var(--accent-color) !important; /* Fundal complet colorat */
-    color: #ffffff !important; /* Forțăm textul și emoji-ul să fie albe */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important; /* Umbră de adâncime */
-    transform: translateX(5px) scale(1.02); /* Pare că iese puțin în afară */
-    font-weight: 700 !important;
-    letter-spacing: 0.5px;
-}
-
-/* Dacă ai dark mode, facem și umbra să strălucească (neon) în culoarea accentului */
-body.dark-mode nav a[style*="var(--accent-color)"] {
-    box-shadow: 0 4px 15px var(--accent-color) !important; 
-    opacity: 0.9 !important;
-}
-
-/* 4. Efect cinematic pentru fundalul care acoperă restul ecranului la deschidere */
-.nav-backdrop {
-    background: rgba(0, 0, 0, 0.3) !important;
-    backdrop-filter: blur(6px) !important; /* Adaugă acel blur de fundal ca pe iOS */
-    -webkit-backdrop-filter: blur(6px) !important;
-}
-
-/* =========================================================
-   SPAȚIU SUPLIMENTAR JOS (MENIU & PAGINĂ)
-   ========================================================= */
-
-/* Adaugă spațiu generos sub ultimul link din meniu (Setări) ca să nu stea lipit de marginea ecranului */
-nav a:last-child {
-    margin-bottom: 50px !important;
-}
-
-/* Adaugă spațiu suplimentar la finalul oricărei pagini, sub ultimele carduri */
-main {
-    padding-bottom: 80px !important; 
-}
-
-/* =========================================================
-   ASCUNDERE BARA DE SCROLL DIN MENIUL LATERAL
-   ========================================================= */
-
-/* Ascunde bara pentru Chrome, Safari și noile versiuni de Edge */
-nav::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-}
-
-/* Ascunde bara pentru Firefox și Internet Explorer/Legacy Edge */
-nav {
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* IE și Edge */
-}
-
-/* =========================================================
-   FIX SPECIFIC DARK MODE: COLORARE CARDURI ACTIVE & SCENE
-   ========================================================= */
-
-/* Forțăm cardurile aprinse/active să preia culoarea predominantă în modul întunecat */
-body.dark-mode .hk-card.is-active {
-    background: var(--accent-color) !important;
-    border-color: var(--accent-color) !important;
-    /* Adăugăm și un efect de glow neon care arată excelent pe fundal întunecat */
-    box-shadow: 0 4px 20px var(--accent-color) !important; 
-}
-
-/* Forțăm toate textele, iconițele și SVG-urile din cardurile active să devină albe pe fundalul colorat */
-body.dark-mode .hk-card.is-active .hk-name,
-body.dark-mode .hk-card.is-active .hk-state,
-body.dark-mode .hk-card.is-active .hk-icon,
-body.dark-mode .hk-card.is-active .hk-icon i,
-body.dark-mode .hk-card.is-active svg,
-body.dark-mode .hk-card.is-active svg.hk-svg-icon,
-body.dark-mode .hk-card.is-active svg.hk-svg-icon * {
-    color: #ffffff !important;
-    stroke: #ffffff !important;
-    fill: transparent !important; /* Menținem ferestrele/draperiile transparente la interior */
-    opacity: 1 !important;
-}
-
-/* Excepție pentru iconițele de tip font-awesome/phosphor pline, să nu devină transparente */
-body.dark-mode .hk-card.is-active .hk-icon i.ph-fill,
-body.dark-mode .hk-card.is-active .hk-controls button i {
-    fill: #ffffff !important;
-}
-
-/* Corecție butoane + / - pentru controlul climatic */
-.ctrl-btn {
-    background: rgba(0, 0, 0, 0.05) !important;
-    color: var(--text-color) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Ajustare specifică pentru Dark Mode */
-body.dark-mode .ctrl-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Păstrăm efectul de hover neschimbat și interactiv */
-.ctrl-btn:hover {
-    background: var(--accent-color) !important;
-    color: white !important;
-    border-color: var(--accent-color) !important;
-}
-
-/* Containerul general pentru notificări floating */
-.toast-container {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    pointer-events: none; /* Să nu încurce click-urile pe restul ecranului */
-}
-
-/* Stilul de "Speech Balloon" / Card Apple modern */
-.toast-notification {
-    pointer-events: auto;
-    background: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #000000 !important;
-    padding: 16px 24px;
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    font-weight: 600;
-    font-size: 0.95em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    
-    /* Animație de intrare (slide din dreapta și pop) */
-    transform: translateX(120%) scale(0.9);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Când este activă, vine la poziția inițială */
-.toast-notification.show {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-}
-
-/* Ajustare automată pentru Dark Mode */
-body.dark-mode .toast-notification {
-    background: rgba(28, 28, 30, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ffffff !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
+/* Toasts */
+.toast-container { position: fixed; top: 25px; right: 25px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.toast-notification { pointer-events: auto; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid rgba(255, 255, 255, 0.5); padding: 16px 24px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); font-weight: 600; font-size: 0.95em; display: flex; align-items: center; gap: 10px; transform: translateX(120%) scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.toast-notification.show { transform: translateX(0) scale(1); opacity: 1; }
+body.dark-mode .toast-notification { background: rgba(28, 28, 30, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
