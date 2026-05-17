@@ -1,17 +1,18 @@
 let intervalVacanta = null;
 
-// Extrase perfecte din folderele tale "assets" cu adaptare la currentColor
+// Extrase perfecte din folderele tale "assets"
 const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.3 122.88" fill="currentColor" class="hk-svg-icon"><path fill-rule="evenodd" d="M100.86,52.48H1.44a1.43,1.43,0,0,1-1.44-1.44V34.5a1.44,1.44,0,0,1,1.44-1.43H100.86a1.43,1.43,0,0,1,1.44,1.43V51a1.44,1.44,0,0,1-1.44,1.44Zm0,18.89H1.44a1.43,1.43,0,0,1-1.44-1.44V53.39A1.44,1.44,0,0,1,1.44,52H100.86a1.43,1.43,0,0,1,1.44,1.44V69.93a1.44,1.44,0,0,1-1.44,1.44Zm0,18.89H1.44a1.44,1.44,0,0,1-1.44-1.44V72.28A1.44,1.44,0,0,1,1.44,70.84H100.86a1.43,1.43,0,0,1,1.44,1.44v16.54a1.43,1.43,0,0,1-1.44,1.44Zm0,18.88H1.44a1.43,1.43,0,0,1-1.44-1.44V91.17a1.44,1.44,0,0,1,1.44-1.44H100.86a1.43,1.43,0,0,1,1.44,1.44V107.7a1.43,1.43,0,0,1-1.44,1.44Zm-1.87,13.74H3.31A3.31,3.31,0,0,1,0,119.57V110.1A1.44,1.44,0,0,1,1.44,108.6H100.86a1.43,1.43,0,0,1,1.44,1.44v9.47a3.32,3.32,0,0,1-3.31,3.37ZM99,32.14H3.31A3.31,3.31,0,0,1,0,28.83V3.31A3.31,3.31,0,0,1,3.31,0H99a3.31,3.31,0,0,1,3.31,3.31V28.83A3.31,3.31,0,0,1,99,32.14Z"/></svg>`;
-const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.3 122.88" fill="currentColor" class="hk-svg-icon">
-  <path d="
-    M10 10 H92 V112 H10 Z
 
-    M10 10 H92 V28 H10 Z
+// REPARAT: Folosim stroke și fill="none" pentru ca dreptunghiul să nu se mai coloreze integral!
+const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.3 122.88" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon">
+  <!-- cadru fereastră -->
+  <rect x="10" y="10" width="82.3" height="100" />
 
-    M51 10 V112
+  <!-- linie verticală centrală -->
+  <line x1="51.15" y1="10" x2="51.15" y2="110" />
 
-    M10 61 H92
-  "/>
+  <!-- linie orizontală centrală -->
+  <line x1="10" y1="61.44" x2="92.3" y2="61.44" />
 </svg>`;
 
 const scenesDB = [
@@ -77,16 +78,16 @@ function initFavorites() {
         const saved = localStorage.getItem('smartHomeData');
         subDispozitive = saved ? JSON.parse(saved) : null;
 
-        // Auto-heal logic forcing a reset to properly render custom SVGs
-        if (!subDispozitive || !subDispozitive.becuri || !localStorage.getItem('design_svg_assets_v5')) {
+        // Auto-heal logic la v6 forțează curățarea automată ca să încarce noua Fereastră!
+        if (!subDispozitive || !subDispozitive.becuri || !localStorage.getItem('design_svg_assets_v6')) {
             subDispozitive = JSON.parse(JSON.stringify(defaultDispozitive));
             localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
-            localStorage.setItem('design_svg_assets_v5', 'true');
+            localStorage.setItem('design_svg_assets_v6', 'true');
         }
     } catch (e) {
         subDispozitive = JSON.parse(JSON.stringify(defaultDispozitive));
         localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
-        localStorage.setItem('design_svg_assets_v5', 'true');
+        localStorage.setItem('design_svg_assets_v6', 'true');
     }
 
     if (!localStorage.getItem('favAcc')) localStorage.setItem('favAcc', JSON.stringify(['becuri_1', 'tv_1', 'incuietori_0', 'camereVideo_0']));
@@ -675,7 +676,7 @@ function aplicaMod(mod) {
         if(subDispozitive.luminiRGB && subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#0a3d62"; }
         (subDispozitive.becuri || []).forEach(d => d.stare = "Oprit"); 
     } else if (mod === 'focus') {
-        if(subDispozitive.becuri && subDispozitive.becuri[0]) subDispozitive.becuri[0].stare = "Pornit";
+        if(subDispozitive.becuri && subDispozitive.becuri[0]) subDispozitive.purificator[0].stare = "Boost";
         if(subDispozitive.luminiRGB && subDispozitive.luminiRGB[1]) subDispozitive.luminiRGB[1].stare = "Pornit";
         if(subDispozitive.purificator && subDispozitive.purificator[0]) subDispozitive.purificator[0].stare = "Boost";
     } else if (mod === 'dinner') {
@@ -922,4 +923,30 @@ function genereazaTabelIstoric() {
     
     html += `</tbody></table>`;
     container.innerHTML = html;
+}
+
+function calculeazaConsumPriza(disp) {
+    if (disp.stare !== 'Pornit') return 0;
+    let consumReal = 0;
+    
+    if (disp.camera === 'Baie') {
+        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[0] && subDispozitive.electrocasnice[0].stare === 'Pornit') consumReal += 2000;
+        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[1] && subDispozitive.electrocasnice[1].stare === 'Pornit') consumReal += 2400;
+    } 
+    else if (disp.camera === 'Dormitor') {
+        if (subDispozitive.tv && subDispozitive.tv[0] && subDispozitive.tv[0].stare === 'Pornit') consumReal += 90;
+        if (subDispozitive.purificator && subDispozitive.purificator[0] && subDispozitive.purificator[0].stare !== 'Oprit') consumReal += 30;
+    } 
+    else if (disp.camera === 'Bucătărie') {
+        consumReal += 150; 
+        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[2] && subDispozitive.electrocasnice[2].stare === 'Pornit') consumReal += 1200;
+    } 
+    else if (disp.camera === 'Living') {
+        if (subDispozitive.tv && subDispozitive.tv[1] && subDispozitive.tv[1].stare === 'Pornit') consumReal += 150;
+        if (subDispozitive.audio && subDispozitive.audio[1] && subDispozitive.audio[1].stare === 'Pornit') consumReal += 40;
+        if (subDispozitive.audio && subDispozitive.audio[2] && subDispozitive.audio[2].stare === 'Pornit') consumReal += 200;
+        if (subDispozitive.aspirator && subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === 'Curăță') consumReal += 60;
+        if (subDispozitive.purificator && subDispozitive.purificator[1] && subDispozitive.purificator[1].stare !== 'Oprit') consumReal += 30;
+    }
+    return consumReal;
 }
