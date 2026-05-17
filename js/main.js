@@ -132,3 +132,14 @@ function showToast(mesaj) {
         }, 400);
     }, 4000);
 }
+
+// Activarea Tranzițiilor Native între pagini (View Transitions API)
+document.addEventListener('DOMContentLoaded', () => {
+    // Injectăm tag-ul meta în <head> pentru a permite cross-document transitions
+    if (!document.querySelector('meta[name="view-transition"]')) {
+        const metaVT = document.createElement('meta');
+        metaVT.name = 'view-transition';
+        metaVT.content = 'same-origin';
+        document.head.appendChild(metaVT);
+    }
+});
