@@ -17,7 +17,7 @@ const scenesDB = [
     { id: 's_night', nume: "🌙 Good Night", descriere: "Oprește luminile, armează ușile.", action: () => aplicaMod('night') },
     { id: 's_away', nume: "👋 Leaving Home", descriere: "Oprește tot, robotul începe curățenia.", action: () => aplicaMod('away') },
     { id: 's_home', nume: "🏠 I'm Home", descriere: "Dezactivează alarma, deschide jaluzelele.", action: () => aplicaMod('home') },
-    { id: 's_movie', nume: "🎬 movieTime", descriere: "Draperii închise, TV pornit, ambient albastru.", action: () => aplicaMod('movie') },
+    { id: 's_movie', nume: "🎬 Movie Time", descriere: "Draperii închise, TV pornit, ambient albastru.", action: () => aplicaMod('movie') },
     { id: 's_focus', nume: "📖 Focus / Citit", descriere: "Lumină birou, purificator pornit.", action: () => aplicaMod('focus') },
     { id: 's_dinner', nume: "🍽️ Dinner Time", descriere: "Lumini calde în living și bucătărie.", action: () => aplicaMod('dinner') }
 ];
