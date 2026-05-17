@@ -2,126 +2,111 @@
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Pericole</title>
+    <title>SmartHome - Pericole & Alerte</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .perils-container { display: flex; gap: 25px; flex-wrap: wrap; margin-top: 25px; }
-        .peril-card {
-            background: var(--card-bg);
-            color: var(--text-color);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            flex: 1;
-            min-width: 280px;
-            max-width: 380px;
-            border-top: 5px solid var(--success-color);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
+        .danger-panel {
+            background: var(--card-bg); border-radius: 16px; padding: 30px; text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06); margin-bottom: 30px; transition: all 0.3s ease;
         }
-        .peril-icon { font-size: 3em; margin-bottom: 10px; }
-        .peril-status { font-size: 1.4em; font-weight: bold; margin: 10px 0; }
-        .peril-instructions { font-size: 0.9em; opacity: 0.8; margin-bottom: 20px; line-height: 1.4; }
-        .peril-actions { display: flex; gap: 10px; }
-        .peril-actions button { flex: 1; padding: 10px; font-size: 0.9em; }
+        .danger-icon { font-size: 5em; margin-bottom: 15px; display: inline-block; }
+        
+        .status-safe { border-top: 6px solid var(--success-color); }
+        .status-safe .danger-icon { color: var(--success-color); }
+        
+        .status-alert-water { 
+            border-top: 6px solid #3498db; animation: pulseWater 1.5s infinite; background-color: rgba(52, 152, 219, 0.08);
+        }
+        .status-alert-fire { 
+            border-top: 6px solid #e74c3c; animation: pulseFire 1.5s infinite; background-color: rgba(231, 76, 60, 0.08);
+        }
+
+        @keyframes pulseWater { 0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(52, 152, 219, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); } }
+        @keyframes pulseFire { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
+
+        .btn-simulate {
+            background-color: transparent; border: 2px solid var(--text-color); color: var(--text-color);
+            padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s;
+        }
+        .btn-simulate:hover { background-color: var(--text-color); color: var(--bg-primary); }
+        .btn-stop {
+            background-color: var(--success-color); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
     <nav>
         <h2>SmartHome</h2>
-        <a href="index.html">🏠 Home</a>
-        <a href="scene.html">🎭 Scene</a>
-        <a href="accesorii.html">🛋️ Accesorii</a>
-        <a href="automatizari.html">🤖 Automatizări</a>
-        <a href="statistici.html">📈 Statistici</a>
-        <a href="camere.html">🌡️ Climă Camere</a>
-        <a href="harta.html">🗺️ Hartă Casă</a>
-        <a href="securitate.html">🛡️ Securitate</a>
-        <a href="pericole.html" style="color: var(--accent-color); font-weight: bold;">🚨 Pericole</a>
-        <a href="setari.html">⚙️ Setări</a>
+        <a href="index.html">🏠 Home</a><a href="scene.html">🎭 Scene</a><a href="accesorii.html">🛋️ Accesorii</a>
+        <a href="automatizari.html">🤖 Automatizări</a><a href="statistici.html">📈 Statistici</a><a href="camere.html">🌡️ Climă Camere</a>
+        <a href="harta.html">🗺️ Hartă Casă</a><a href="securitate.html">🛡️ Securitate</a>
+        <a href="pericole.html" style="color: var(--accent-color); font-weight: bold;">🚨 Pericole</a><a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
         <div style="display: flex; align-items: center; margin-bottom: 20px;">
-            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
-            <h1 style="margin: 0;">Senzori de Pericole și Alerte</h1>
+            <button class="menu-toggle-btn" onclick="toggleNav()">☰</button><h1 style="margin: 0;">Sisteme de Pericol și Alerte</h1>
         </div>
-        <p>Monitorizarea în timp real a senzorilor tehnici de siguranță împotriva incendiilor și inundațiilor accidentale.</p>
+        <p>Monitorizare inteligentă împotriva inundațiilor și a scurgerilor de gaze.</p>
 
-        <div class="perils-container">
-            <div class="peril-card" id="card-incendiu">
-                <div>
-                    <div class="peril-icon" id="icon-incendiu">🛡️</div>
-                    <h3 style="margin: 0; opacity: 0.7;">Senzor Fum (Bucătarie)</h3>
-                    <div class="peril-status" id="stareIncendiu" style="color: var(--success-color);">SIGUR</div>
-                    <p class="peril-instructions" id="detaliiIncendiu">Nivel de particule și gaz în parametri normali.</p>
-                </div>
-                <div class="peril-actions">
-                    <button id="btn-sim-incendiu" onclick="simuleazaIncendiu()" style="background-color: var(--accent-color);">🔥 Simulează Fum</button>
-                    <button id="btn-reset-incendiu" onclick="reseteazaIncendiu()" style="background-color: var(--success-color); display: none;">✅ Resetează</button>
+        <div class="hk-grid-wide" style="margin-top: 30px;">
+            <div class="danger-panel status-safe" id="panel-inundatie">
+                <div class="danger-icon" id="icon-inundatie">💧</div><h2 style="margin: 0;">Senzor Inundație Baie</h2>
+                <p id="status-inundatie" style="font-weight: bold; color: var(--success-color); font-size: 1.2em;">Stare Normală</p>
+                <div id="controls-inundatie">
+                    <button type="button" class="btn-simulate" onclick="declanseazaAlarma('inundatie')">Simulează Inundație</button>
                 </div>
             </div>
 
-            <div class="peril-card" id="card-inundatie">
-                <div>
-                    <div class="peril-icon" id="icon-inundatie">🛡️</div>
-                    <h3 style="margin: 0; opacity: 0.7;">Senzor Inundație (Baie)</h3>
-                    <div class="peril-status" id="stareInundatie" style="color: var(--success-color);">USCAT</div>
-                    <p class="peril-instructions" id="detaliiInundatie">Senzorul de podea nu detectează prezența lichidelor.</p>
-                </div>
-                <div class="peril-actions">
-                    <button id="btn-sim-inundatie" onclick="simuleazaInundatie()" style="background-color: var(--accent-color);">💧 Simulează Apă</button>
-                    <button id="btn-reset-inundatie" onclick="reseteazaInundatie()" style="background-color: var(--success-color); display: none;">✅ Resetează</button>
+            <div class="danger-panel status-safe" id="panel-incendiu">
+                <div class="danger-icon" id="icon-incendiu">🔥</div><h2 style="margin: 0;">Senzor Fum Bucătărie</h2>
+                <p id="status-incendiu" style="font-weight: bold; color: var(--success-color); font-size: 1.2em;">Aer Curat</p>
+                <div id="controls-incendiu">
+                    <button type="button" class="btn-simulate" onclick="declanseazaAlarma('incendiu')">Simulează Fum / Foc</button>
                 </div>
             </div>
         </div>
     </main>
 
     <script src="js/main.js"></script>
-    <script src="js/validation.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const inundatieActive = localStorage.getItem('pericolInundatie') === 'true';
-            const incendiuActive = localStorage.getItem('pericolIncendiu') === 'true';
-
-            if (incendiuActive) {
-                document.getElementById('stareIncendiu').innerText = "PERICOL FUM!";
-                document.getElementById('stareIncendiu').style.color = "white";
-                document.getElementById('icon-incendiu').innerText = "🚨";
-                document.getElementById('detaliiIncendiu').innerText = "CRITIC: Nivel ridicat de monoxid de carbon!";
-                document.getElementById('detaliiIncendiu').style.fontWeight = "bold";
-                document.getElementById('card-incendiu').style.backgroundColor = "var(--error-color)";
-                document.getElementById('card-incendiu').style.color = "white";
-                document.getElementById('card-incendiu').style.borderTop = "none";
-                document.getElementById('btn-sim-incendiu').style.display = "none";
-                document.getElementById('btn-reset-incendiu').style.display = "block";
-                document.body.classList.add('alarm-flash');
+        function declanseazaAlarma(tip) {
+            const panel = document.getElementById(`panel-${tip}`);
+            const status = document.getElementById(`status-${tip}`);
+            const controls = document.getElementById(`controls-${tip}`);
+            
+            panel.classList.remove('status-safe');
+            
+            if (tip === 'inundatie') {
+                panel.classList.add('status-alert-water');
+                status.innerText = "🚨 ALERTĂ: INUNDAȚIE DETECTATĂ!"; status.style.color = "#3498db";
+                controls.innerHTML = `<button type="button" class="btn-stop" onclick="opresteAlarma('inundatie')">Oprește Alarma și Scurgerea</button>`;
+                if (typeof adaugaInLog === 'function') adaugaInLog("⚠️ ALERTĂ CRITICĂ: Senzorul a detectat INUNDAȚIE în Baie!");
+                if (typeof showToast === 'function') showToast("Alerta a fost trimisă pe telefon!");
+            } else if (tip === 'incendiu') {
+                panel.classList.add('status-alert-fire');
+                status.innerText = "🚨 ALERTĂ: FUM DETECTAT (PERICOL)!"; status.style.color = "#e74c3c";
+                controls.innerHTML = `<button type="button" class="btn-stop" onclick="opresteAlarma('incendiu')">Oprește Alarma și Gazul</button>`;
+                if (typeof adaugaInLog === 'function') adaugaInLog("⚠️ ALERTĂ CRITICĂ: Senzorul a detectat FUM sau FOC în Bucătărie!");
+                if (typeof showToast === 'function') showToast("Apel automat către pompieri inițiat!");
             }
-            if (inundatieActive) {
-                document.getElementById('stareInundatie').innerText = "INUNDAȚIE!";
-                document.getElementById('stareInundatie').style.color = "white";
-                document.getElementById('icon-incendie').innerText = "🚨";
-                document.getElementById('detaliiInundatie').innerText = "CRITIC: Scurgere masivă de apă detectată pe podea!";
-                document.getElementById('detaliiInundatie').style.fontWeight = "bold";
-                document.getElementById('card-inundatie').style.backgroundColor = "var(--error-color)";
-                document.getElementById('card-inundatie').style.color = "white";
-                document.getElementById('card-inundatie').style.borderTop = "none";
-                document.getElementById('btn-sim-inundatie').style.display = "none";
-                document.getElementById('btn-reset-inundatie').style.display = "block";
-                document.body.classList.add('alarm-flash');
-            }
-        });
+        }
 
-        const origSimInundatie = window.simuleazaInundatie;
-        window.simuleazaInundatie = function() { origSimInundatie(); location.reload(); }
-        const origResetInundatie = window.reseteazaInundatie;
-        window.reseteazaInundatie = function() { origResetInundatie(); location.reload(); }
-        const origSimIncendiu = window.simuleazaIncendiu;
-        window.simuleazaIncendiu = function() { origSimIncendiu(); location.reload(); }
-        const origResetIncendiu = window.reseteazaIncendiu;
-        window.reseteazaIncendiu = function() { origResetIncendiu(); location.reload(); }
+        function opresteAlarma(tip) {
+            const panel = document.getElementById(`panel-${tip}`);
+            const status = document.getElementById(`status-${tip}`);
+            const controls = document.getElementById(`controls-${tip}`);
+
+            panel.classList.remove('status-alert-water', 'status-alert-fire');
+            panel.classList.add('status-safe');
+
+            if (tip === 'inundatie') {
+                status.innerText = "Stare Normală"; status.style.color = "var(--success-color)";
+                controls.innerHTML = `<button type="button" class="btn-simulate" onclick="declanseazaAlarma('inundatie')">Simulează Inundație</button>`;
+            } else if (tip === 'incendiu') {
+                status.innerText = "Aer Curat"; status.style.color = "var(--success-color)";
+                controls.innerHTML = `<button type="button" class="btn-simulate" onclick="declanseazaAlarma('incendiu')">Simulează Fum / Foc</button>`;
+            }
+        }
     </script>
 </body>
 </html>

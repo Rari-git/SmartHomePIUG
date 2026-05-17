@@ -4,6 +4,60 @@
     <meta charset="UTF-8">
     <title>SmartHome - Automatizări</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Switch ON/OFF */
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Stiluri Carousel (Rând unic) */
+        .carousel-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; position: relative; }
+        .carousel-container {
+            display: flex; gap: 15px; overflow-x: auto; scroll-behavior: smooth;
+            padding-bottom: 10px; flex: 1; scrollbar-width: none; /* Ascunde scrollbar-ul pe Firefox */
+        }
+        .carousel-container::-webkit-scrollbar { display: none; } /* Ascunde scrollbar-ul pe Chrome */
+        
+        .nav-arrow {
+            background: var(--card-bg); border: 2px solid rgba(0,0,0,0.1); border-radius: 50%;
+            width: 45px; height: 45px; font-size: 1.5em; font-weight: bold; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; transition: 0.2s; color: var(--text-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 10;
+        }
+        .nav-arrow:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.1); }
+
+        /* Card Șablon */
+        .suggestion-card {
+            background: var(--card-bg); border-radius: 12px; padding: 20px;
+            flex: 0 0 calc(33.333% - 10px); min-width: 50px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); transition: transform 0.2s;
+        }
+        .suggestion-card:hover { transform: translateY(-5px); }
+        .add-sug-btn {
+            background: rgba(0,0,0,0.05); color: var(--text-color); border: none; padding: 10px; border-radius: 8px;
+            cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.2s;
+        }
+        .add-sug-btn:hover { background: var(--accent-color); color: white; }
+
+        /* Card Regulă Nouă (BIG +) */
+        .card-add-new {
+            background: transparent; border: 3px dashed rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: rgba(0,0,0,0.5); cursor: pointer; transition: 0.3s; min-height: 150px; border-radius: 18px;
+        }
+        .card-add-new:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(52, 152, 219, 0.05); }
+        .card-add-new .plus-icon { font-size: 3.5em; font-weight: bold; margin-bottom: 5px; line-height: 1; }
+        body.dark-mode .card-add-new { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); }
+        body.dark-mode .card-add-new:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+        .trigger-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+        .trigger-tab { flex: 1; padding: 10px; text-align: center; background: rgba(0,0,0,0.05); border-radius: 8px; cursor: pointer; font-weight: bold; border: 2px solid transparent; }
+        .trigger-tab.active { background: rgba(52, 152, 219, 0.1); border-color: var(--accent-color); color: var(--accent-color); }
+    </style>
 </head>
 <body>
     <nav>
@@ -13,42 +67,63 @@
         <a href="accesorii.html">🛋️ Accesorii</a>
         <a href="automatizari.html" style="color: var(--accent-color); font-weight: bold;">🤖 Automatizări</a>
         <a href="statistici.html">📈 Statistici</a>
-        <a href="camere.html">🌡️ Climă & Camere</a>
+        <a href="camere.html">🌡️ Climă Camere</a>
         <a href="harta.html">🗺️ Hartă Casă</a>
         <a href="securitate.html">🛡️ Securitate</a>
         <a href="pericole.html">🚨 Pericole</a>
         <a href="setari.html">⚙️ Setări</a>
     </nav>
     <main>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center;">
-                <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-                <h1 style="margin: 0;">Motor Automatizări</h1>
-            </div>
-            <button onclick="deschideModalAutomatizare()" style="background: var(--accent-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">➕ Regulă Nouă</button>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
+            <h1 style="margin: 0;">Motor Automatizări</h1>
         </div>
-        <p>Creează reguli de tip <strong>DACĂ (Condiție) ➔ ATUNCI (Acțiune)</strong> pentru a face casa cu adevărat inteligentă.</p>
+        <p>Alege din cele 9 șabloane inteligente sau creează-ți propriile reguli avansate la sfârșitul listei.</p>
 
-        <div id="automations-list" class="hk-grid-wide" style="margin-top: 30px;">
+        <h3 style="margin-top: 30px;">💡 Șabloane Inteligente</h3>
+        <div class="carousel-wrapper">
+            <button class="nav-arrow" onclick="scrollCarousel(-1)">&#10094;</button>
+            <div id="sabloane-carousel" class="carousel-container">
+                </div>
+            <button class="nav-arrow" onclick="scrollCarousel(1)">&#10095;</button>
+        </div>
+
+        <h3 style="margin-top: 30px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px;">⚙️ Regulile Tale Active</h3>
+        <div id="automations-list" class="hk-grid-wide" style="margin-top: 20px; align-items: stretch;">
             </div>
     </main>
 
     <div id="popup-automatizare" class="modal">
         <div class="modal-content" style="max-width: 500px;">
             <span class="close-btn" onclick="document.getElementById('popup-automatizare').classList.remove('active');">&times;</span>
-            <h2 style="color: var(--accent-color); margin-top: 0;">Creează Automatizare</h2>
+            <h2 style="color: var(--accent-color); margin-top: 0;">Creează Regulă Manuală</h2>
             
             <div style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                 <h3 style="margin-top: 0; color: #e67e22;">1. DACĂ (Trigger)</h3>
-                <label>Când acest senzor/dispozitiv:</label>
-                <select id="auto-trigger-dev" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;"></select>
                 
-                <label style="display: block; margin-top: 10px;">Devine:</label>
-                <select id="auto-trigger-state" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;">
-                    <option value="Activ">Activ / Detectează</option>
-                    <option value="Deschis">Deschis</option>
-                    <option value="Pornit">Pornit</option>
-                </select>
+                <div class="trigger-tabs">
+                    <div class="trigger-tab active" id="tab-disp" onclick="schimbaTabTrigger('disp')">Senzor / Dispozitiv</div>
+                    <div class="trigger-tab" id="tab-timp" onclick="schimbaTabTrigger('timp')">Oră Fixă (Timp)</div>
+                </div>
+
+                <div id="trigger-disp-container">
+                    <label>Când acest senzor/dispozitiv:</label>
+                    <select id="auto-trigger-dev" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;"></select>
+                    
+                    <label style="display: block; margin-top: 10px;">Devine:</label>
+                    <select id="auto-trigger-state" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;">
+                        <option value="Activ">Activ / Detectează</option>
+                        <option value="Deschis">Deschis</option>
+                        <option value="Pornit">Pornit / Aprins</option>
+                        <option value="Închis">Închis</option>
+                        <option value="Oprit">Oprit / Stins</option>
+                    </select>
+                </div>
+
+                <div id="trigger-timp-container" style="display: none; text-align: center;">
+                    <label>Rulează în fiecare zi la ora:</label><br>
+                    <input type="time" id="auto-trigger-timp" style="font-size: 2em; padding: 10px; margin-top: 10px; border-radius: 8px; border: 2px solid var(--accent-color);">
+                </div>
             </div>
 
             <div style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
@@ -60,7 +135,9 @@
                 <select id="auto-action-state" style="width: 100%; padding: 10px; border-radius: 5px; margin-top: 5px;">
                     <option value="Pornit">Pornit / Aprins</option>
                     <option value="Oprit">Oprit / Stins</option>
-                    <option value="Blocat">Blocat</option>
+                    <option value="Deschis">Deschis</option>
+                    <option value="Închis">Închis</option>
+                    <option value="Blocat">Blocat / Armat</option>
                 </select>
             </div>
 
@@ -70,5 +147,24 @@
 
     <script src="js/main.js"></script>
     <script src="js/counter.js"></script>
+    <script>
+        let modTriggerCurent = 'disp';
+        function schimbaTabTrigger(mod) {
+            modTriggerCurent = mod;
+            document.getElementById('tab-disp').classList.toggle('active', mod === 'disp');
+            document.getElementById('tab-timp').classList.toggle('active', mod === 'timp');
+            document.getElementById('trigger-disp-container').style.display = mod === 'disp' ? 'block' : 'none';
+            document.getElementById('trigger-timp-container').style.display = mod === 'timp' ? 'block' : 'none';
+        }
+
+        // Logică derulare (scroll) pentru Carousel
+        function scrollCarousel(dir) {
+            const container = document.getElementById('sabloane-carousel');
+            if (container) {
+                // Derulează stânga (-1) sau dreapta (1) câte 280px (aprox. un card)
+                container.scrollBy({ left: dir * 280, behavior: 'smooth' });
+            }
+        }
+    </script>
 </body>
 </html>
