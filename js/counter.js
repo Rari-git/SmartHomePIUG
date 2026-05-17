@@ -1137,3 +1137,38 @@ function stergeScenaCustom(idScena, event) {
         reincarcaInterfata();
     }
 }
+
+// Funcția de Securizare Totală solicitată de utilizator
+function executaSecurizareTotala() {
+    // 1. Închide toate geamurile (senzoriContact)
+    if (subDispozitive.senzoriContact) {
+        subDispozitive.senzoriContact.forEach(g => g.stare = "Închis");
+    }
+    
+    // 2. Încuie ușa de la intrare (incuietori)
+    if (subDispozitive.incuietori) {
+        subDispozitive.incuietori.forEach(u => u.stare = "Blocat");
+    }
+    
+    // 3. Pornește senzorii de mișcare (îi face din Inactiv -> Activ)
+    if (subDispozitive.senzoriMiscare) {
+        subDispozitive.senzoriMiscare.forEach(s => s.stare = "Activ");
+    }
+    
+    // 4. Pornește toate camerele video (le trece din Standby -> LIVE)
+    if (subDispozitive.camereVideo) {
+        subDispozitive.camereVideo.forEach(c => c.stare = "LIVE");
+    }
+    
+    // Forțăm starea alarmei globale ca fiind Armată
+    localStorage.setItem('alarmaDezactivata', 'false');
+    
+    // Salvăm starea în baza de date locală și reîmprospătăm ecranul
+    salveazaStarea();
+    reincarcaInterfata();
+    
+    // Adăugăm acțiunea în istoricul de statistici/loguri
+    if (typeof adaugaInLog === 'function') {
+        adaugaInLog("🛡️ Securitate: S-a efectuat o securizare totală (Uși încuiate, geamuri închise, senzori și camere activate).");
+    }
+}

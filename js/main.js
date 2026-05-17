@@ -97,3 +97,38 @@ function toggleNav() {
         backdrop.classList.remove('active');
     }
 }
+
+function showToast(mesaj) {
+    // 1. Verificăm dacă există containerul pe ecran, dacă nu, îl creăm
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    // 2. Creăm elementul notificării sub formă de balon/cadran
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `✨ <span>${mesaj}</span>`;
+
+    // 3. Îl punem în container
+    container.appendChild(toast);
+
+    // 4. Îi dăm un mic timeout ca browserul să poată rula animația de slide-in
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 50);
+
+    // 5. După 4 secunde, pornim animația de dispariție și îl ștergem din pagină
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.style.transform = 'translateY(-20px)';
+        toast.style.opacity = '0';
+        
+        // Așteptăm să se termine tranziția CSS înainte de a-l șterge complet din HTML
+        setTimeout(() => {
+            toast.remove();
+        }, 400);
+    }, 4000);
+}

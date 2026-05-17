@@ -32,7 +32,7 @@ body {
     background-size: cover;
     
     color: var(--text-color);
-    display: flex;
+    
     min-height: 100vh;
     transition: color 0.3s ease;
     -webkit-font-smoothing: antialiased;
@@ -541,4 +541,106 @@ nav::-webkit-scrollbar {
 nav {
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE și Edge */
+}
+
+/* =========================================================
+   FIX SPECIFIC DARK MODE: COLORARE CARDURI ACTIVE & SCENE
+   ========================================================= */
+
+/* Forțăm cardurile aprinse/active să preia culoarea predominantă în modul întunecat */
+body.dark-mode .hk-card.is-active {
+    background: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    /* Adăugăm și un efect de glow neon care arată excelent pe fundal întunecat */
+    box-shadow: 0 4px 20px var(--accent-color) !important; 
+}
+
+/* Forțăm toate textele, iconițele și SVG-urile din cardurile active să devină albe pe fundalul colorat */
+body.dark-mode .hk-card.is-active .hk-name,
+body.dark-mode .hk-card.is-active .hk-state,
+body.dark-mode .hk-card.is-active .hk-icon,
+body.dark-mode .hk-card.is-active .hk-icon i,
+body.dark-mode .hk-card.is-active svg,
+body.dark-mode .hk-card.is-active svg.hk-svg-icon,
+body.dark-mode .hk-card.is-active svg.hk-svg-icon * {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+    fill: transparent !important; /* Menținem ferestrele/draperiile transparente la interior */
+    opacity: 1 !important;
+}
+
+/* Excepție pentru iconițele de tip font-awesome/phosphor pline, să nu devină transparente */
+body.dark-mode .hk-card.is-active .hk-icon i.ph-fill,
+body.dark-mode .hk-card.is-active .hk-controls button i {
+    fill: #ffffff !important;
+}
+
+/* Corecție butoane + / - pentru controlul climatic */
+.ctrl-btn {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: var(--text-color) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ajustare specifică pentru Dark Mode */
+body.dark-mode .ctrl-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Păstrăm efectul de hover neschimbat și interactiv */
+.ctrl-btn:hover {
+    background: var(--accent-color) !important;
+    color: white !important;
+    border-color: var(--accent-color) !important;
+}
+
+/* Containerul general pentru notificări floating */
+.toast-container {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none; /* Să nu încurce click-urile pe restul ecranului */
+}
+
+/* Stilul de "Speech Balloon" / Card Apple modern */
+.toast-notification {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #000000 !important;
+    padding: 16px 24px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    /* Animație de intrare (slide din dreapta și pop) */
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Când este activă, vine la poziția inițială */
+.toast-notification.show {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+/* Ajustare automată pentru Dark Mode */
+body.dark-mode .toast-notification {
+    background: rgba(28, 28, 30, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }

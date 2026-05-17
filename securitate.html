@@ -3,24 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Securitate</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .security-panel { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 25px; }
-        .security-badge {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
-            flex: 1;
-            min-width: 280px;
-            max-width: 350px;
-            border-top: 5px solid var(--success-color);
-            transition: all 0.3s ease;
+        /* REPARAT: Grid stabil tridimensional care nu se deformează la apariția textului de alertă */
+        .security-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 25px;
+            width: 100%;
         }
-        .numpad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 220px; margin: 20px auto; }
+
+        /* DESIGN NOU: Ambele elemente devin carduri premium ușor opace (Glassmorphism) */
+        .security-badge-card, .security-form-card {
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        body.dark-mode .security-badge-card, 
+        body.dark-mode .security-form-card {
+            background: rgba(28, 28, 30, 0.65) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Păstrăm funcționalitatea din JS pentru bordura superioară dinamică */
+        .security-badge-card {
+            border-top: 5px solid var(--success-color) !important;
+            transition: border-color 0.3s ease;
+        }
+
+        .numpad-container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+            width: 100%;
+            max-width: 220px; 
+            margin: 20px auto; 
+        }
+        
         .numpad-btn {
             background: var(--bg-primary);
             color: var(--text-color);
@@ -40,8 +74,21 @@
         }
         .numpad-btn:hover { background: var(--accent-color); color: white; }
         .numpad-btn:active { transform: scale(0.9); }
-        .security-actions { display: flex; gap: 10px; margin-top: 15px; }
-        .security-actions button { flex: 1; padding: 12px; }
+        
+        /* REPARAT: Mesajele interne au dimensiuni sigure și nu modifică structura cardului */
+        .error-msg, .success-msg {
+            width: 100%;
+            max-width: 240px;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 10px 0;
+            display: none;
+        }
+        .error-msg { background: rgba(255, 59, 48, 0.1); color: var(--error-color); }
+        .success-msg { background: rgba(52, 199, 89, 0.1); color: var(--success-color); }
     </style>
 </head>
 <body>
@@ -65,19 +112,21 @@
         </div>
         <p>Panou central de monitorizare perimetrală și control al sistemului de alarmă anti-efracție.</p>
 
-        <div class="security-panel">
-            <div class="security-badge" id="panel-badge">
+        <div class="security-grid-container">
+            
+            <div class="security-badge-card" id="panel-badge">
                 <div id="security-icon" style="font-size: 3.5em; margin-bottom: 10px;">🛡️</div>
                 <h3 style="margin: 0; opacity: 0.7;">Stare Sistem</h3>
                 <h2 id="security-status-text" style="font-size: 2em; margin: 10px 0; color: var(--success-color);">Armată & Sigură</h2>
                 <p id="security-details" style="font-size: 0.9em; opacity: 0.8; margin: 0;">Toți senzorii perimetrali sunt activi.</p>
             </div>
 
-            <div class="form-group" style="max-width: 350px; flex: 1; min-width: 280px; text-align: center;">
-                <h3 style="margin-top: 0;">Introducere Cod Securitate</h3>
-                <input type="password" id="pinInput" placeholder="••••" maxlength="4" readonly style="text-align: center; font-size: 1.8em; letter-spacing: 5px; width: 80%; padding: 8px; margin-bottom: 5px;">
-                <p id="pinError" class="error-msg" style="margin: 5px 0;"></p>
-                <p id="pinSuccess" class="success-msg" style="margin: 5px 0;"></p>
+            <div class="security-form-card">
+                <h3 style="margin-top: 0; margin-bottom: 15px;">Introducere Cod Securitate</h3>
+                <input type="password" id="pinInput" placeholder="••••" maxlength="4" readonly style="text-align: center; font-size: 1.8em; letter-spacing: 5px; width: 100%; max-width: 240px; padding: 10px; margin-bottom: 5px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: var(--text-color);">
+                
+                <div id="pinError" class="error-msg"></div>
+                <div id="pinSuccess" class="success-msg"></div>
 
                 <div class="numpad-container">
                     <div class="numpad-btn" onclick="apasăTastăNumpad('1')">1</div>
@@ -93,11 +142,19 @@
                     <div class="numpad-btn" onclick="apasăTastăNumpad('0')">0</div>
                     <div class="numpad-btn" onclick="apasăTastăNumpad('C')" style="color: var(--error-color);">C</div>
                 </div>
-                <div class="security-actions">
-                    <button onclick="proceseazăAcțiuneAlarmă('armează')" style="background-color: var(--success-color);">🔒 Armează</button>
-                    <button onclick="proceseazăAcțiuneAlarmă('dezactivează')" style="background-color: var(--error-color);">🔓 Dezactivează</button>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 240px;">
+                    <div style="display: flex; gap: 10px; width: 100%;">
+                        <button onclick="proceseazăAcțiuneAlarmă('armează'); if(typeof executaSecurizareTotala === 'function') executaSecurizareTotala();" style="background-color: var(--success-color); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1;">🔒 Armează</button>
+                        <button onclick="proceseazăAcțiuneAlarmă('dezactivează')" style="background-color: var(--error-color); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1;">🔓 Dezactivează</button>
+                    </div>
+                    
+                    <button onclick="if(typeof executaSecurizareTotala === 'function') executaSecurizareTotala();" style="background: var(--accent-color); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95em; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        ⚡ Securizare Rapidă Casă
+                    </button>
                 </div>
             </div>
+            
         </div>
 
         <hr style="border: 0; border-top: 2px solid rgba(0,0,0,0.05); margin: 40px 0;">
