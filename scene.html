@@ -3,9 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Scene</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* DESIGN NOU: Cardul de adăugare opac, în stil de sticlă mată (Glassmorphism) */
+        .card-add-custom-scene {
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px dashed var(--accent-color) !important;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            font-size: 1.1em;
+            color: var(--accent-color);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        body.dark-mode .card-add-custom-scene {
+            background: rgba(28, 28, 30, 0.65) !important;
+            border: 2px dashed var(--accent-color) !important;
+        }
+        .card-add-custom-scene:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        /* Câmpurile de text din interiorul ferestrei Pop-up */
+        .popup-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .popup-field label { font-weight: 600; font-size: 0.9em; opacity: 0.8; color: var(--text-color); }
+        .popup-field input, .popup-field select {
+            padding: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1em;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -24,18 +74,27 @@
     <main>
         <div style="display: flex; align-items: center; margin-bottom: 20px;">
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-            <h1 style="margin: 0;">Scene Predefinite</h1>
+            <h1 style="margin: 0;">Panou Control Scene</h1>
         </div>
-        <p>Alege o scenă pentru a controla automat grupuri de accesorii dintr-o singură apăsare.</p>
+        <p>Alege o scenă sau configurează-ți propriile moduri personalizate pentru casa ta inteligentă.</p>
         
-        <div class="hk-grid-wide" id="all-scenes-container"></div>
+        <div class="hk-grid-wide" id="all-scenes-container" style="margin-bottom: 30px;"></div>
 
         <h2 class="hk-section-title">Scene Personalizate</h2>
-        <button onclick="alert('Funcționalitate de construire rutine vizuale în curs de dezvoltare.')" 
-                style="background: transparent; border: 2px dashed var(--accent-color); color: var(--accent-color); padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; font-size: 1.1em;">
-            ➕ Crează Scenă Personalizată (Custom Automation)
+        <button class="card-add-custom-scene" onclick="deschidePopupCreareScena()">
+            <i class="ph-bold ph-plus-circle" style="font-size: 1.3em;"></i> Crează Scenă Personalizată
         </button>
     </main>
+
+    <div id="popup-dispozitive" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="inchidePopup()">&times;</span>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <h2 id="modal-titlu" style="margin: 0; color: var(--accent-color);">✨ Scenă Nouă</h2>
+            </div>
+            <div id="modal-continut"></div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
     <script src="js/counter.js"></script>

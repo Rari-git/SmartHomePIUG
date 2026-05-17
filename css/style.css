@@ -364,3 +364,181 @@ svg.hk-svg-icon {
 .hk-card.is-active[onclick*="'senzoriContact'"] .hk-icon {
     color: #5ac8fa !important;
 }
+
+/* =========================================================
+   NOUL DESIGN: GLASSMORPHISM & TEXT NEGRU & ACTIVE COLOR
+   ========================================================= */
+
+/* 1. Forțăm tot textul să fie negru și complet opac (fără transparențe) */
+:root {
+    --text-color: #000000 !important;
+    --text-muted: #111111 !important;
+}
+
+body, p, h1, h2, h3, h4, .hk-name, .hk-state, .hk-section-title {
+    color: var(--text-color) !important;
+    opacity: 1 !important; /* Eliminăm opacity: 0.7 de la subtitluri */
+}
+
+/* Păstrăm contrastul pentru Dark Mode (dacă folosești modul întunecat) */
+body.dark-mode, 
+body.dark-mode p, 
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode h4, 
+body.dark-mode .hk-name, 
+body.dark-mode .hk-state {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* 2. Facem cardurile "ușor opace" (translucide) folosind efect de blur / sticlă */
+.hk-card, 
+.stats-card, 
+.notification-container, 
+.danger-panel, 
+.settings-card, 
+.climate-card,
+.map-wrapper {
+    background: rgba(255, 255, 255, 0.65) !important; /* Alb transparent 65% */
+    backdrop-filter: blur(15px); /* Efectul de preluare a culorilor din fundal */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5); /* O bordură subtilă luminoasă */
+}
+
+body.dark-mode .hk-card, 
+body.dark-mode .stats-card, 
+body.dark-mode .notification-container, 
+body.dark-mode .danger-panel, 
+body.dark-mode .settings-card, 
+body.dark-mode .climate-card {
+    background: rgba(28, 28, 30, 0.65) !important; /* Negru transparent 65% */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 3. Cardurile pe care apeși (Active) preiau culoarea predominantă (Accent Color din setări) */
+.hk-card.is-active {
+    background: var(--accent-color) !important; /* Culoarea predominantă a temei */
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Textul și iconițele din interiorul unui card activ devin albe pentru lizibilitate */
+.hk-card.is-active .hk-name,
+.hk-card.is-active .hk-state,
+.hk-card.is-active .hk-icon,
+.hk-card.is-active .hk-icon svg.hk-svg-icon {
+    color: #ffffff !important;
+}
+
+/* Suprascriem excepțiile vechi pentru Jaluzele și Ferestre ca să se coloreze și ele complet */
+.hk-card.is-active[onclick*="'jaluzele'"],
+.hk-card.is-active[onclick*="'senzoriContact'"] {
+    background: var(--accent-color) !important;
+}
+.hk-card.is-active[onclick*="'jaluzele'"] svg.hk-svg-icon,
+.hk-card.is-active[onclick*="'senzoriContact'"] svg.hk-svg-icon {
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   NOUL DESIGN MENIU LATERAL (SIDEBAR)
+   ========================================================= */
+
+/* 1. Meniul devine Glassmorphism curat, asortat perfect */
+nav {
+    background: rgba(255, 255, 255, 0.4) !important; /* Mai transparent */
+    backdrop-filter: blur(25px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(150%) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.dark-mode nav {
+    background: rgba(28, 28, 30, 0.4) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Titlul meniului mai aerisit */
+nav h2 {
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 25px !important;
+}
+
+/* 2. Butoanele din meniu (link-urile) primesc un efect modern de pastilă și animație */
+nav a {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px !important;
+    margin-bottom: 8px !important;
+    padding: 14px 18px !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+/* Hover effect - se mișcă ușor la dreapta la trecerea mouse-ului */
+nav a:hover {
+    transform: translateX(8px);
+    background: rgba(0, 0, 0, 0.04) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-mode nav a:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+/* 3. Link-ul ACTIV (pagina pe care ești) - Glow Effect */
+/* Selectăm automat link-ul pe care l-ai marcat tu cu style="color: var(--accent-color)" în HTML */
+nav a[style*="var(--accent-color)"] {
+    background: var(--accent-color) !important; /* Fundal complet colorat */
+    color: #ffffff !important; /* Forțăm textul și emoji-ul să fie albe */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important; /* Umbră de adâncime */
+    transform: translateX(5px) scale(1.02); /* Pare că iese puțin în afară */
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+}
+
+/* Dacă ai dark mode, facem și umbra să strălucească (neon) în culoarea accentului */
+body.dark-mode nav a[style*="var(--accent-color)"] {
+    box-shadow: 0 4px 15px var(--accent-color) !important; 
+    opacity: 0.9 !important;
+}
+
+/* 4. Efect cinematic pentru fundalul care acoperă restul ecranului la deschidere */
+.nav-backdrop {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(6px) !important; /* Adaugă acel blur de fundal ca pe iOS */
+    -webkit-backdrop-filter: blur(6px) !important;
+}
+
+/* =========================================================
+   SPAȚIU SUPLIMENTAR JOS (MENIU & PAGINĂ)
+   ========================================================= */
+
+/* Adaugă spațiu generos sub ultimul link din meniu (Setări) ca să nu stea lipit de marginea ecranului */
+nav a:last-child {
+    margin-bottom: 50px !important;
+}
+
+/* Adaugă spațiu suplimentar la finalul oricărei pagini, sub ultimele carduri */
+main {
+    padding-bottom: 80px !important; 
+}
+
+/* =========================================================
+   ASCUNDERE BARA DE SCROLL DIN MENIUL LATERAL
+   ========================================================= */
+
+/* Ascunde bara pentru Chrome, Safari și noile versiuni de Edge */
+nav::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+}
+
+/* Ascunde bara pentru Firefox și Internet Explorer/Legacy Edge */
+nav {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE și Edge */
+}

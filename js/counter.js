@@ -1,18 +1,17 @@
 let intervalVacanta = null;
 
 // Extrase perfecte din folderele tale "assets"
-const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.3 122.88" fill="currentColor" class="hk-svg-icon"><path fill-rule="evenodd" d="M100.86,52.48H1.44a1.43,1.43,0,0,1-1.44-1.44V34.5a1.44,1.44,0,0,1,1.44-1.43H100.86a1.43,1.43,0,0,1,1.44,1.43V51a1.44,1.44,0,0,1-1.44,1.44Zm0,18.89H1.44a1.43,1.43,0,0,1-1.44-1.44V53.39A1.44,1.44,0,0,1,1.44,52H100.86a1.43,1.43,0,0,1,1.44,1.44V69.93a1.44,1.44,0,0,1-1.44,1.44Zm0,18.89H1.44a1.44,1.44,0,0,1-1.44-1.44V72.28A1.44,1.44,0,0,1,1.44,70.84H100.86a1.43,1.43,0,0,1,1.44,1.44v16.54a1.43,1.43,0,0,1-1.44,1.44Zm0,18.88H1.44a1.43,1.43,0,0,1-1.44-1.44V91.17a1.44,1.44,0,0,1,1.44-1.44H100.86a1.43,1.43,0,0,1,1.44,1.44V107.7a1.43,1.43,0,0,1-1.44,1.44Zm-1.87,13.74H3.31A3.31,3.31,0,0,1,0,119.57V110.1A1.44,1.44,0,0,1,1.44,108.6H100.86a1.43,1.43,0,0,1,1.44,1.44v9.47a3.32,3.32,0,0,1-3.31,3.37ZM99,32.14H3.31A3.31,3.31,0,0,1,0,28.83V3.31A3.31,3.31,0,0,1,3.31,0H99a3.31,3.31,0,0,1,3.31,3.31V28.83A3.31,3.31,0,0,1,99,32.14Z"/></svg>`;
+const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="currentColor" class="hk-svg-icon">
+  <rect x="0" y="5" width="100" height="28" rx="4" />
+  <rect x="4" y="38" width="92" height="25" rx="3" />
+  <rect x="4" y="68" width="92" height="25" rx="3" />
+  <rect x="4" y="98" width="92" height="25" rx="3" />
+</svg>`;
 
-// REPARAT: Folosim stroke și fill="none" pentru ca dreptunghiul să nu se mai coloreze integral!
-const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.3 122.88" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon">
-  <!-- cadru fereastră -->
-  <rect x="10" y="10" width="82.3" height="100" />
-
-  <!-- linie verticală centrală -->
-  <line x1="51.15" y1="10" x2="51.15" y2="110" />
-
-  <!-- linie orizontală centrală -->
-  <line x1="10" y1="61.44" x2="92.3" y2="61.44" />
+const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon">
+  <rect x="12" y="12" width="76" height="96" rx="6" />
+  <line x1="50" y1="12" x2="50" y2="108" />
+  <line x1="12" y1="60" x2="88" y2="60" />
 </svg>`;
 
 const scenesDB = [
@@ -375,35 +374,44 @@ function randareAutomatizari() {
 
 function genereazaListaNotificari() {
     let notificari = [];
+    
     const becuriAprinse = (subDispozitive.becuri || []).filter(d => d.stare === "Pornit");
     const rgbAprinse = (subDispozitive.luminiRGB || []).filter(d => d.stare === "Pornit");
     const totalLumini = becuriAprinse.length + rgbAprinse.length;
     if (totalLumini > 0) {
         notificari.push({ id: "notif_lumini", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLumini} ${totalLumini === 1 ? 'lumină aprinsă' : 'lumini aprinse'}` });
     }
+    
     const audioPornit = (subDispozitive.audio || []).filter(d => d.stare === "Pornit");
     if (audioPornit.length > 0) {
         notificari.push({ id: "notif_audio", text: `<i class="ph-fill ph-speaker-high"></i> ${audioPornit.length} sisteme active` });
     }
+    
     const tvPornit = (subDispozitive.tv || []).filter(d => d.stare === "Pornit");
     if (tvPornit.length > 0) {
-        notificari.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV pornit în ${tvPornit[0].camera}` });
+        const idx = subDispozitive.tv.findIndex(d => d === tvPornit[0]);
+        notificari.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV pornit în ${tvPornit[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'tv', ${idx})` });
     }
+    
     if (subDispozitive.aspirator && subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === "Curăță") {
-        notificari.push({ id: "notif_aspirator", text: `<i class="ph-fill ph-robot"></i> Robotul curăță în ${subDispozitive.aspirator[0].camera}` });
+        notificari.push({ id: "notif_aspirator", text: `<i class="ph-fill ph-robot"></i> Robotul curăță în ${subDispozitive.aspirator[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'aspirator', 0)` });
     }
+    
     if (subDispozitive.incuietori && subDispozitive.incuietori[0] && subDispozitive.incuietori[0].stare === "Deblocat") {
-        notificari.push({ id: "notif_usa", text: `<i class="ph-fill ph-lock-key"></i> Ușa de la intrare este deblocată!` });
+        notificari.push({ id: "notif_usa", text: `<i class="ph-fill ph-lock-key"></i> Ușa de intrare este deblocată!`, actiune: `deschideMeniuDispozitive('none', 'incuietori', 0)` });
     }
+    
     if (subDispozitive.senzoriContact) {
         subDispozitive.senzoriContact.forEach((d, idx) => {
-            if(d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `${iconFereastra} Fereastră deschisă în ${d.camera}` });
+            if(d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `${iconFereastra} Fereastră deschisă în ${d.camera}`, actiune: `deschideMeniuDispozitive('none', 'senzoriContact', ${idx})` });
         });
     }
+    
     let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
     logs.forEach((log, idx) => {
         notificari.push({ id: `notif_motion_${idx}`, text: `<i class="ph-fill ph-person-simple-walk"></i> Mișcare în ${log.camera} [${log.ora}]` });
     });
+    
     return notificari;
 }
 
@@ -412,25 +420,58 @@ function afiseazaNotificariHome() {
     if (!container) return;
     const toateNotificarile = genereazaListaNotificari();
     container.innerHTML = "";
+    
     if (toateNotificarile.length === 0) {
         container.innerHTML = `<p style="margin:0; opacity:0.5; font-size:0.95em;">Toate sistemele sunt în standby.</p>`;
         return;
     }
+    
     const limita = Math.min(toateNotificarile.length, 3);
     for (let i = 0; i < limita; i++) {
         const notif = toateNotificarile[i];
         if (notif.id === "notif_lumini") {
-            container.innerHTML += `
-                <div class="notification-item" onclick="deschidePopupLuminiAprinse()" style="cursor: pointer;">
-                    <span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pentru detalii)</span></span>
-                </div>`;
+            container.innerHTML += `<div class="notification-item" onclick="deschidePopupLuminiAprinse()" style="cursor: pointer;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pentru detalii)</span></span></div>`;
+        } else if (notif.id === "notif_audio") {
+            container.innerHTML += `<div class="notification-item" onclick="deschidePopupAudioPornit()" style="cursor: pointer;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pentru detalii)</span></span></div>`;
+        } else if (notif.actiune) {
+            container.innerHTML += `<div class="notification-item" onclick="${notif.actiune}" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color=''"><span>${notif.text}</span></div>`;
         } else {
             container.innerHTML += `<div class="notification-item"><span>${notif.text}</span></div>`;
         }
     }
-    if (toateNotificarile.length > 3) {
-        container.innerHTML += `<button class="see-more-btn" onclick="deschidePopupToateNotificarile()">Vezi mai multe &gt;</button>`;
-    }
+    if (toateNotificarile.length > 3) container.innerHTML += `<button class="see-more-btn" onclick="deschidePopupToateNotificarile()">Vezi mai multe &gt;</button>`;
+}
+
+function deschidePopupToateNotificarile() {
+    const modal = document.getElementById('popup-dispozitive');
+    const titlu = document.getElementById('modal-titlu');
+    const continental = document.getElementById('modal-continut');
+    if (!modal || !titlu || !continental) return;
+    titlu.innerHTML = "🔔 Toate Notificările Casei";
+    
+    const toateNotificarile = genereazaListaNotificari();
+    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left;">`;
+    
+    toateNotificarile.forEach(notif => {
+        if (notif.id === "notif_lumini") {
+            html += `<div class="notification-item" onclick="deschidePopupLuminiAprinse()" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; font-weight: bold;">(Apasă pentru detalii)</span></span></div>`;
+        } else if (notif.id === "notif_audio") {
+            html += `<div class="notification-item" onclick="deschidePopupAudioPornit()" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; font-weight: bold;">(Apasă pentru detalii)</span></span></div>`;
+        } else if (notif.actiune) {
+            html += `<div class="notification-item" onclick="${notif.actiune}" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); transition: color 0.2s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color=''"><span>${notif.text}</span></div>`;
+        } else {
+            html += `<div class="notification-item" style="padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><span>${notif.text}</span></div>`;
+        }
+    });
+    
+    html += `</div>
+        <div style="margin-top: 10px;">
+            <button onclick="localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); inchidePopup();" style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;">
+                <i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare
+            </button>
+        </div>`;
+    continental.innerHTML = html;
+    modal.classList.add('active');
 }
 
 function deschidePopupToateNotificarile() {
@@ -446,6 +487,11 @@ function deschidePopupToateNotificarile() {
         if (notif.id === "notif_lumini") {
             html += `
                 <div class="notification-item" onclick="deschidePopupLuminiAprinse()" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; font-weight: bold;">(Apasă pentru detalii)</span></span>
+                </div>`;
+        } else if (notif.id === "notif_audio") {
+            html += `
+                <div class="notification-item" onclick="deschidePopupAudioPornit()" style="cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
                     <span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; font-weight: bold;">(Apasă pentru detalii)</span></span>
                 </div>`;
         } else {
@@ -742,30 +788,42 @@ function deschidePopupLuminiAprinse() {
     const modal = document.getElementById('popup-dispozitive');
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
-
     if (!modal || !titlu || !continental) return;
     
     titlu.innerHTML = "<i class='ph-fill ph-lightbulb'></i> Lumini Active în Casă";
-    
     let html = `<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px 0;">`;
-    
     let areLumini = false;
+    
     (subDispozitive.becuri || []).forEach((bec, idx) => {
         if (bec.stare === "Pornit") {
             areLumini = true;
             html += `
-                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='var(--bg-primary)'" onclick="deschideMeniuDispozitive('none', 'becuri', ${idx}); event.stopPropagation();">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5em;"><i class="ph-fill ph-lightbulb"></i></span>
+                        <span style="font-size: 1.5em; color: var(--warning-color);"><i class="ph-fill ph-lightbulb"></i></span>
                         <div>
                             <strong style="display:block;">${bec.nume}</strong>
-                            <span style="font-size: 0.85em; opacity: 0.6;">${bec.camera} • Intensitate: ${bec.valoare}%</span>
+                            <span style="font-size: 0.85em; opacity: 0.6;">${bec.camera} • ${bec.valoare}%</span>
                         </div>
                     </div>
-                    <button onclick="toggleStareDispozitiv('becuri', ${idx}); deschidePopupLuminiAprinse();" 
-                            style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">
-                        Stinge
-                    </button>
+                    <button onclick="toggleStareDispozitiv('becuri', ${idx}, event); deschidePopupLuminiAprinse();" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Stinge</button>
+                </div>`;
+        }
+    });
+
+    (subDispozitive.luminiRGB || []).forEach((bec, idx) => {
+        if (bec.stare === "Pornit") {
+            areLumini = true;
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='var(--bg-primary)'" onclick="deschideMeniuDispozitive('none', 'luminiRGB', ${idx}); event.stopPropagation();">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5em; color: ${bec.culoare || 'var(--warning-color)'};"><i class="ph-fill ph-lamp"></i></span>
+                        <div>
+                            <strong style="display:block;">${bec.nume}</strong>
+                            <span style="font-size: 0.85em; opacity: 0.6;">${bec.camera} • ${bec.valoare}%</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleStareDispozitiv('luminiRGB', ${idx}, event); deschidePopupLuminiAprinse();" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Stinge</button>
                 </div>`;
         }
     });
@@ -774,6 +832,44 @@ function deschidePopupLuminiAprinse() {
     
     if (!areLumini) {
         html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate luminile au fost stinse!</div>`;
+        setTimeout(inchidePopup, 1000); 
+    }
+    
+    continental.innerHTML = html;
+    modal.classList.add('active');
+}
+
+function deschidePopupAudioPornit() {
+    const modal = document.getElementById('popup-dispozitive');
+    const titlu = document.getElementById('modal-titlu');
+    const continental = document.getElementById('modal-continut');
+    if (!modal || !titlu || !continental) return;
+    
+    titlu.innerHTML = "<i class='ph-fill ph-speaker-high'></i> Sisteme Audio Active";
+    let html = `<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px 0;">`;
+    let areAudio = false;
+    
+    (subDispozitive.audio || []).forEach((boxa, idx) => {
+        if (boxa.stare === "Pornit") {
+            areAudio = true;
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='var(--bg-primary)'" onclick="deschideMeniuDispozitive('none', 'audio', ${idx}); event.stopPropagation();">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5em; color: var(--accent-color);"><i class="ph-fill ph-speaker-high"></i></span>
+                        <div>
+                            <strong style="display:block;">${boxa.nume}</strong>
+                            <span style="font-size: 0.85em; opacity: 0.6;">${boxa.camera} • Volum: ${boxa.valoare}%</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleStareDispozitiv('audio', ${idx}, event); deschidePopupAudioPornit();" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Oprește</button>
+                </div>`;
+        }
+    });
+    
+    html += `</div>`;
+    
+    if (!areAudio) {
+        html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate sistemele audio au fost oprite!</div>`;
         setTimeout(inchidePopup, 1000); 
     }
     
@@ -949,4 +1045,108 @@ function calculeazaConsumPriza(disp) {
         if (subDispozitive.purificator && subDispozitive.purificator[1] && subDispozitive.purificator[1].stare !== 'Oprit') consumReal += 30;
     }
     return consumReal;
+}
+
+// Funcția care rulează o scenă și o marchează ca fiind "Activă"
+function executaScena(idScena) {
+    // 1. Salvăm în memorie faptul că această scenă este cea activă acum
+    localStorage.setItem('activeScene', idScena);
+    
+    // 2. Căutăm scena în baza de date (scenesDB)
+    const scena = scenesDB.find(s => s.id === idScena);
+    
+    // 3. Dacă o găsim, îi executăm acțiunile (va rula funcția aplicaMod specifică)
+    if (scena && scena.action) {
+        scena.action();
+    }
+}
+
+function deschidePopupAudioPornit() {
+    const modal = document.getElementById('popup-dispozitive');
+    const titlu = document.getElementById('modal-titlu');
+    const continental = document.getElementById('modal-continut');
+    if (!modal || !titlu || !continental) return;
+    
+    titlu.innerHTML = "<i class='ph-fill ph-speaker-high'></i> Sisteme Audio Active";
+    let html = `<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px 0;">`;
+    let areAudio = false;
+    
+    (subDispozitive.audio || []).forEach((boxa, idx) => {
+        if (boxa.stare === "Pornit") {
+            areAudio = true;
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" 
+                     onmouseover="this.style.background='rgba(0,0,0,0.05)'" 
+                     onmouseout="this.style.background='var(--bg-primary)'" 
+                     onclick="deschideMeniuDispozitive('none', 'audio', ${idx}); event.stopPropagation();">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5em; color: var(--accent-color);"><i class="ph-fill ph-speaker-high"></i></span>
+                        <div>
+                            <strong style="display:block;">${boxa.nume}</strong>
+                            <span style="font-size: 0.85em; opacity: 0.6;">${boxa.camera} • Volum: ${boxa.valoare}%</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleStareDispozitiv('audio', ${idx}, event); deschidePopupAudioPornit(); event.stopPropagation();" 
+                            style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">
+                        Oprește
+                    </button>
+                </div>`;
+        }
+    });
+    
+    html += `</div>`;
+    
+    if (!areAudio) {
+        html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate sistemele audio au fost oprite!</div>`;
+        setTimeout(inchidePopup, 1000); 
+    }
+    
+    continental.innerHTML = html;
+    modal.classList.add('active');
+}
+
+// Deschide pop-up-ul cu formularul de configurare scenă
+function deschidePopupCreareScena() {
+    const modal = document.getElementById('popup-dispozitive');
+    const titlu = document.getElementById('modal-titlu');
+    const continut = document.getElementById('modal-continut');
+    
+    if(!modal || !continut) return;
+    
+    titlu.innerHTML = "🎭 Creare Scenă Nouă";
+    
+    continut.innerHTML = `
+        <div class="popup-field">
+            <label>Numele Scenei:</label>
+            <input type="text" id="custom-scene-name" placeholder="ex: Party Mode, Relaxare, Plecat...">
+        </div>
+        <div class="popup-field">
+            <label>Emoji sugestiv:</label>
+            <select id="custom-scene-emoji">
+                <option value="🎉">🎉 Party / Distracție</option>
+                <option value="🍃">🍃 Relaxare / Fresh</option>
+                <option value="💻">💻 Birou / Work</option>
+                <option value="🧘">🧘 Meditație / Yoga</option>
+                <option value="🍷">🍷 Romantic / Seară</option>
+                <option value="⚡">⚡ Boost Energie</option>
+            </select>
+        </div>
+        <div class="popup-field">
+            <label>Descriere scurtă (Acțiune):</label>
+            <input type="text" id="custom-scene-desc" placeholder="ex: Oprește toate electronicele din casă.">
+        </div>
+        <div class="popup-field">
+            <label>Șablon comportament (Rutina generată):</label>
+            <select id="custom-scene-template">
+                <option value="away">Mod Plecat (Închide tout + Alarme active)</option>
+                <option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option>
+                <option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option>
+                <option value="movie">Mod Ambient Cinematic (Lumini colorate/TV)</option>
+            </select>
+        </div>
+        <button onclick="salveazaScenaCustomNoua()" style="background: var(--success-color); color: white; width: 100%; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; font-size: 1em;">
+            💾 Creează Scena
+        </button>
+    `;
+    modal.classList.add('active');
 }

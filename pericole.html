@@ -83,13 +83,11 @@
                 status.innerText = "🚨 ALERTĂ: INUNDAȚIE DETECTATĂ!"; status.style.color = "#3498db";
                 controls.innerHTML = `<button type="button" class="btn-stop" onclick="opresteAlarma('inundatie')">Oprește Alarma și Scurgerea</button>`;
                 if (typeof adaugaInLog === 'function') adaugaInLog("⚠️ ALERTĂ CRITICĂ: Senzorul a detectat INUNDAȚIE în Baie!");
-                if (typeof showToast === 'function') showToast("Alerta a fost trimisă pe telefon!");
             } else if (tip === 'incendiu') {
                 panel.classList.add('status-alert-fire');
                 status.innerText = "🚨 ALERTĂ: FUM DETECTAT (PERICOL)!"; status.style.color = "#e74c3c";
                 controls.innerHTML = `<button type="button" class="btn-stop" onclick="opresteAlarma('incendiu')">Oprește Alarma și Gazul</button>`;
                 if (typeof adaugaInLog === 'function') adaugaInLog("⚠️ ALERTĂ CRITICĂ: Senzorul a detectat FUM sau FOC în Bucătărie!");
-                if (typeof showToast === 'function') showToast("Apel automat către pompieri inițiat!");
             }
         }
 
