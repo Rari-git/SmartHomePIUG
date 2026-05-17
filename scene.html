@@ -15,14 +15,16 @@
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
             <h1>Panou Control Scene</h1>
         </div>
-        <p>Alege o scenă sau configurează-ți propriile moduri personalizate pentru casa ta inteligentă.</p>
+        <p class="page-subtitle">Alege o scenă sau configurează-ți propriile moduri personalizate pentru casa ta inteligentă.</p>
         
         <div class="hk-grid-wide mb-20" id="all-scenes-container"></div>
 
         <h2 class="hk-section-title">Scene Personalizate</h2>
-        <button class="card-add-custom-scene" onclick="deschidePopupCreareScena()">
-            <i class="ph-bold ph-plus-circle" style="font-size: 1.3em;"></i> Crează Scenă Personalizată
-        </button>
+        <div class="card-add-custom-scene" onclick="deschidePopupCreareScena()">
+            <div class="plus-icon"><i class="ph-bold ph-plus"></i></div>
+            <div class="scene-title">Crează Scenă Personalizată</div>
+            <div class="scene-desc">Configurare complet manuală</div>
+        </div>
     </main>
     <smart-modal></smart-modal>
     <script src="js/main.js"></script>

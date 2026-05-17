@@ -15,6 +15,7 @@
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
             <h1>Control Climatic</h1>
         </div>
+        <p class="page-subtitle">Ajustează temperaturile, umiditatea și controlează calitatea aerului în fiecare cameră.</p>
         
         <div class="widget-card flex-between mb-20" style="border-left: 5px solid var(--accent-color); justify-content: space-around;">
             <div class="text-center"><h4 class="text-muted">🌡️ Temp. Medie</h4><h2 class="widget-value text-accent"><span id="widget-temp">22.0</span>°C</h2></div>
@@ -61,7 +62,7 @@
             </div>
         </div>
 
-        <h2 class="hk-section-title">💧 Dezumidificatoare (Control Țintă)</h2>
+        <h2 class="hk-section-title">💧 Dezumidificatoare</h2>
         <div class="thermostat-grid">
             <div class="climate-card hk-card" id="card-umid-living" style="border-color: #3498db;">
                 <h3 class="m-0 text-muted">🛋️ Living Room</h3>
@@ -101,15 +102,21 @@
             </div>
         </div>
 
-        <h2 class="hk-section-title">🍃 Sistem de Ventilație Centralizat HVAC</h2>
-        <div class="climate-card hk-card flex-between flex-row" style="min-height: auto;">
-            <div style="text-align: left;">
-                <h3 class="m-0 text-muted">Calitatea Aerului (CO2)</h3>
-                <div class="climate-display"><span class="climate-value" id="co2Curent">450</span><span class="climate-unit" style="font-size: 0.8em;"> ppm</span></div>
-                <div class="climate-status m-0">Stare: <span id="stareCO2" class="text-success">Excelentă</span></div>
-            </div>
-            <button onclick="deschideGeamurile()" class="hvac-btn">🪟 Activează Ventilația Globală</button>
+        <h2 class="hk-section-title">🍃 Sistem de Ventilație Centralizat</h2>
+
+<div class="hk-card" style="width: 100%; max-width: 460px; height: auto; min-height: 90px; aspect-ratio: auto; padding: 20px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 15px; box-sizing: border-box;">
+    <div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">
+        <h3 class="m-0 text-muted" style="font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px;">Calitatea Aerului (CO2)</h3>
+        <div class="climate-display" style="margin: 0; display: flex; align-items: baseline; gap: 2px;">
+            <span class="climate-value" id="co2Curent" style="font-size: 2em; font-weight: 800; letter-spacing: -0.5px;">450</span>
+            <span class="climate-unit" style="font-size: 0.9em; opacity: 0.7;">ppm</span>
         </div>
+        <div class="climate-status m-0" style="font-size: 0.8em; font-weight: 700; margin-top: 2px;">Stare: <span id="stareCO2" class="text-success">Excelentă</span></div>
+    </div>
+    
+    <button onclick="deschideGeamurile()" class="hvac-btn" style="margin: 0; padding: 12px 20px; height: max-content;">Ventilează</button>
+</div>
+        
     </main>
     <smart-modal></smart-modal>
     <script src="js/main.js"></script>
