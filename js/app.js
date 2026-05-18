@@ -147,7 +147,7 @@ function toggleFavorite(id, type, event) {
     }
     
     localStorage.setItem(type === 'scene' ? 'favScenes' : 'favAcc', JSON.stringify(favs));
-    
+
     // Actualizăm efectul de umplere a steluței INSTANT pe ecran, fără încărcare de date
     if (event && event.target) {
         const starBtn = event.target.closest('.hk-star');
@@ -164,7 +164,7 @@ function toggleFavorite(id, type, event) {
 }
 
 function toggleStareDispozitiv(cat, index, event) {
-    if(event) event.stopPropagation();
+    if(event) event.stopPropagation(); 
     localStorage.removeItem('activeScene');
     
     if (typeof intervalVacanta !== 'undefined' && intervalVacanta) {
@@ -233,10 +233,10 @@ function verificaReguliAutomatizare(triggerCat, triggerIdx, newState) {
     let schimbare = false;
     rules.forEach(rule => {
         if (rule.active && rule.tipTrigger === 'disp' && rule.tCat === triggerCat && rule.tIdx === triggerIdx.toString() && rule.tState === newState) {
-            const actionDisp = subDispozitive[rule.aCat] && subDispozitive[rule.aCat][rule.aIdx];
+    const actionDisp = subDispozitive[rule.aCat] && subDispozitive[rule.aCat][rule.aIdx];
             if (actionDisp) {
-                actionDisp.stare = rule.aState;
-                rule.lastRun = `Azi la ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'})}`;
+        actionDisp.stare = rule.aState;
+        rule.lastRun = `Azi la ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'})}`;
                 schimbare = true;
             }
         }
