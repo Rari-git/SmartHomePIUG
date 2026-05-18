@@ -43,6 +43,7 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     padding-bottom: 80px; 
+    animation: fadeSlideIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 h1, h2, h3, h4, p, .hk-name, .hk-state, .hk-section-title {
@@ -53,28 +54,26 @@ h1, h2, h3, h4, p, .hk-name, .hk-state, .hk-section-title {
 .page-header { 
     display: flex; 
     align-items: center; 
-    gap: 20px; /* Distanța perfectă între meniu și Titlu */
+    gap: 20px; 
     margin-bottom: 5px; 
 }
 
 .page-header h1 { 
     margin: 0; 
-    font-size: 2.2em; /* Titlu mai mare */
-    font-weight: 800; /* Bolduit puternic (Extra Bold) */
+    font-size: 2.2em; 
+    font-weight: 800; 
     letter-spacing: -0.5px; 
 }
 
-/* REGULĂ NOUĂ PENTRU SUBTITLURI/DESCRIERI */
 .page-subtitle {
     color: var(--text-color);
     opacity: 0.65;
     font-size: 1.05em;
-    margin: 0 0 30px 0; /* Spațiu mare sub descriere (ca la accesorii) */
+    margin: 0 0 30px 0; 
     font-weight: 400;
     line-height: 1.5;
 }
 
-/* Banner de Informare (Folosit la Securitate) */
 .info-banner {
     background: var(--card-bg);
     padding: 15px 20px;
@@ -100,7 +99,18 @@ nav.active { left: 0; }
 
 nav h2 { text-align: left; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 20px; margin-bottom: 25px; letter-spacing: -0.5px; }
 
-nav a { display: block; padding: 14px 18px; margin-bottom: 8px; text-decoration: none; border-radius: 12px; font-weight: 500; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
+nav a { 
+    display: block; 
+    padding: 14px 18px; 
+    margin-bottom: 8px; 
+    text-decoration: none; 
+    border-radius: 12px; 
+    font-weight: 500; 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    position: relative; 
+    overflow: hidden;
+    color: var(--text-color);
+}
 nav a:last-child { margin-bottom: 50px; }
 nav a:hover { transform: translateX(8px); background: rgba(0, 0, 0, 0.04); color: var(--text-color); }
 body.dark-mode nav a:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
@@ -135,8 +145,8 @@ body.dark-mode .hk-section-title { background: rgba(0, 0, 0, 0.5); }
 .hk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
 .hk-grid-wide { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 
-.hk-card, .stats-card, .notification-container, .danger-panel, .settings-card, .climate-card, .map-wrapper, .security-badge-card, .security-form-card { background: var(--card-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: var(--card-radius); box-shadow: var(--shadow-soft); }
-body.dark-mode .hk-card, body.dark-mode .stats-card, body.dark-mode .notification-container, body.dark-mode .danger-panel, body.dark-mode .settings-card, body.dark-mode .climate-card, body.dark-mode .security-badge-card, body.dark-mode .security-form-card { border-color: rgba(255, 255, 255, 0.1); }
+.hk-card, .stats-card, .notification-container, .danger-panel, .settings-card, .climate-card, .security-badge-card, .security-form-card, .map-container { background: var(--card-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: var(--card-radius); box-shadow: var(--shadow-soft); }
+body.dark-mode .hk-card, body.dark-mode .stats-card, body.dark-mode .notification-container, body.dark-mode .danger-panel, body.dark-mode .settings-card, body.dark-mode .climate-card, body.dark-mode .security-badge-card, body.dark-mode .security-form-card, body.dark-mode .map-container { border-color: rgba(255, 255, 255, 0.1); }
 
 .hk-card { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 1 / 1; cursor: pointer; position: relative; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background 0.2s; }
 .hk-grid-wide .hk-card { aspect-ratio: auto; height: 110px; }
@@ -173,7 +183,7 @@ body.dark-mode .notification-item { border-bottom-color: rgba(255,255,255,0.05);
 
 svg.hk-svg-icon { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
 
-/* === MODULE CSS (Climă, Hartă, Automatizări, Pericole) === */
+/* === MODULE CSS (Climă, Automatizări, Pericole) === */
 
 .thermostat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
 .climate-card { text-align: center; border-bottom: 5px solid var(--success-color); min-height: 160px; padding: 20px; display: flex; flex-direction: column; justify-content: center;}
@@ -195,7 +205,7 @@ input:checked + .slider { background-color: var(--success-color); }
 input:checked + .slider:before { transform: translateX(20px); }
 
 .card-add-custom-scene {
-    background: var(--card-bg) !important; /* Acum este opac, la fel ca restul cardurilor */
+    background: var(--card-bg) !important; 
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(15px);
     border: 2px dashed var(--accent-color) !important;
@@ -232,12 +242,6 @@ body.dark-mode .card-add-custom-scene:hover { background: rgba(0,0,0,0.5) !impor
 }
 .hvac-btn:active { transform: scale(0.95); }
 
-.map-wrapper { position: relative; width: 100%; max-width: 650px; margin: 30px auto 0 auto; overflow: visible; padding: 0; }
-.blueprint-image { width: 100%; height: auto; display: block; border-radius: 20px; transition: filter 0.3s ease; }
-body.dark-mode .blueprint-image { filter: invert(1) brightness(0.9) contrast(1.1); }
-.map-hotspot { position: absolute; width: 38px; height: 38px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(255,255,255,0.9); border: 2px solid var(--success-color); display: flex; align-items: center; justify-content: center; font-size: 1.2em; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s, background 0.2s; user-select: none; z-index: 10; color: black; }
-.map-hotspot:hover { transform: translate(-50%, -50%) scale(1.15); background: white; }
-
 .danger-panel { text-align: center; transition: all 0.3s ease; }
 .danger-icon { font-size: 5em; margin-bottom: 15px; display: inline-block; }
 .status-safe { border-top: 6px solid var(--success-color); }
@@ -271,3 +275,136 @@ body.dark-mode .blueprint-image { filter: invert(1) brightness(0.9) contrast(1.1
 .toast-notification { pointer-events: auto; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border: 1px solid rgba(255, 255, 255, 0.5); padding: 16px 24px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); font-weight: 600; font-size: 0.95em; display: flex; align-items: center; gap: 10px; transform: translateX(120%) scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .toast-notification.show { transform: translateX(0) scale(1); opacity: 1; }
 body.dark-mode .toast-notification { background: rgba(28, 28, 30, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
+
+@view-transition {
+    navigation: auto;
+}
+
+/* ========================================== */
+/* SISTEM REPROIECTAT HĂRȚI INLINE SVG      */
+/* ========================================== */
+
+.map-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    overflow: hidden;
+    padding: 0;
+}
+
+#smartHomeMap {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Etichete text camere de pe schiță */
+.room-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    fill: var(--text-color);
+    opacity: 0.15;
+    pointer-events: none;
+    letter-spacing: 2px;
+}
+
+body.dark-mode .room-label { 
+    fill: #ffffff; 
+    opacity: 0.1; 
+}
+
+/* Structura SVG */
+/*---------------------------------------*/
+
+.svg-hotspot {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.hotspot-bg {
+    fill: rgba(255, 255, 255, 0.95);
+    stroke: var(--text-color);
+    stroke-width: 3px;
+    pointer-events: auto;
+    transition: fill 0.2s, stroke 0.2s, filter 0.2s;
+}
+
+.svg-hotspot:hover {
+    opacity: 0.9;
+}
+
+.svg-hotspot:hover .hotspot-bg {
+    fill: #ffffff !important;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35)) !important;
+}
+
+body.dark-mode .hotspot-bg {
+    fill: rgba(30, 30, 30, 0.95);
+}
+
+body.dark-mode .svg-hotspot:hover .hotspot-bg {
+    fill: #222222 !important;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.65)) !important;
+}
+
+.hotspot-icon {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.hotspot-light { color: #d35400 !important; }
+.hotspot-light .hotspot-bg { stroke: #f1c40f !important; }
+
+.hotspot-window { color: #2980b9 !important; }
+.hotspot-window .hotspot-bg { stroke: #3498db !important; }
+
+.hotspot-audio { color: #732d99 !important; }
+.hotspot-audio .hotspot-bg { stroke: #9b59b6 !important; }
+
+.hotspot-tv { color: #2c3e50 !important; }
+.hotspot-tv .hotspot-bg { stroke: #34495e !important; }
+
+.hotspot-power { color: #1e7e34 !important; }
+.hotspot-power .hotspot-bg { stroke: #2ecc71 !important; }
+
+.hotspot-climate { color: #d35400 !important; }
+.hotspot-climate .hotspot-bg { stroke: #e67e22 !important; }
+
+.hotspot-air { color: #16a085 !important; }
+.hotspot-air .hotspot-bg { stroke: #1abc9c !important; }
+
+.hotspot-sensor { color: #7f8c8d !important; }
+.hotspot-sensor .hotspot-bg { stroke: #7f8c8d !important; }
+
+.hotspot-appliance { color: #495057 !important; }
+.hotspot-appliance .hotspot-bg { stroke: #6c757d !important; }
+
+.hotspot-robot { color: #17a2b8 !important; }
+.hotspot-robot .hotspot-bg { stroke: #1abc9c !important; }
+
+.hotspot-camera { color: #111111 !important; }
+.hotspot-camera .hotspot-bg { stroke: #333333 !important; }
+
+.hotspot-lock { color: #007aff !important; }
+.hotspot-lock .hotspot-bg { stroke: #007aff !important; }
+
+.hotspot-danger { color: #bd2130 !important; animation: pulseDangerSVG 2s infinite; }
+.hotspot-danger .hotspot-bg { stroke: #dc3545 !important; }
+
+body.dark-mode .hotspot-camera { color: #ffffff !important; }
+body.dark-mode .hotspot-camera .hotspot-bg { stroke: #ffffff !important; }
+body.dark-mode .hotspot-light { color: #f1c40f !important; }
+body.dark-mode .hotspot-audio { color: #a855f7 !important; }
+body.dark-mode .hotspot-power { color: #2ecc71 !important; }
+body.dark-mode .hotspot-danger { color: #ff453a !important; }
+
+@keyframes pulseDangerSVG {
+    0% { filter: drop-shadow(0 0 0 rgba(231, 76, 60, 0.6)); }
+    70% { filter: drop-shadow(0 0 12px rgba(231, 76, 60, 0)); }
+    100% { filter: drop-shadow(0 0 0 rgba(231, 76, 60, 0)); }
+}

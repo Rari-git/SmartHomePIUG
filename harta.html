@@ -17,59 +17,356 @@
         </div>
         <p class="text-muted">Gestionare vizuală a dispozitivelor inteligente. Faceți click pe pictogramele din camere pentru control instant.</p>
 
-        <div class="map-wrapper">
-            <img src="Home.svg" alt="Schița Casei" class="blueprint-image">
-            
-            <div class="map-hotspot" style="top: 30%; left: 35%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 0)" title="Bec Dormitor">💡</div>
-            <div class="map-hotspot" style="top: 5%; left: 33%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 0)" title="Draperie Dormitor">🪟</div>
-            <div class="map-hotspot" style="top: 20%; left: 28%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 0)" title="Boxă Dormitor">🎵</div>
-            <div class="map-hotspot" style="top: 40%; left: 15%;" onclick="deschideMeniuDispozitive('cat_tv', 'tv', 0)" title="TV Dormitor">📺</div>
-            <div class="map-hotspot" style="top: 21%; left: 50%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 0)" title="Priză Dormitor">🔌</div>
-            <div class="map-hotspot" style="top: 40%; left: 3%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-dormitor')" title="Climatizare Dormitor">🌡️</div>
-            <div class="map-hotspot" style="top: 40%; left: 49%;" onclick="deschideMeniuDispozitive('cat_purificator', 'purificator', 0)" title="Purificator Aer">🌬️</div>
-            <div class="map-hotspot" style="top: -3%; left: 33%;" onclick="deschideMeniuDispozitive('cat_senzoriContact', 'senzoriContact', 0)" title="Fereastră Dormitor">🟩</div>
+        <div class="map-container">
 
-            <div class="map-hotspot" style="top: 60%; left: 37%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 2)" title="Bec Baie">💡</div>
-            <div class="map-hotspot" style="top: 60%; left: 28%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 3)" title="Boxă Baie">🎵</div>
-            <div class="map-hotspot" style="top: 53.5%; left: 4.5%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 3)" title="Draperie Baie">🪟</div>
-            <div class="map-hotspot" style="top: 53.5%; left: -2.7%;" onclick="deschideMeniuDispozitive('cat_senzoriContact', 'senzoriContact', 4)" title="Fereastră Baie">🟩</div>
-            <div class="map-hotspot" style="top: 68.6%; left: 43%;" onclick="deschideMeniuDispozitive('cat_electrocasnice', 'electrocasnice', 0)" title="Mașină Spălat Baie">🧺</div>
-            <div class="map-hotspot" style="top: 68.6%; left: 50%;" onclick="deschideMeniuDispozitive('cat_electrocasnice', 'electrocasnice', 1)" title="Uscător Baie">💨</div>
-            <div class="map-hotspot" style="top: 69%; left: 20%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 2)" title="Priză Baie">🔌</div>
-            <div class="map-hotspot" style="top: 53%; left: 48%; border-color: #e74c3c;" onclick="deschideMeniuDispozitive('cat_pericole', 'senzori-baie')" title="Senzor Inundație Baie">💧</div>
-            <div class="map-hotspot" style="top: 69%; left: 13%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-baie')" title="Climatizare Baie">🌡️</div>
+        <svg id="smartHomeMap" viewBox="120 -50 1620 1180" xmlns="http://www.w3.org/2000/svg">
 
-            <div class="map-hotspot" style="top: 80%; left: 25%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 3)" title="Bec Bucătărie">💡</div>
-            <div class="map-hotspot" style="top: 80%; left: 33%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 4)" title="Boxă Bucătărie">🎵</div>
-            <div class="map-hotspot" style="top: 90%; left: 50%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 3)" title="Priză Bucătărie">🔌</div>
-            <div class="map-hotspot" style="top: 80%; left: 11%; border-color: #e74c3c;" onclick="deschideMeniuDispozitive('cat_pericole', 'senzori-bucatarie')" title="Senzor Fum Bucătărie">🔥</div>
-            <div class="map-hotspot" style="top: 89%; left: 3%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-bucatarie')" title="Climatizare Bucătărie">🌡️</div>
-            <div class="map-hotspot" style="top: 92%; left: 40%;" onclick="deschideMeniuDispozitive('cat_electrocasnice', 'electrocasnice', 2)" title="Espressor Cafea">☕</div>
-            <div class="map-hotspot" style="top: 95.5%; left: 29.5%;" onclick="deschideMeniuDispozitive('cat_senzoriContact', 'senzoriContact', 3)" title="Fereastră Bucătărie">🟩</div>
-            <div class="map-hotspot" style="top: 88%; left: 29.5%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 4)" title="Draperie  Bucătărie">🪟</div>
+            <image href="Home.svg" x="0" y="0" width="1920" height="1080" />
 
-            <div class="map-hotspot" style="top: 40%; left: 75%;" onclick="deschideMeniuDispozitive('cat_becuri', 'becuri', 1)" title="Bec Living">💡</div>
-            <div class="map-hotspot" style="top: 34.5%; left: 89%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 1)" title="Draperie 1 Living">🪟</div>
-            <div class="map-hotspot" style="top: 74%; left: 89%;" onclick="deschideMeniuDispozitive('cat_jaluzele', 'jaluzele', 2)" title="Draperie 2 Living">🪟</div>
-            <div class="map-hotspot" style="top: 50%; left: 75%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 1)" title="Boxă Living">🎵</div>
-            <div class="map-hotspot" style="top: 11%; left: 82%;" onclick="deschideMeniuDispozitive('cat_audio', 'audio', 2)" title="Sistem Audio Living">🔊</div>
-            <div class="map-hotspot" style="top: 5%; left: 77%;" onclick="deschideMeniuDispozitive('cat_tv', 'tv', 1)" title="TV Living">📺</div>
-            <div class="map-hotspot" style="top: 90%; left: 91%;" onclick="deschideMeniuDispozitive('cat_aspirator', 'aspirator', 0)" title="Robot Curățenie">🤖</div>
-            <div class="map-hotspot" style="top: 70%; left: 60%;" onclick="deschideMeniuDispozitive('cat_prize', 'prize', 1)" title="Priză Living">🔌</div>
-            <div class="map-hotspot" style="top: 42%; left: 60%; border-color: #f1c40f;" onclick="deschideMeniuDispozitive('cat_climatizare', 'climatizare-living')" title="Climatizare Living">🌡️</div>
-            <div class="map-hotspot" style="top: 35%; left: 65%;" onclick="deschideMeniuDispozitive('cat_purificator', 'purificator', 1)" title="Purificator Aer">🌬️</div>
-            <div class="map-hotspot" style="top: 34.5%; left: 96%;" onclick="deschideMeniuDispozitive('cat_senzoriContact', 'senzoriContact', 1)" title="Fereastră 1 Living">🟩</div>
-            <div class="map-hotspot" style="top: 74%; left: 96%;" onclick="deschideMeniuDispozitive('cat_senzoriContact', 'senzoriContact', 2)" title="Fereastră 2 Living">🟩</div>
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                    <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
 
-            <div class="map-hotspot" style="top: 79%; left: -2.7%; border-color: var(--accent-color);" onclick="deschideMeniuDispozitive('cat_incuietori', 'incuietori', 0)" title="Ușă Principală">🚪</div>
-            <div class="map-hotspot" style="top: 72%; left: -5%;" onclick="deschideMeniuDispozitive('cat_camereVideo', 'camereVideo', 0)" title="Interfon Video">📹</div>
-            <div class="map-hotspot" style="top: 95%; left: -3%;" onclick="deschideMeniuDispozitive('cat_camereVideo', 'camereVideo', 1)" title="Cameră Curte">📹</div>
+            <g class="svg-hotspot hotspot-light" transform="translate(830 350) scale(1.5)" onclick="deschideMeniuDispozitive('cat_becuri','becuri',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-window" transform="translate(788 100) scale(1.5)" onclick="deschideMeniuDispozitive('cat_jaluzele','jaluzele',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
+                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-audio" transform="translate(730 350) scale(1.5)" onclick="deschideMeniuDispozitive('cat_audio','audio',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
+                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-tv" transform="translate(538 450) scale(1.5)" onclick="deschideMeniuDispozitive('cat_tv','tv',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="2" y="4" width="20" height="14" rx="2"/>
+                    <line class="hotspot-icon" x1="8" y1="22" x2="16" y2="22"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-power" transform="translate(1010 255) scale(1.2)" onclick="deschideMeniuDispozitive('cat_prize','prize',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M7 7v10"/>
+                    <path class="hotspot-icon" d="M17 7v10"/>
+                    <path class="hotspot-icon" d="M6 14h12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-climate" transform="translate(420 480) scale(1.4)" onclick="deschideMeniuDispozitive('cat_climatizare','climatizare-dormitor')">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M12 2v20"/>
+                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-air" transform="translate(990 480) scale(1.4)" onclick="deschideMeniuDispozitive('cat_purificator','purificator',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M4 12h16"/>
+                    <path class="hotspot-icon" d="M6 8c2 2 2 6 0 8"/>
+                    <path class="hotspot-icon" d="M18 8c-2 2-2 6 0 8"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-sensor" transform="translate(788 10) scale(1.5)" onclick="deschideMeniuDispozitive('cat_senzoriContact','senzoriContact',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
+                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-light" transform="translate(790 720) scale(1.5)" onclick="deschideMeniuDispozitive('cat_becuri','becuri',2)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-danger" transform="translate(990 610) scale(1.5)" onclick="deschideMeniuDispozitive('cat_pericole','senzori-baie')">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M12 2L12 2C8 6 5 10 5 14C5 17.866 8.134 21 12 21C15.866 21 19 17.866 19 14C19 10 16 6 12 2Z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-audio" transform="translate(690 720) scale(1.5)" onclick="deschideMeniuDispozitive('cat_audio','audio',3)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
+                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-window" transform="translate(450 620) scale(1.5)" onclick="deschideMeniuDispozitive('cat_jaluzele','jaluzele',3)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
+                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-sensor" transform="translate(360 620) scale(1.5)" onclick="deschideMeniuDispozitive('cat_senzoriContact','senzoriContact',4)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
+                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-appliance" transform="translate(915 779) scale(1.2)" onclick="deschideMeniuDispozitive('cat_electrocasnice','electrocasnice',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2"/>
+                    <circle class="hotspot-icon" cx="12" cy="14" r="4"/>
+                    <line class="hotspot-icon" x1="8" y1="6" x2="12" y2="6"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-appliance" transform="translate(1000 779) scale(1.2)" onclick="deschideMeniuDispozitive('cat_electrocasnice','electrocasnice',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2"/>
+                    <circle class="hotspot-icon" cx="12" cy="14" r="4"/>
+                    <line class="hotspot-icon" x1="8" y1="6" x2="12" y2="6"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-power" transform="translate(735 820) scale(1.2)" onclick="deschideMeniuDispozitive('cat_prize','prize',2)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M7 7v10"/>
+                    <path class="hotspot-icon" d="M17 7v10"/>
+                    <path class="hotspot-icon" d="M6 14h12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-climate" transform="translate(550 780) scale(1.4)" onclick="deschideMeniuDispozitive('cat_climatizare','climatizare-baie')">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M12 2v20"/>
+                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-appliance" transform="translate(870 1010) scale(1.5)" onclick="deschideMeniuDispozitive('cat_electrocasnice','electrocasnice',2)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                    <path class="hotspot-icon" d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-light" transform="translate(680 900) scale(1.5)" onclick="deschideMeniuDispozitive('cat_becuri','becuri',3)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-audio" transform="translate(580 900) scale(1.5)" onclick="deschideMeniuDispozitive('cat_audio','audio',4)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
+                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-power" transform="translate(950 1030) scale(1.2)" onclick="deschideMeniuDispozitive('cat_prize','prize',3)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M7 7v10"/>
+                    <path class="hotspot-icon" d="M17 7v10"/>
+                    <path class="hotspot-icon" d="M6 14h12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-danger" transform="translate(920 890) scale(1.2)" onclick="deschideMeniuDispozitive('cat_pericole','senzori-bucatarie')">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-climate" transform="translate(420 1010) scale(1.4)" onclick="deschideMeniuDispozitive('cat_climatizare','climatizare-bucatarie')">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M12 2v20"/>
+                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-sensor" transform="translate(748 1070) scale(1.5)" onclick="deschideMeniuDispozitive('cat_senzoriContact','senzoriContact',3)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
+                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-window" transform="translate(748 980) scale(1.5)" onclick="deschideMeniuDispozitive('cat_jaluzele','jaluzele',4)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
+                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-light" transform="translate(1350 600) scale(1.5)" onclick="deschideMeniuDispozitive('cat_becuri','becuri',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-tv" transform="translate(1327 90) scale(1.5)" onclick="deschideMeniuDispozitive('cat_tv','tv',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="2" y="4" width="20" height="14" rx="2"/>
+                    <line class="hotspot-icon" x1="8" y1="22" x2="16" y2="22"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-audio" transform="translate(1250 600) scale(1.5)" onclick="deschideMeniuDispozitive('cat_audio','audio',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
+                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-robot" transform="translate(1490 1000) scale(1.5)" onclick="deschideMeniuDispozitive('cat_aspirator','aspirator',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <circle class="hotspot-icon" cx="12" cy="12" r="10"/>
+                    <circle class="hotspot-icon" cx="12" cy="12" r="4"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-window" transform="translate(1465 412) scale(1.5)" onclick="deschideMeniuDispozitive('cat_jaluzele','jaluzele',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
+                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-window" transform="translate(1465 842) scale(1.5)" onclick="deschideMeniuDispozitive('cat_jaluzele','jaluzele',2)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
+                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-audio" transform="translate(1400 150) scale(1.4)" onclick="deschideMeniuDispozitive('cat_audio','audio',2)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2"/>
+                    <circle class="hotspot-icon" cx="12" cy="14" r="4"/>
+                    <circle class="hotspot-icon" cx="12" cy="6" r="1"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-power" transform="translate(1090 830) scale(1.2)" onclick="deschideMeniuDispozitive('cat_prize','prize',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M7 7v10"/>
+                    <path class="hotspot-icon" d="M17 7v10"/>
+                    <path class="hotspot-icon" d="M6 14h12"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-climate" transform="translate(1120 500) scale(1.4)" onclick="deschideMeniuDispozitive('cat_climatizare','climatizare-living')">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M12 2v20"/>
+                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-air" transform="translate(1110 730) scale(1.4)" onclick="deschideMeniuDispozitive('cat_purificator','purificator',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M4 12h16"/>
+                    <path class="hotspot-icon" d="M6 8c2 2 2 6 0 8"/>
+                    <path class="hotspot-icon" d="M18 8c-2 2-2 6 0 8"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-sensor" transform="translate(1556 412) scale(1.5)" onclick="deschideMeniuDispozitive('cat_senzoriContact','senzoriContact',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
+                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-sensor" transform="translate(1556 842) scale(1.5)" onclick="deschideMeniuDispozitive('cat_senzoriContact','senzoriContact',2)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
+                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-lock" transform="translate(357 893) scale(1.2)" onclick="deschideMeniuDispozitive('cat_incuietori','incuietori',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <rect class="hotspot-icon" x="3" y="11" width="18" height="11" rx="2"/>
+                    <path class="hotspot-icon" d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-camera" transform="translate(300 820) scale(1.4)" onclick="deschideMeniuDispozitive('cat_camereVideo','camereVideo',0)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M23 7l-7 5 7 5V7z"/>
+                    <rect class="hotspot-icon" x="1" y="5" width="15" height="14" rx="2"/>
+                </g>
+            </g>
+
+            <g class="svg-hotspot hotspot-camera" transform="translate(260 320) scale(1.4)" onclick="deschideMeniuDispozitive('cat_camereVideo','camereVideo',1)">
+                <circle r="28" class="hotspot-bg"/>
+                <g transform="translate(-12 -12)">
+                    <path class="hotspot-icon" d="M23 7l-7 5 7 5V7z"/>
+                    <rect class="hotspot-icon" x="1" y="5" width="15" height="14" rx="2"/>
+                </g>
+            </g>
+
+        </svg>
+
         </div>
     </main>
 
     <smart-modal></smart-modal>
 
     <script src="js/main.js"></script>
-    <script src="js/counter.js"></script>
 </body>
 </html>
