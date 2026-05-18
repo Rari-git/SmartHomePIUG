@@ -263,19 +263,28 @@ function afiseazaNotificariHome() {
 
 function genereazaListaNotificari() {
     let notificari = [];
-    const becuriAprinse = (subDispozitive.becuri || []).filter(d => d.stare === "Pornit");
+    
+    // Corectat din 'becuri' în 'lumini'
+    const becuriAprinse = (subDispozitive.lumini || []).filter(d => d.stare === "Pornit");
     const rgbAprinse = (subDispozitive.luminiRGB || []).filter(d => d.stare === "Pornit");
     const totalLumini = becuriAprinse.length + rgbAprinse.length;
     if (totalLumini > 0) notificari.push({ id: "notif_lumini", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLumini} ${totalLumini === 1 ? 'lumină aprinsă' : 'lumini aprinse'}` });
+    
     const audioPornit = (subDispozitive.audio || []).filter(d => d.stare === "Pornit");
     if (audioPornit.length > 0) notificari.push({ id: "notif_audio", text: `<i class="ph-fill ph-speaker-high"></i> ${audioPornit.length} sisteme active` });
+    
     const tvPornit = (subDispozitive.tv || []).filter(d => d.stare === "Pornit");
     if (tvPornit.length > 0) { const idx = subDispozitive.tv.findIndex(d => d === tvPornit[0]); notificari.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV pornit în ${tvPornit[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'tv', ${idx})` }); }
+    
     if (subDispozitive.aspirator && subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === "Curăță") notificari.push({ id: "notif_aspirator", text: `<i class="ph-fill ph-robot"></i> Robotul curăță în ${subDispozitive.aspirator[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'aspirator', 0)` });
+    
     if (subDispozitive.incuietori && subDispozitive.incuietori[0] && subDispozitive.incuietori[0].stare === "Deblocat") notificari.push({ id: "notif_usa", text: `<i class="ph-fill ph-lock-key"></i> Ușa de intrare este deblocată!`, actiune: `deschideMeniuDispozitive('none', 'incuietori', 0)` });
-    if (subDispozitive.senzoriContact) subDispozitive.senzoriContact.forEach((d, idx) => { if(d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `${iconFereastra} Fereastră deschisă în ${d.camera}`, actiune: `deschideMeniuDispozitive('none', 'senzoriContact', ${idx})` }); });
+    
+    if (subDispozitive.senzoriContact) subDispozitive.senzoriContact.forEach((d, idx) => { if(d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `🚪 Fereastră deschisă în ${d.camera}`, actiune: `deschideMeniuDispozitive('none', 'senzoriContact', ${idx})` }); });
+    
     let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
     logs.forEach((log, idx) => { notificari.push({ id: `notif_motion_${idx}`, text: `<i class="ph-fill ph-person-simple-walk"></i> Mișcare în ${log.camera} [${log.ora}]` }); });
+    
     return notificari;
 }
 
@@ -394,11 +403,30 @@ function deschidePopupToateNotificarile() {
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
     if (!modal || !titlu || !continental) return;
+    
     titlu.innerHTML = "🔔 Toate Notificările Casei";
     const toateNotificarile = genereazaListaNotificari();
-    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left;">`;
-    toateNotificarile.forEach(notif => { html += `<div class="notification-item" style="padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);"><span>${notif.text}</span></div>`; });
+    
+    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left; display: flex; flex-direction: column; gap: 8px;">`;
+    
+    toateNotificarile.forEach(notif => { 
+        if (notif.id === "notif_lumini") {
+            html += `<div class="notification-item" onclick="deschidePopupLuminiAprinse()" style="cursor: pointer; padding: 12px; background: var(--bg-primary); border-radius: 8px;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pt detalii)</span></span></div>`;
+        } else if (notif.id === "notif_audio") {
+            html += `<div class="notification-item" onclick="deschidePopupAudioPornit()" style="cursor: pointer; padding: 12px; background: var(--bg-primary); border-radius: 8px;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pt detalii)</span></span></div>`;
+        } else if (notif.actiune) {
+            html += `<div class="notification-item" onclick="${notif.actiune}" style="cursor: pointer; transition: color 0.2s; padding: 12px; background: var(--bg-primary); border-radius: 8px;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color=''"><span>${notif.text}</span></div>`;
+        } else {
+            html += `<div class="notification-item" style="padding: 12px; background: var(--bg-primary); border-radius: 8px;"><span>${notif.text}</span></div>`;
+        }
+    });
+    
+    if (toateNotificarile.length === 0) {
+        html += `<p style="opacity: 0.5; text-align: center; margin: 20px 0;">Nicio notificare activă.</p>`;
+    }
+    
     html += `</div><div style="margin-top: 10px;"><button onclick="localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); inchidePopup();" style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button></div>`;
+    
     continental.innerHTML = html;
     modal.classList.add('active');
 }
@@ -422,4 +450,50 @@ window.onclick = function(event) {
     if (event.target === m2) m2.classList.remove('active');
     if (event.target === m3) m3.classList.remove('active');
     if (event.target === m4) m4.classList.remove('active');
+}
+
+function actualizeazaCardInDOM(cat, index) {
+    const idUnic = `${cat}_${index}`;
+    const disp = subDispozitive[cat][index];
+    if (!disp) return;
+
+    // Verificăm dacă e considerat "activ" pentru a colora fundalul
+    const isActive = ['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare);
+    
+    // 1. Caută TOATE cardurile cu acest ID pe ecran și modifică doar atributele lor
+    const carduri = document.querySelectorAll(`.hk-card[data-id="${idUnic}"]`);
+    carduri.forEach(card => {
+        if (isActive) card.classList.add('is-active');
+        else card.classList.remove('is-active');
+        
+        // Modificăm strict textul stării (fără a recrea iconițele SVG)
+        const stateEl = card.querySelector('.hk-state');
+        if (stateEl) {
+            stateEl.innerText = `${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}`;
+        }
+    });
+
+    // 2. Actualizează widget-urile globale silențios (Consumul de Energie de sus etc.)
+    actualizeazaStatusGlobal();
+
+    // 3. Actualizează alertele doar dacă ne aflăm pe pagina Home
+    if (document.getElementById('notifications-container')) {
+        afiseazaNotificariHome();
+    }
+
+    // 4. Actualizare vizuală "live" în interiorul Meniului Popup (fără a-l închide)
+    const popup = document.getElementById('popup-dispozitive');
+    if (popup && popup.classList.contains('active')) {
+        const btn = popup.querySelector('.sensor-action-btn');
+        if (btn && btn.getAttribute('onclick').includes(`'${cat}', ${index}`)) {
+            btn.style.backgroundColor = isActive ? 'var(--success-color)' : '#95a5a6';
+            if (cat === 'prize') {
+                btn.innerText = `Alimentare Priză: ${disp.stare}`;
+                const wDisplay = popup.querySelector('div[style*="font-size: 3.5em"]');
+                if(wDisplay) wDisplay.innerText = `${calculeazaConsumPriza(disp)} W`;
+            } else {
+                btn.innerText = `Schimbă Stare (Curent: ${disp.stare})`;
+            }
+        }
+    }
 }

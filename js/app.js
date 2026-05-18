@@ -138,10 +138,29 @@ function salveazaCodPinNou() {
 function toggleFavorite(id, type, event) {
     if(event) event.stopPropagation();
     let favs = JSON.parse(localStorage.getItem(type === 'scene' ? 'favScenes' : 'favAcc')) || [];
-    if (favs.includes(id)) favs = favs.filter(item => item !== id);
-    else favs.push(id);
+    
+    const isFav = favs.includes(id);
+    if (isFav) {
+        favs = favs.filter(item => item !== id);
+    } else {
+        favs.push(id);
+    }
+    
     localStorage.setItem(type === 'scene' ? 'favScenes' : 'favAcc', JSON.stringify(favs));
-    reincarcaInterfata();
+    
+    // Actualizăm efectul de umplere a steluței INSTANT pe ecran, fără încărcare de date
+    if (event && event.target) {
+        const starBtn = event.target.closest('.hk-star');
+        if (starBtn) {
+            if (isFav) starBtn.classList.remove('is-fav');
+            else starBtn.classList.add('is-fav');
+        }
+    }
+
+    // Facem render total doar dacă suntem fizic pe pagina principală (ca să apară noul card)
+    if (document.getElementById('fav-accessories-container')) {
+        randareHome();
+    }
 }
 
 function toggleStareDispozitiv(cat, index, event) {
@@ -183,7 +202,13 @@ function toggleStareDispozitiv(cat, index, event) {
     
     verificaReguliAutomatizare(cat, index, disp.stare);
     salveazaStarea();
-    reincarcaInterfata();
+    
+    // AICI INTERVINE MAGIA OPTIMIZĂRII
+    if (typeof actualizeazaCardInDOM === 'function') {
+        actualizeazaCardInDOM(cat, index);
+    } else {
+        reincarcaInterfata();
+    }
 }
 
 function verificaAutomatizariTimp() {
