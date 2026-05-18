@@ -4,25 +4,31 @@ class SmartNav extends HTMLElement {
         if (currentPage === '' || currentPage === '/') currentPage = 'index.html';
         const isActive = (page) => currentPage === page ? 'active' : '';
 
+        const intrUnSubfolder = window.location.pathname.includes('/pages/') || 
+                                window.location.pathname.includes('/html/') ||
+                                (!window.location.pathname.endsWith('index.html') && currentPage !== 'index.html');
+        
+        const caleHome = intrUnSubfolder ? '../index.html' : 'index.html';
+        const prefixPagini = intrUnSubfolder ? '' : 'html/'; // Înlocuiește 'pages/' cu numele folderului tău dacă e diferit (ex: 'html/')
+
         this.innerHTML = `
             <nav>
                 <h2>SmartHome</h2>
-                <a href="index.html" class="${isActive('index.html')}">🏠 Home</a>
-                <a href="scene.html" class="${isActive('scene.html')}">🎭 Scene</a>
-                <a href="accesorii.html" class="${isActive('accesorii.html')}">🛋️ Accesorii</a>
-                <a href="automatizari.html" class="${isActive('automatizari.html')}">🤖 Automatizări</a>
-                <a href="statistici.html" class="${isActive('statistici.html')}">📈 Statistici</a>
-                <a href="camere.html" class="${isActive('camere.html')}">🌡️ Climă Camere</a>
-                <a href="harta.html" class="${isActive('harta.html')}">🗺️ Hartă Casă</a>
-                <a href="securitate.html" class="${isActive('securitate.html')}">🛡️ Securitate</a>
-                <a href="pericole.html" class="${isActive('pericole.html')}">🚨 Pericole</a>
-                <a href="setari.html" class="${isActive('setari.html')}">⚙️ Setări</a>
+                <a href="${caleHome}" class="${isActive('index.html')}">🏠 Home</a>
+                <a href="${prefixPagini}scene.html" class="${isActive('scene.html')}">🎭 Scene</a>
+                <a href="${prefixPagini}accesorii.html" class="${isActive('accesorii.html')}">🛋️ Accesorii</a>
+                <a href="${prefixPagini}automatizari.html" class="${isActive('automatizari.html')}">🤖 Automatizări</a>
+                <a href="${prefixPagini}statistici.html" class="${isActive('statistici.html')}">📈 Statistici</a>
+                <a href="${prefixPagini}camere.html" class="${isActive('camere.html')}">🌡️ Climă Camere</a>
+                <a href="${prefixPagini}harta.html" class="${isActive('harta.html')}">🗺️ Hartă Casă</a>
+                <a href="${prefixPagini}securitate.html" class="${isActive('securitate.html')}">🛡️ Securitate</a>
+                <a href="${prefixPagini}pericole.html" class="${isActive('pericole.html')}">🚨 Pericole</a>
+                <a href="${prefixPagini}setari.html" class="${isActive('setari.html')}">⚙️ Setări</a>
             </nav>
         `;
     }
 }
 customElements.define('smart-nav', SmartNav);
-
 class SmartModal extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
