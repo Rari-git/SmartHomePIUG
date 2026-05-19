@@ -79,10 +79,10 @@ function randareGraficDashboard() {
         }
         
         let maxVal = Math.max(...date.map(d => d.v), 1);
-        let html = '<div style="display: flex; flex-direction: column; gap: 14px;">';
+        let html = '<div class="chart-container">';
         date.forEach(p => {
             let procent = (p.v / maxVal) * 100;
-            html += `<div style="display: flex; align-items: center; gap: 15px;"><div style="width: 110px; font-weight: 600; font-size: 0.9em; opacity: 0.8;">${p.e}</div><div style="flex: 1; background: rgba(0,0,0,0.05); height: 16px; border-radius: 8px; overflow: hidden;"><div class="anim-bar" data-width="${procent}%" style="background: var(--accent-color); width: 0%; height: 100%; border-radius: 8px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);"></div></div><div style="width: 80px; text-align: right; font-weight: 700; color: var(--accent-color);">${p.v} kWh</div></div>`;
+            html += `<div class="chart-row"><div class="chart-label">${p.e}</div><div class="chart-track"><div class="anim-bar chart-bar energy" data-width="${procent}%" style="width: 0%;"></div></div><div class="chart-val energy">${p.v} kWh</div></div>`;
         });
         html += '</div>';
         container.innerHTML = html;
@@ -108,26 +108,26 @@ function randareGraficDashboard() {
         
         let maxT = Math.max(...date.map(d => d.t), 1);
         let maxU = Math.max(...date.map(d => d.u), 1);
-        let html = '<div style="display: flex; flex-direction: column; gap: 16px;">';
+        let html = '<div class="chart-container-climate">';
         date.forEach(p => {
             let prT = (p.t / maxT) * 100;
             let prU = (p.u / maxU) * 100;
             html += `
-                <div style="display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid rgba(0,0,0,0.03); padding-bottom: 8px;">
-                    <div style="font-weight: 700; font-size: 0.9em; opacity: 0.9; margin-bottom: 2px;">${p.e}</div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 0.8em; font-weight: bold; width: 45px; opacity: 0.7;">Temp:</span>
-                        <div style="flex: 1; background: rgba(0,0,0,0.04); height: 10px; border-radius: 5px; overflow: hidden;">
-                            <div class="anim-bar" data-width="${prT}%" style="background: var(--warning-color); width: 0%; height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;"></div>
+                <div class="chart-climate-group">
+                    <div class="chart-climate-title">${p.e}</div>
+                    <div class="chart-row small-gap">
+                        <span class="chart-sub-label">Temp:</span>
+                        <div class="chart-track small-track">
+                            <div class="anim-bar chart-bar temp" data-width="${prT}%" style="width: 0%;"></div>
                         </div>
-                        <span style="font-size: 0.85em; font-weight: bold; width: 55px; color: var(--warning-color); text-align: right;">${p.t}°C</span>
+                        <span class="chart-val temp">${p.t}°C</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 0.8em; font-weight: bold; width: 45px; opacity: 0.7;">Umid:</span>
-                        <div style="flex: 1; background: rgba(0,0,0,0.04); height: 10px; border-radius: 5px; overflow: hidden;">
-                            <div class="anim-bar" data-width="${prU}%" style="background: #3498db; width: 0%; height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s;"></div>
+                    <div class="chart-row small-gap">
+                        <span class="chart-sub-label">Umid:</span>
+                        <div class="chart-track small-track">
+                            <div class="anim-bar chart-bar umid" data-width="${prU}%" style="width: 0%;"></div>
                         </div>
-                        <span style="font-size: 0.85em; font-weight: bold; width: 55px; color: #3498db; text-align: right;">${p.u}%</span>
+                        <span class="chart-val umid">${p.u}%</span>
                     </div>
                 </div>
             `;
@@ -245,11 +245,11 @@ function randareSabloane() {
     
     sabloaneRecomandate.forEach(sug => {
         if (!activeIds.includes(sug.idSugestie)) {
-            html += `<div class="suggestion-card" style="border-top: 5px solid ${sug.culoare}; min-width: 250px; flex-shrink: 0; box-sizing: border-box; background: var(--card-bg); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between;"><div style="font-size: 2em; margin-bottom: 10px; line-height: 1;">${sug.icon}</div><strong style="font-size: 1.1em; color: var(--text-color);">${sug.nume}</strong><p style="font-size: 0.85em; opacity: 0.8; margin: 10px 0; flex: 1; line-height: 1.4;">${sug.descriereScurta}</p><button class="add-sug-btn" data-action="add-suggestion" data-sugid="${sug.idSugestie}" style="width:100%; background: var(--accent-color); color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">+ Adaugă Regula</button></div>`;
+            html += `<div class="suggestion-card" style="border-top: 5px solid ${sug.culoare};"><div class="sug-icon">${sug.icon}</div><strong class="sug-name">${sug.nume}</strong><p class="sug-desc">${sug.descriereScurta}</p><button class="sug-btn" data-action="add-suggestion" data-sugid="${sug.idSugestie}">+ Adaugă Regula</button></div>`;
             counter++;
         }
     });
-    container.innerHTML = counter === 0 ? `<p style="opacity:0.5; padding: 20px; font-style: italic;">Ai activat toate șabloanele recomandate!</p>` : html;
+    container.innerHTML = counter === 0 ? `<div class="popup-empty-text">Ai activat toate șabloanele recomandate!</div>` : html;
 }
 
 function randareAutomatizari() {
@@ -258,9 +258,9 @@ function randareAutomatizari() {
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     let html = '';
     rules.forEach(rule => {
-        html += `<div class="hk-card" style="height: auto; padding: 20px; border-left: 5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}; opacity: ${rule.active ? '1' : '0.5'}; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;"><div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px; margin-bottom: 10px;"><div style="font-weight: bold; font-size: 1.1em; color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div style="display: flex; align-items: center; gap: 15px;"><label class="toggle-switch"><input type="checkbox" data-action="toggle-automation" data-autoid="${rule.id}" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button data-action="delete-automation" data-autoid="${rule.id}" style="background: transparent; color: var(--error-color); font-size: 1.3em; border: none; cursor: pointer; padding: 0;"><i class="ph-bold ph-trash"></i></button></div></div><div style="font-size: 1em; line-height: 1.5; font-weight: 500; flex: 1;">${rule.descriere}</div><div style="margin-top: 15px; font-size: 0.8em; color: gray; font-weight: bold;"><i class="ph-bold ph-clock-counter-clockwise"></i> Ultima rulare: ${rule.lastRun || 'Niciodată'}</div></div>`;
+        html += `<div class="hk-card auto-card" style="border-left: 5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}; opacity: ${rule.active ? '1' : '0.5'};"><div class="auto-header"><div class="auto-title" style="color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div class="auto-controls"><label class="toggle-switch"><input type="checkbox" data-action="toggle-automation" data-autoid="${rule.id}" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button data-action="delete-automation" data-autoid="${rule.id}" class="auto-delete-btn"><i class="ph-bold ph-trash"></i></button></div></div><div class="auto-desc">${rule.descriere}</div><div class="auto-footer"><i class="ph-bold ph-clock-counter-clockwise"></i> Ultima rulare: ${rule.lastRun || 'Niciodată'}</div></div>`;
     });
-    html += `<div class="hk-card card-add-new" onclick="deschideModalAutomatizare()" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px; border: 2px dashed var(--accent-color); background:transparent;"><div class="plus-icon" style="font-size:2em; color:var(--accent-color);"><i class="ph-bold ph-plus"></i></div><div style="font-size: 1.1em; font-weight: bold; color:var(--accent-color); margin-top:5px;">Regulă Nouă</div><div style="font-size: 0.85em; opacity:0.7; margin-top: 5px;">Configurare complet manuală</div></div>`;
+    html += `<div class="hk-card card-add-new" onclick="deschideModalAutomatizare()"><div class="plus-icon"><i class="ph-bold ph-plus"></i></div><div class="add-title">Regulă Nouă</div><div class="add-desc">Configurare complet manuală</div></div>`;
     container.innerHTML = html;
 }
 
@@ -269,10 +269,10 @@ function randareStatisticiLogs() {
     if (!container) return;
     const logs = JSON.parse(localStorage.getItem('smartHomeLogs')) || [];
     if (logs.length === 0) {
-        container.innerHTML = `<p style="opacity: 0.5; font-style: italic; text-align: center; padding: 20px;">Niciun eveniment înregistrat încă.</p>`;
+        container.innerHTML = `<div class="popup-empty-text">Niciun eveniment înregistrat încă.</div>`;
         return;
     }
-    container.innerHTML = logs.map(log => `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px 16px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-left: 4px solid var(--accent-color); margin-bottom:8px;"><span style="font-weight: 500; font-size: 0.95em;">${log.text}</span><span style="font-size: 0.8em; opacity: 0.6; font-weight: bold; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 4px; white-space: nowrap; margin-left: 10px;"><i class="ph-bold ph-clock"></i> ${log.ora}</span></div>`).join('');
+    container.innerHTML = logs.map(log => `<div class="log-item"><span class="log-text">${log.text}</span><span class="log-time"><i class="ph-bold ph-clock"></i> ${log.ora}</span></div>`).join('');
 }
 
 function construiesteCardHTML(disp, cat, idx, isFav) {
@@ -289,7 +289,7 @@ function construiesteScenaHTML(scena, isFav) {
     
     // Extragem un index din string-ul scenei pentru a genera progresia animației
     const animDelay = (scena.id.charCodeAt(scena.id.length - 1) % 10) * 0.04;
-    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${scena.id}" style="height: 90px; animation-delay: ${animDelay}s;" data-action="execute-scene" data-sceneid="${scena.id}"><div class="hk-controls">${esteCustom ? `<button class="hk-btn" data-action="delete-scene" data-sceneid="${scena.id}" style="color: var(--error-color); margin-right: 2px;"><i class="ph-bold ph-trash"></i></button>` : ''}<button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${scena.id}" data-favtype="scene"><i class="ph-fill ph-star"></i></button></div><div class="hk-name" style="font-size: 1.1em; margin-bottom: 5px;">${scena.nume}</div><div class="hk-state" style="margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${scena.descriere}</div></div>`;
+    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${scena.id}" style="height: 90px; animation-delay: ${animDelay}s;" data-action="execute-scene" data-sceneid="${scena.id}"><div class="hk-controls">${esteCustom ? `<button class="hk-btn" data-action="delete-scene" data-sceneid="${scena.id}" style="color: var(--error-color); margin-right: 2px;"><i class="ph-bold ph-trash"></i></button>` : ''}<button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${scena.id}" data-favtype="scene"><i class="ph-fill ph-star"></i></button></div><div class="hk-name scene-name-title">${scena.nume}</div><div class="hk-state scene-desc-text">${scena.descriere}</div></div>`;
 }
 
 function afiseazaNotificariHome() {
@@ -304,9 +304,9 @@ function afiseazaNotificariHome() {
     const limita = Math.min(toateNotificarile.length, 3);
     for (let i = 0; i < limita; i++) {
         const notif = toateNotificarile[i];
-        if (notif.id === "notif_lumini") container.innerHTML += `<div class="notification-item" data-action="open-popup-lumini" style="cursor: pointer;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pt detalii)</span></span></div>`;
-        else if (notif.id === "notif_audio") container.innerHTML += `<div class="notification-item" data-action="open-popup-audio" style="cursor: pointer;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pt detalii)</span></span></div>`;
-        else if (notif.actiune) container.innerHTML += `<div class="notification-item" onclick="${notif.actiune}" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color=''"><span>${notif.text}</span></div>`;
+        if (notif.id === "notif_lumini") container.innerHTML += `<div class="notification-item" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
+        else if (notif.id === "notif_audio") container.innerHTML += `<div class="notification-item" data-action="open-popup-audio"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
+        else if (notif.actiune) container.innerHTML += `<div class="notification-item hover-accent" onclick="${notif.actiune}"><span>${notif.text}</span></div>`;
         else container.innerHTML += `<div class="notification-item"><span>${notif.text}</span></div>`;
     }
     if (toateNotificarile.length > 3) container.innerHTML += `<button class="see-more-btn" data-action="open-popup-all-notifs">Vezi mai multe &gt;</button>`;
@@ -366,26 +366,26 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
         const camera = categorie.split('-')[1];
         titlu.innerHTML = `🌡️ Termostat ${camera.charAt(0).toUpperCase() + camera.slice(1)}`;
         let temp = localStorage.getItem(`temp-${camera}`) || "22";
-        continental.innerHTML = `<div style="text-align: center; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"><h3 style="margin-top: 0; opacity: 0.8;">Setare Temperatură</h3><div style="font-size: 3.5em; font-weight: bold; color: var(--accent-color); margin: 10px 0;"><span id="popup-temp-${camera}">${temp}</span>°C</div><div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg-primary); font-size: 1.8em; font-weight: bold; cursor: pointer;">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--bg-primary); font-size: 1.8em; font-weight: bold; cursor: pointer;">+</button></div></div>`;
+        continental.innerHTML = `<div class="popup-content-box"><h3 class="popup-subtitle">Setare Temperatură</h3><div class="popup-val-display"><span id="popup-temp-${camera}">${temp}</span>°C</div><div class="popup-ctrl-row"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" class="popup-ctrl-btn">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" class="popup-ctrl-btn">+</button></div></div>`;
         modal.classList.add('active'); return;
     }
     const disp = subDispozitive[categorie][elementIndex];
     titlu.innerHTML = `${disp.icon} ${disp.nume}`;
     let contentHtml = '';
     if (categorie === 'prize') {
-        contentHtml = `<div style="background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;"><div style="font-size: 1.1em; font-weight: bold; opacity: 0.8; margin-bottom: 5px;">Consum Curent în ${disp.camera}</div><div style="font-size: 3.5em; font-weight: bold; color: var(--accent-color); margin: 10px 0;">${calculeazaConsumPriza(disp)} W</div><div style="font-size: 0.9em; opacity: 0.7; margin-bottom: 20px;">Dispozitive: <strong>${disp.detalii}</strong></div><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Alimentare Priză: ${disp.stare}</button></div>`;
+        contentHtml = `<div class="popup-content-box"><div class="popup-subtitle">Consum Curent în ${disp.camera}</div><div class="popup-val-display">${calculeazaConsumPriza(disp)} W</div><div class="popup-details">Dispozitive: <strong>${disp.detalii}</strong></div><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'};">Alimentare Priză: ${disp.stare}</button></div>`;
     } else {
-        contentHtml = `<div style="margin-bottom: 20px; text-align:center;"><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'}; color: white; padding: 12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Schimbă Stare (Curent: ${disp.stare})</button></div>`;
-        if (categorie === 'camereVideo') contentHtml += `<div style="background: #111; border-radius: 8px; height: 200px; display:flex; align-items:center; justify-content:center; color:white; position:relative; margin-bottom: 15px; overflow: hidden;">${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}</div>`;
+        contentHtml = `<div class="popup-action-row"><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'};">Schimbă Stare (Curent: ${disp.stare})</button></div>`;
+        if (categorie === 'camereVideo') contentHtml += `<div class="camera-feed-box">${disp.stare === 'LIVE' ? '<span class="camera-live-badge">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" class="camera-feed-img">' : '<span class="camera-offline">[ Camera Feed Offline ]</span>'}</div>`;
         if (['becuri', 'audio', 'jaluzele', 'luminiRGB'].includes(categorie)) {
             const isOff = disp.stare === 'Oprit' || disp.stare === 'Închis';
             contentHtml += `
-                <div class="slider-container ${isOff ? 'disabled-controls' : ''}" style="margin-top: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="slider-container ${isOff ? 'disabled-controls' : ''}">
+                    <div class="slider-header">
                         <label>Intensitate / Volum:</label>
-                        <label style="font-weight: bold; color: var(--accent-color);"><span id="val-${categorie}-${elementIndex}">${disp.valoare}</span>%</label>
+                        <label class="slider-val"><span id="val-${categorie}-${elementIndex}">${disp.valoare}</span>%</label>
                     </div>
-                    <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} style="width: 100%; margin-top: 8px;" data-action="device-slider-input" data-cat="${categorie}" data-idx="${elementIndex}">
+                    <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} class="device-slider" data-action="device-slider-input" data-cat="${categorie}" data-idx="${elementIndex}">
                 </div>`;
         }
     }
@@ -399,22 +399,22 @@ function deschidePopupLuminiAprinse() {
     const continental = document.getElementById('modal-continut');
     if (!modal || !titlu || !continental) return;
     titlu.innerHTML = "<i class='ph-fill ph-lightbulb'></i> Lumini Active în Casă";
-    let html = `<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px 0;">`;
+    let html = `<div class="popup-list-container">`;
     let areLumini = false;
     (subDispozitive.becuri || []).forEach((bec, idx) => {
         if (bec.stare === "Pornit") {
             areLumini = true;
-            html += `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; cursor: pointer;" data-action="open-device-menu" data-cat="becuri" data-idx="${idx}"><div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5em; color: var(--warning-color);"><i class="ph-fill ph-lightbulb"></i></span><div><strong style="display:block;">${bec.nume}</strong><span style="font-size: 0.85em; opacity: 0.6;">${bec.camera} • ${bec.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="becuri" data-idx="${idx}" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Stinge</button></div>`;
+            html += `<div class="popup-list-item" data-action="open-device-menu" data-cat="becuri" data-idx="${idx}"><div class="popup-list-left"><span class="popup-item-icon warning"><i class="ph-fill ph-lightbulb"></i></span><div><strong class="popup-item-title">${bec.nume}</strong><span class="popup-item-desc">${bec.camera} • ${bec.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="becuri" data-idx="${idx}" class="popup-item-btn error">Stinge</button></div>`;
         }
     });
     (subDispozitive.luminiRGB || []).forEach((lampa, idx) => {
         if (lampa.stare === "Pornit") {
             areLumini = true;
-            html += `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; cursor: pointer;" data-action="open-device-menu" data-cat="luminiRGB" data-idx="${idx}"><div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5em; color: var(--accent-color);"><i class="ph-fill ph-lamp"></i></span><div><strong style="display:block;">${lampa.nume}</strong><span style="font-size: 0.85em; opacity: 0.6;">${lampa.camera} • ${lampa.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="luminiRGB" data-idx="${idx}" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Stinge</button></div>`;
+            html += `<div class="popup-list-item" data-action="open-device-menu" data-cat="luminiRGB" data-idx="${idx}"><div class="popup-list-left"><span class="popup-item-icon accent"><i class="ph-fill ph-lamp"></i></span><div><strong class="popup-item-title">${lampa.nume}</strong><span class="popup-item-desc">${lampa.camera} • ${lampa.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="luminiRGB" data-idx="${idx}" class="popup-item-btn error">Stinge</button></div>`;
         }
     });
     html += `</div>`;
-    if (!areLumini) html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate luminile au fost stinse!</div>`;
+    if (!areLumini) html = `<div class="popup-empty-text">Toate luminile au fost stinse!</div>`;
     continental.innerHTML = html;
     modal.classList.add('active');
 }
@@ -425,16 +425,16 @@ function deschidePopupAudioPornit() {
     const continental = document.getElementById('modal-continut');
     if (!modal || !titlu || !continental) return;
     titlu.innerHTML = "<i class='ph-fill ph-speaker-high'></i> Sisteme Audio Active";
-    let html = `<div style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 5px 0;">`;
+    let html = `<div class="popup-list-container">`;
     let areAudio = false;
     (subDispozitive.audio || []).forEach((boxa, idx) => {
         if (boxa.stare === "Pornit") {
             areAudio = true;
-            html += `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; cursor: pointer;" data-action="open-device-menu" data-cat="audio" data-idx="${idx}"><div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5em; color: var(--accent-color);"><i class="ph-fill ph-speaker-high"></i></span><div><strong style="display:block;">${boxa.nume}</strong><span style="font-size: 0.85em; opacity: 0.6;">${boxa.camera} • Volum: ${boxa.valoare}%</span></div></div><button data-action="toggle-and-refresh-audio" data-cat="audio" data-idx="${idx}" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Oprește</button></div>`;
+            html += `<div class="popup-list-item" data-action="open-device-menu" data-cat="audio" data-idx="${idx}"><div class="popup-list-left"><span class="popup-item-icon accent"><i class="ph-fill ph-speaker-high"></i></span><div><strong class="popup-item-title">${boxa.nume}</strong><span class="popup-item-desc">${boxa.camera} • Volum: ${boxa.valoare}%</span></div></div><button data-action="toggle-and-refresh-audio" data-cat="audio" data-idx="${idx}" class="popup-item-btn error">Oprește</button></div>`;
         }
     });
     html += `</div>`;
-    if (!areAudio) html = `<div style="text-align:center; padding: 20px; opacity:0.6;">Toate sistemele audio au fost oprite!</div>`;
+    if (!areAudio) html = `<div class="popup-empty-text">Toate sistemele audio au fost oprite!</div>`;
     continental.innerHTML = html;
     modal.classList.add('active');
 }
@@ -445,7 +445,7 @@ function deschidePopupCreareScena() {
     const continental = document.getElementById('modal-continut');
     if(!modal || !continental) return;
     titlu.innerHTML = "🎭 Creare Scenă Nouă";
-    continental.innerHTML = `<div class="form-row"><label>Numele Scenei:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="ex: Party Mode, Relaxare..."></div><div class="form-row"><label>Emoji sugestiv:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Distracție</option><option value="🍃">🍃 Relaxare / Fresh</option><option value="💻">💻 Birou / Work</option></select></div><div class="form-row"><label>Descriere scurtă:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="ex: Oprește toate electronicele din casă."></div><div class="form-row"><label>Șablon comportament:</label><select id="custom-scene-template" class="form-input"><option value="away">Mod Plecat (Închide tot + Alarme active)</option><option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option><option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option></select></div><button onclick="salveazaScenaCustomNoua()" style="background: var(--success-color); color: white; width: 100%; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; font-size: 1em;">💾 Creează Scena</button>`;
+    continental.innerHTML = `<div class="form-row"><label>Numele Scenei:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="ex: Party Mode, Relaxare..."></div><div class="form-row"><label>Emoji sugestiv:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Distracție</option><option value="🍃">🍃 Relaxare / Fresh</option><option value="💻">💻 Birou / Work</option></select></div><div class="form-row"><label>Descriere scurtă:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="ex: Oprește toate electronicele din casă."></div><div class="form-row"><label>Șablon comportament:</label><select id="custom-scene-template" class="form-input"><option value="away">Mod Plecat (Închide tot + Alarme active)</option><option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option><option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option></select></div><button onclick="salveazaScenaCustomNoua()" class="btn-full-success">💾 Creează Scena</button>`;
     modal.classList.add('active');
 }
 
@@ -470,25 +470,25 @@ function deschidePopupToateNotificarile() {
     titlu.innerHTML = "🔔 Toate Notificările Casei";
     const toateNotificarile = genereazaListaNotificari();
     
-    let html = `<div style="max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; text-align: left; display: flex; flex-direction: column; gap: 8px;">`;
+    let html = `<div class="popup-list-container" style="max-height: 250px; padding-right: 5px; margin-bottom: 15px; text-align: left; gap: 8px;">`;
     
     toateNotificarile.forEach(notif => { 
         if (notif.id === "notif_lumini") {
-            html += `<div class="notification-item" data-action="open-popup-lumini" style="cursor: pointer; padding: 12px; background: var(--bg-primary); border-radius: 8px;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pt detalii)</span></span></div>`;
+            html += `<div class="notification-item card-style" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
         } else if (notif.id === "notif_audio") {
-            html += `<div class="notification-item" data-action="open-popup-audio" style="cursor: pointer; padding: 12px; background: var(--bg-primary); border-radius: 8px;"><span>${notif.text} <span style="font-size: 0.85em; opacity: 0.5; margin-left: 5px; font-weight: bold;">(Apasă pt detalii)</span></span></div>`;
+            html += `<div class="notification-item card-style" data-action="open-popup-audio"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
         } else if (notif.actiune) {
-            html += `<div class="notification-item" onclick="${notif.actiune}" style="cursor: pointer; transition: color 0.2s; padding: 12px; background: var(--bg-primary); border-radius: 8px;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color=''"><span>${notif.text}</span></div>`;
+            html += `<div class="notification-item card-style hover-accent" onclick="${notif.actiune}"><span>${notif.text}</span></div>`;
         } else {
-            html += `<div class="notification-item" style="padding: 12px; background: var(--bg-primary); border-radius: 8px;"><span>${notif.text}</span></div>`;
+            html += `<div class="notification-item card-style"><span>${notif.text}</span></div>`;
         }
     });
     
     if (toateNotificarile.length === 0) {
-        html += `<p style="opacity: 0.5; text-align: center; margin: 20px 0;">Nicio notificare activă.</p>`;
+        html += `<div class="popup-empty-text">Nicio notificare activă.</div>`;
     }
     
-    html += `</div><div style="margin-top: 10px;"><button data-action="clear-motion-history" style="background-color: transparent; border: 2px solid var(--error-color); color: var(--error-color); width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em;"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button></div>`;
+    html += `</div><div class="popup-action-row"><button data-action="clear-motion-history" class="btn-clear-history"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button></div>`;
     
     continental.innerHTML = html;
     modal.classList.add('active');
