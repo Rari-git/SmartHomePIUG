@@ -264,8 +264,7 @@ function afiseazaNotificariHome() {
 function genereazaListaNotificari() {
     let notificari = [];
     
-    // Corectat din 'becuri' în 'lumini'
-    const becuriAprinse = (subDispozitive.lumini || []).filter(d => d.stare === "Pornit");
+    const becuriAprinse = (subDispozitive.becuri || []).filter(d => d.stare === "Pornit");
     const rgbAprinse = (subDispozitive.luminiRGB || []).filter(d => d.stare === "Pornit");
     const totalLumini = becuriAprinse.length + rgbAprinse.length;
     if (totalLumini > 0) notificari.push({ id: "notif_lumini", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLumini} ${totalLumini === 1 ? 'lumină aprinsă' : 'lumini aprinse'}` });

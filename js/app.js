@@ -183,7 +183,13 @@ function toggleStareDispozitiv(cat, index, event) {
     };
 
     if (dictionarStari[cat]) {
-        disp.stare = dictionarStari[cat][disp.stare] || (cat === 'incuietori' ? 'Blocat' : 'Închis');
+        let defaultState = 'Închis';
+        if (cat === 'incuietori') defaultState = 'Blocat';
+        else if (cat === 'camereVideo') defaultState = 'Standby';
+        else if (cat === 'senzoriMiscare') defaultState = 'Inactiv';
+        else if (cat === 'aspirator') defaultState = 'La Bază';
+        
+        disp.stare = dictionarStari[cat][disp.stare] || defaultState;
     } else if (cat === 'purificator') {
         disp.stare = disp.stare === "Oprit" ? "Auto" : (disp.stare === "Auto" ? "Boost" : "Oprit");
     } else {
@@ -300,7 +306,11 @@ function ajusteazaDinPopup(camera, directie) {
 
 function stingeTotGlobal() { 
     Object.keys(subDispozitive).forEach(cat => (subDispozitive[cat] || []).forEach(d => { 
-        if (cat === 'incuietori') d.stare = "Blocat"; else if(cat === 'jaluzele') d.stare = "Închis"; else d.stare = "Oprit"; 
+        if (cat === 'incuietori') d.stare = "Blocat";
+        else if (cat === 'jaluzele' || cat === 'senzoriContact') d.stare = "Închis";
+        else if (cat === 'senzoriMiscare') d.stare = "Inactiv";
+        else if (cat === 'camereVideo') d.stare = "Standby";
+        else d.stare = "Oprit"; 
     })); 
     salveazaStarea();
 }
