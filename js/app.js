@@ -4,6 +4,7 @@ let scenesDB = [...defaultScenes, ...customScenesList];
 let subDispozitive = {};
 let pinCurentIntrodus = "";
 let modAlarmaActiune = "";
+let timeoutSalvareStare = null; // Timeout pentru Debounce localStorage
 
 // Executăm intro-ul direct, fără să mai așteptăm încărcarea completă a paginii.
 // Astfel blocăm afișarea interfeței și scăpăm de acele frame-uri vizibile nedorite.
@@ -14,9 +15,77 @@ document.addEventListener('DOMContentLoaded', () => {
     incarcaNumeCasa();
     reincarcaInterfata();
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
+
+    // 🚀 SISTEM GLOBAL: EVENT DELEGATION
+    // Preia toate interacțiunile UI dintr-un singur loc pentru performanță maximă
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+
+        const action = target.getAttribute('data-action');
+
+        if (action === 'toggle-device') {
+            toggleStareDispozitiv(target.dataset.cat, parseInt(target.dataset.idx), e);
+        } else if (action === 'toggle-favorite') {
+            e.stopPropagation(); toggleFavorite(target.dataset.favid, target.dataset.favtype, e);
+        } else if (action === 'open-device-menu') {
+            e.stopPropagation(); deschideMeniuDispozitive('none', target.dataset.cat, parseInt(target.dataset.idx));
+        } else if (action === 'execute-scene') {
+            executaScena(target.dataset.sceneid);
+        } else if (action === 'delete-scene') {
+            e.stopPropagation(); stergeScenaCustom(target.dataset.sceneid, e);
+        } else if (action === 'toggle-device-popup') {
+            toggleStareDispozitiv(target.dataset.cat, parseInt(target.dataset.idx), e);
+            deschideMeniuDispozitive('none', target.dataset.cat, parseInt(target.dataset.idx));
+        } else if (action === 'delete-automation') {
+            stergeAutomatizare(parseInt(target.dataset.autoid));
+        } else if (action === 'add-suggestion') {
+            adaugaSugestie(target.dataset.sugid);
+        } else if (action === 'adjust-temp-popup') {
+            ajusteazaDinPopup(target.dataset.camera, target.dataset.dir);
+        } else if (action === 'open-popup-lumini') {
+            deschidePopupLuminiAprinse();
+        } else if (action === 'open-popup-audio') {
+            deschidePopupAudioPornit();
+        } else if (action === 'open-popup-all-notifs') {
+            deschidePopupToateNotificarile();
+        } else if (action === 'clear-motion-history') {
+            localStorage.setItem('motionLogs', '[]'); afiseazaNotificariHome(); inchidePopup();
+        } else if (action === 'toggle-and-refresh-lights') {
+            e.stopPropagation(); toggleStareDispozitiv(target.dataset.cat, parseInt(target.dataset.idx), e); deschidePopupLuminiAprinse();
+        } else if (action === 'toggle-and-refresh-audio') {
+            e.stopPropagation(); toggleStareDispozitiv(target.dataset.cat, parseInt(target.dataset.idx), e); deschidePopupAudioPornit();
+        }
+    });
+
+    document.addEventListener('input', (e) => {
+        if (e.target.matches('[data-action="device-slider-input"]')) {
+            const valElem = document.getElementById(`val-${e.target.dataset.cat}-${e.target.dataset.idx}`);
+            if (valElem) valElem.innerText = e.target.value;
+        }
+    });
+
+    document.addEventListener('change', (e) => {
+        if (e.target.matches('[data-action="device-slider-input"]')) {
+            if (subDispozitive[e.target.dataset.cat] && subDispozitive[e.target.dataset.cat][e.target.dataset.idx]) {
+                subDispozitive[e.target.dataset.cat][e.target.dataset.idx].valoare = e.target.value;
+                salveazaStarea();
+            }
+        } else if (e.target.matches('[data-action="toggle-automation"]')) {
+            comutaAutomatizare(parseInt(e.target.dataset.autoid));
+        }
+    });
 });
 
 setInterval(verificaAutomatizariTimp, 60000);
+
+// 🛡️ Siguranță: Forțăm salvarea datelor dacă fereastra aplicației este închisă brusc
+window.addEventListener('beforeunload', () => {
+    if (timeoutSalvareStare) {
+        clearTimeout(timeoutSalvareStare);
+        localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+    }
+});
 
 function initIntro() {
     // Rulează intro-ul doar o dată pe sesiune (la deschiderea aplicației)
@@ -76,7 +145,13 @@ function initFavorites() {
 }
 
 function salveazaStarea() {
-    localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+    // 🚀 Optimizare Performanță: Debounce
+    // Nu mai scriem pe disc la fiecare pixel de pe slider. Așteptăm 500ms de inactivitate.
+    if (timeoutSalvareStare) clearTimeout(timeoutSalvareStare);
+    timeoutSalvareStare = setTimeout(() => {
+        localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+        timeoutSalvareStare = null;
+    }, 500); 
 }
 
 function incarcaNumeCasa() {
@@ -351,7 +426,7 @@ function comutaAutomatizare(id) {
         localStorage.setItem('userAutomations', JSON.stringify(rules)); 
         
         // Modificăm punctual stilurile DOM-ului fără a redesena lista completă (evităm lag-ul)
-        const checkbox = document.querySelector(`input[onchange="comutaAutomatizare(${id})"]`);
+        const checkbox = document.querySelector(`input[data-autoid="${id}"]`);
         if (checkbox) {
             const card = checkbox.closest('.hk-card');
             if (card) {
@@ -448,9 +523,22 @@ function executaScena(idScena) {
         deschidePopupPin('scena_home');
         return;
     }
+
+    // 1. Adăugăm clasa pentru a bloca animațiile
+    document.body.classList.add('ui-is-updating');
+
     localStorage.setItem('activeScene', idScena);
     const scena = scenesDB.find(s => s.id === idScena);
     if (scena && scena.action) typeof scena.action === 'function' ? scena.action() : aplicaMod(scena.action);
+
+    // 2. Apelăm reincarcaInterfata (presupunând că ea redesenează cardurile)
+    reincarcaInterfata();
+
+    // 3. Eliminăm clasa după un scurt delay, astfel încât, 
+    // dacă utilizatorul mai dă un refresh ulterior, animațiile să fie active
+    setTimeout(() => {
+        document.body.classList.remove('ui-is-updating');
+    }, 100); 
 }
 
 function salveazaScenaCustomNoua() {

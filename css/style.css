@@ -217,6 +217,14 @@ body.dark-mode .hk-section-title { background: rgba(0, 0, 0, 0.5); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* NOU: Clasă temporară pentru a preveni re-rularea animației la update-uri de UI */
+.ui-is-updating .hk-card {
+    animation: none !important;
+    animation-name: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+}
+
 .hk-card, .stats-card, .notification-container, .danger-panel, .settings-card, .climate-card, .security-badge-card, .security-form-card, .map-container { background: var(--card-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: var(--card-radius); box-shadow: var(--shadow-soft); }
 body.dark-mode .hk-card, body.dark-mode .stats-card, body.dark-mode .notification-container, body.dark-mode .danger-panel, body.dark-mode .settings-card, body.dark-mode .climate-card, body.dark-mode .security-badge-card, body.dark-mode .security-form-card, body.dark-mode .map-container { border-color: rgba(255, 255, 255, 0.1); }
 
