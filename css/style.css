@@ -92,7 +92,7 @@ body::before {
     height: 40px; 
     background: white;
     border-bottom-left-radius: 12px; 
-    z-index: 99; 
+    z-index: 1; 
 }
 
 input, textarea, .history-modal-content, .toast-notification {
@@ -475,7 +475,6 @@ body.dark-mode .hotspot-danger { color: #ff453a !important; }
     70% { filter: drop-shadow(0 0 12px rgba(231, 76, 60, 0)); }
     100% { filter: drop-shadow(0 0 0 rgba(231, 76, 60, 0)); }
 }
-
 
 /* ========================================== */
 /* ACCELERARE HARDWARE (GPU) PENTRU ANIMAȚII  */
