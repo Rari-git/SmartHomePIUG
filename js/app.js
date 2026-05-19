@@ -24,6 +24,9 @@ function initIntro() {
         const isHtmlFolder = window.location.pathname.includes('/html/');
         const basePath = isHtmlFolder ? '../assets' : 'assets';
         
+        // Blochează scroll-ul și ascunde bara cât timp rulează intro-ul
+        document.documentElement.classList.add('hide-scrollbar');
+
         const introDiv = document.createElement('div');
         introDiv.id = 'app-intro';
         introDiv.innerHTML = `
@@ -33,12 +36,15 @@ function initIntro() {
         // În cazul în care 'body' nu e gata creat, îl atașăm de documentElement
         (document.body || document.documentElement).appendChild(introDiv);
 
-nt        const playIntro = () => {
+        const playIntro = () => {
             introDiv.classList.add('start-anim');
             setTimeout(() => {
                 introDiv.classList.add('hidden');
-                setTimeout(() => introDiv.remove(), 600);
-            }, 2200);
+                setTimeout(() => {
+                    introDiv.remove();
+                    document.documentElement.classList.remove('hide-scrollbar'); // Restaurăm scroll-ul
+                }, 600);
+            }, 2500);
         };
         
         // Așteaptă ca elementele, imaginile și layout-ul să se încarce complet pentru a preveni lag/stutter-ul
