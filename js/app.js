@@ -5,6 +5,10 @@ let subDispozitive = {};
 let pinCurentIntrodus = "";
 let modAlarmaActiune = "";
 
+// Executăm intro-ul direct, fără să mai așteptăm încărcarea completă a paginii.
+// Astfel blocăm afișarea interfeței și scăpăm de acele frame-uri vizibile nedorite.
+initIntro();
+
 document.addEventListener('DOMContentLoaded', () => {
     initFavorites();
     incarcaNumeCasa();
@@ -13,6 +17,31 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 setInterval(verificaAutomatizariTimp, 60000);
+
+function initIntro() {
+    // Rulează intro-ul doar o dată pe sesiune (la deschiderea aplicației)
+    if (!sessionStorage.getItem('introAfisat')) {
+        const isHtmlFolder = window.location.pathname.includes('/html/');
+        const basePath = isHtmlFolder ? '../assets' : 'assets';
+        
+        const introDiv = document.createElement('div');
+        introDiv.id = 'app-intro';
+        // Încearcă SVG-ul, iar la eroare aplică automat PNG-ul ca fallback
+        introDiv.innerHTML = `
+            <img src="${basePath}/logo.svg" alt="SmartHome Logo" class="intro-logo" onerror="this.onerror=null; this.src='${basePath}/logo.png'">
+            <div class="intro-text">SmartHome</div>
+        `;
+        // În cazul în care 'body' nu e gata creat, îl atașăm de documentElement
+        (document.body || document.documentElement).appendChild(introDiv);
+
+        setTimeout(() => {
+            introDiv.classList.add('hidden');
+            setTimeout(() => introDiv.remove(), 600); // Curăță complet din cod după animație
+        }, 2200);
+        
+        sessionStorage.setItem('introAfisat', 'true');
+    }
+}
 
 function initFavorites() {
     try {

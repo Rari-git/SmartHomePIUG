@@ -493,3 +493,46 @@ body.dark-mode .hotspot-danger { color: #ff453a !important; }
     transform: translateZ(0); /* Forțează randarea pe placa video */
     backface-visibility: hidden; /* Previne clipirile la animatii 3D */
 }
+
+/* ========================================== */
+/* INTRO APP SPLASH SCREEN                    */
+/* ========================================== */
+#app-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-primary); /* Acoperă toată aplicația solid */
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    -webkit-app-region: drag; /* Permite mutarea ferestrei în timpul încărcării */
+}
+#app-intro.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+.intro-logo {
+    width: 240px;
+    height: auto;
+    animation: pulse-intro 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    filter: drop-shadow(0 8px 24px rgba(0, 122, 255, 0.3));
+}
+.intro-text {
+    margin-top: 35px;
+    font-size: 2.8em;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-color);
+    animation: pulse-intro 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes pulse-intro {
+    0% { transform: scale(0.8); opacity: 0; }
+    30% { transform: scale(1.05); opacity: 1; }
+    70% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.1); opacity: 0; }
+}
