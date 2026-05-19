@@ -1,10 +1,18 @@
-let intervalVacanta = null;
-let customScenesList = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
-let scenesDB = [...defaultScenes, ...customScenesList];
-let subDispozitive = {};
-let pinCurentIntrodus = "";
-let modAlarmaActiune = "";
-let timeoutSalvareStare = null; // Timeout pentru Debounce localStorage
+import { defaultScenes, sabloaneRecomandate, defaultDispozitive } from './data.js';
+import { 
+    reincarcaInterfata, actualizeazaCardInDOM, sincronizeazaDOMcuMemoria, 
+    afiseazaNotificariHome, construiesteScenaHTML, construiesteCardHTML, 
+    deschideMeniuDispozitive, deschidePopupLuminiAprinse, deschidePopupAudioPornit, 
+    deschidePopupToateNotificarile, applyFadeOutAndClose, showToast 
+} from './ui.js';
+
+export let intervalVacanta = null;
+export let customScenesList = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
+export let scenesDB = [...defaultScenes, ...customScenesList];
+export let subDispozitive = {};
+export let pinCurentIntrodus = "";
+export let modAlarmaActiune = "";
+export let timeoutSalvareStare = null;
 
 // Executăm intro-ul direct, fără să mai așteptăm încărcarea completă a paginii.
 // Astfel blocăm afișarea interfeței și scăpăm de acele frame-uri vizibile nedorite.
@@ -657,3 +665,29 @@ function actualizeazaMediiClimat() {
     if (umidCurenta) umidCurenta.innerText = mediaUmid + "%";
     if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid;
 }
+
+// === ES6 MODULE EXPORTS ===
+export { 
+    initIntro, initFavorites, salveazaStarea, incarcaNumeCasa, deschidePopupPin, 
+    inchidePopupPin, apasatTastaPin, verificaCodPinIntrodus, salveazaCodPinNou, 
+    toggleFavorite, toggleStareDispozitiv, verificaAutomatizariTimp, 
+    verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie, 
+    stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal, 
+    aplicaMod, calculeazaConsumPriza, executaScena, salveazaScenaCustomNoua, 
+    stergeScenaCustom, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat 
+};
+
+// === EXPUNERI GLOBALE PENTRU INLINE HTML (ONCLICK) ===
+window.apasatTastaPin = apasatTastaPin;
+window.salveazaCodPinNou = salveazaCodPinNou;
+window.salveazaAutomatizare = salveazaAutomatizare;
+window.salveazaScenaCustomNoua = salveazaScenaCustomNoua;
+window.ajusteazaDinPopup = ajusteazaDinPopup;
+window.inchidePopupPin = inchidePopupPin;
+window.executaSecurizareTotala = executaSecurizareTotala;
+window.adaugaSugestie = adaugaSugestie;
+window.stergeAutomatizare = stergeAutomatizare;
+window.actualizeazaMediiClimat = actualizeazaMediiClimat;
+window.adaugaInLog = adaugaInLog;
+window.deschidePopupPin = deschidePopupPin;
+window.executaScena = executaScena;

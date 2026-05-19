@@ -20,63 +20,47 @@
             <span class="danger-icon">💧</span>
             <h2>Senzor Inundație (Baie)</h2>
             <p id="status-inundatie" class="text-success" style="font-weight: bold; font-size: 1.1em;">Stare Normală</p>
-            <div id="controls-inundatie" style="margin-top: 20px;">
-                <button type="button" class="btn-simulate" onclick="declanseazaAlarma('inundatie')">Simulează Inundație</button>
+            <div id="controls-inundatie" style="margin-top: 20px; display: flex; justify-content: center;">
+                <button type="button" class="btn-simulate" onclick="simuleazaInundatie()">Simulează Inundație</button>
+                <button type="button" class="btn-stop" onclick="reseteazaInundatie()" style="display: none;">Oprește Alarma și Robinetul</button>
             </div>
         </div>
 
         <div class="danger-panel status-safe" id="panel-incendiu">
             <span class="danger-icon">🔥</span>
             <h2>Detector de Fum & Gaz (Bucătărie)</h2>
-            <p id="status-incendiu" class="text-success" style="font-weight: bold; font-size: 1.1em;">Aer Curat</p>
-            <div id="controls-incendiu" style="margin-top: 20px;">
-                <button type="button" class="btn-simulate" onclick="declanseazaAlarma('incendiu')">Simulează Detecție Fum</button>
+            <p id="status-incendiu" class="text-success" style="font-weight: bold; font-size: 1.1em;">Stare Normală</p>
+            <div id="controls-incendiu" style="margin-top: 20px; display: flex; justify-content: center;">
+                <button type="button" class="btn-simulate" onclick="simuleazaIncendiu()">Simulează Detecție Fum</button>
+                <button type="button" class="btn-stop" onclick="reseteazaIncendiu()" style="display: none;">Oprește Alarma și Gazul</button>
             </div>
         </div>
     </main>
     <smart-modal></smart-modal>
-    <script src="../js/main.js"></script>
-    <script src="../js/data.js"></script>
-    <script src="../js/ui.js"></script>
-    <script src="../js/app.js"></script>
-    <script>
-        function declanseazaAlarma(tip) {
-            const panel = document.getElementById(`panel-${tip}`);
-            const status = document.getElementById(`status-${tip}`);
-            const controls = document.getElementById(`controls-${tip}`);
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/app.js"></script>
+    <script type="module" src="../js/validation.js"></script>
+    <script type="module">
+        // Importăm funcțiile necesare din module
+        import { simuleazaInundatie, reseteazaInundatie, simuleazaIncendiu, reseteazaIncendiu } from '../js/validation.js';
+        import { adaugaInLog } from '../js/app.js';
+        import { showToast } from '../js/ui.js';
 
-            panel.classList.remove('status-safe');
+        // Expunem funcțiile pe window pentru a fi accesibile din HTML (onclick)
+        window.simuleazaInundatie = simuleazaInundatie;
+        window.reseteazaInundatie = reseteazaInundatie;
+        window.simuleazaIncendiu = simuleazaIncendiu;
+        window.reseteazaIncendiu = reseteazaIncendiu;
 
-            if (tip === 'inundatie') {
-                panel.classList.add('status-alert-water');
-                status.innerText = "🚨 ALERTA: APĂ DETECTATĂ PE PARCHET!"; status.style.color = "#2980b9";
-                controls.innerHTML = `<button type="button" class="btn-stop" onclick="opresteAlarma('inundatie')">Oprește Alarma și Robinetul</button>`;
-                if (typeof adaugaInLog === 'function') adaugaInLog("⚠️ ALERTĂ CRITICĂ: Senzorul de inundatie a detectat scurgeri în Baie!");
-            } else if (tip === 'incendiu') {
-                panel.classList.add('status-alert-fire');
-                status.innerText = "🚨 ALERTĂ: FUM DETECTAT (PERICOL)!"; status.style.color = "#e74c3c";
-                controls.innerHTML = `<button type="button" class="btn-stop" onclick="opresteAlarma('incendiu')">Oprește Alarma și Gazul</button>`;
-                if (typeof adaugaInLog === 'function') adaugaInLog("⚠️ ALERTĂ CRITICĂ: Senzorul a detectat FUM sau FOC în Bucătărie!");
+        // La încărcarea paginii, verificăm starea pericolelor și actualizăm UI-ul
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('pericolInundatie') === 'true') {
+                simuleazaInundatie();
             }
-        }
-
-        function opresteAlarma(tip) {
-            const panel = document.getElementById(`panel-${tip}`);
-            const status = document.getElementById(`status-${tip}`);
-            const controls = document.getElementById(`controls-${tip}`);
-
-            panel.classList.remove('status-alert-water', 'status-alert-fire');
-            panel.classList.add('status-safe');
-
-            if (tip === 'inundatie') {
-                status.innerText = "Stare Normală"; status.style.color = "var(--success-color)";
-                controls.innerHTML = `<button type="button" class="btn-simulate" onclick="declanseazaAlarma('inundatie')">Simulează Inundație</button>`;
-            } else if (tip === 'incendiu') {
-                status.innerText = "Aer Curat"; status.style.color = "var(--success-color)";
-                controls.innerHTML = `<button type="button" class="btn-simulate" onclick="declanseazaAlarma('incendiu')">Simulează Detecție Fum</button>`;
+            if (localStorage.getItem('pericolIncendiu') === 'true') {
+                simuleazaIncendiu();
             }
-            if (typeof showToast === 'function') showToast("Alarma a fost oprită manual de utilizator.");
-        }
+        });
     </script>
 </body>
 </html>

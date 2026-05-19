@@ -101,11 +101,12 @@
         
     </main>
     <smart-modal></smart-modal>
-    <script src="../js/main.js"></script>
-    <script src="../js/data.js"></script>
-    <script src="../js/ui.js"></script>
-    <script src="../js/app.js"></script>
-    <script>
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/app.js"></script>
+    <script type="module">
+        // Importăm showToast pentru a-l folosi local în acest modul
+        import { showToast } from '../js/ui.js';
+
         document.addEventListener('DOMContentLoaded', () => {
             const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
             camere.forEach(camera => {
@@ -192,6 +193,11 @@
             document.getElementById('stareCO2').innerText = "Aer Proaspăt (Purificat)";
             if (typeof showToast === "function") showToast("Sistemul HVAC a reîmprospătat aerul din casă.");
         }
+
+        window.ajusteazaValoareCameră = ajusteazaValoareCameră;
+        window.actualizeazaCuloriTermostat = actualizeazaCuloriTermostat;
+        window.actualizeazaCuloriUmiditate = actualizeazaCuloriUmiditate;
+        window.deschideGeamurile = deschideGeamurile;
     </script>
 </body>
 </html>

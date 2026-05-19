@@ -1,3 +1,6 @@
+import { actualizeazaMediiClimat } from './app.js';
+import { showToast } from './ui.js';
+
 function apasăTastăNumpad(valoare) {
     const input = document.getElementById('pinInput');
     if (!input) return;
@@ -451,3 +454,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 });
+
+export {
+    apasăTastăNumpad, proceseazăAcțiuneAlarmă, actualizeazăEcranSecuritate,
+    simuleazaInundatie, reseteazaInundatie, simuleazaIncendiu, reseteazaIncendiu,
+    valideazaTemperatura, valideazaTemperaturaCameră, actualizeazaSenzori,
+    actualizeazaSenzorCO2, pornesteDezumidificator, deschideGeamurile, valideazaNume
+};
+
+window.apasăTastăNumpad = apasăTastăNumpad;
+window.proceseazăAcțiuneAlarmă = proceseazăAcțiuneAlarmă;
+window.simuleazaInundatie = simuleazaInundatie;
+window.reseteazaInundatie = reseteazaInundatie;
+window.simuleazaIncendiu = simuleazaIncendiu;
+window.reseteazaIncendiu = reseteazaIncendiu;
+window.valideazaTemperatura = valideazaTemperatura;
+window.valideazaTemperaturaCameră = valideazaTemperaturaCameră;
+window.actualizeazaSenzori = actualizeazaSenzori;
+window.actualizeazaSenzorCO2 = actualizeazaSenzorCO2;
+window.pornesteDezumidificator = pornesteDezumidificator;
+window.deschideGeamurile = deschideGeamurile;
+window.simuleazaInundatie = simuleazaInundatie;
+window.reseteazaInundatie = reseteazaInundatie;
+window.simuleazaIncendiu = simuleazaIncendiu;
+window.reseteazaIncendiu = reseteazaIncendiu;
+window.valideazaNume = valideazaNume;

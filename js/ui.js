@@ -1,6 +1,9 @@
-let dashTipCurent = 'energie';
-let dashPerioadaCurenta = '7z';
-let sortableInstante = { acc: null, scene: null };
+import { iconDraperie, iconFereastra, sabloaneRecomandate } from './data.js';
+import { subDispozitive, scenesDB, calculeazaConsumPriza, salveazaStarea, adaugaInLog, actualizeazaMediiClimat, inchidePopupPin } from './app.js';
+
+export let dashTipCurent = 'energie';
+export let dashPerioadaCurenta = '7z';
+export let sortableInstante = { acc: null, scene: null };
 
 // Helper function for smooth modal fade-out
 function applyFadeOutAndClose(modal) {
@@ -650,3 +653,39 @@ function showToast(mesaj, isError = false, callback = null) {
         });
     }, 3500);
 }
+
+// === ES6 MODULE EXPORTS ===
+export {
+    applyFadeOutAndClose, reincarcaInterfata, schimbaTipGraficDashboard, schimbaPerioadaDashboard,
+    randareGraficDashboard, randareHome, randareAccesorii, randareScene, randareSecuritate,
+    randareSabloane, randareAutomatizari, randareStatisticiLogs, construiesteCardHTML,
+    construiesteScenaHTML, afiseazaNotificariHome, genereazaListaNotificari, actualizeazaStatusGlobal,
+    deschideMeniuDispozitive, deschidePopupLuminiAprinse, deschidePopupAudioPornit,
+    deschidePopupCreareScena, deschideModalAutomatizare, deschidePopupToateNotificarile,
+    inchidePopup, inchidePopupIstoric, inchidePopupAutomatizare, sincronizeazaDOMcuMemoria,
+    actualizeazaCardInDOM, showToast
+};
+
+// === EXPUNERI GLOBALE PENTRU INLINE HTML (ONCLICK) ===
+window.schimbaTipGraficDashboard = schimbaTipGraficDashboard;
+window.schimbaPerioadaDashboard = schimbaPerioadaDashboard;
+window.inchidePopup = inchidePopup;
+window.inchidePopupIstoric = inchidePopupIstoric;
+window.inchidePopupAutomatizare = inchidePopupAutomatizare;
+window.deschidePopupCreareScena = deschidePopupCreareScena;
+window.deschideModalAutomatizare = deschideModalAutomatizare;
+window.showToast = showToast;
+window.reincarcaInterfata = reincarcaInterfata;
+window.deschideMeniuDispozitive = deschideMeniuDispozitive;
+window.deschidePopupLuminiAprinse = deschidePopupLuminiAprinse;
+window.deschidePopupAudioPornit = deschidePopupAudioPornit;
+window.deschidePopupToateNotificarile = deschidePopupToateNotificarile;
+window.sincronizeazaDOMcuMemoria = sincronizeazaDOMcuMemoria;
+window.actualizeazaCardInDOM = actualizeazaCardInDOM;
+window.randareHome = randareHome;
+window.randareAccesorii = randareAccesorii;
+window.randareScene = randareScene;
+window.randareSecuritate = randareSecuritate;
+window.randareSabloane = randareSabloane;
+window.randareAutomatizari = randareAutomatizari;
+window.applyFadeOutAndClose = applyFadeOutAndClose;

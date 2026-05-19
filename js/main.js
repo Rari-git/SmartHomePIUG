@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+export { toggleDarkMode, schimbaCuloareAccent, showToast, toggleHelp, toggleNav };
+window.toggleDarkMode = toggleDarkMode;
+window.schimbaCuloareAccent = schimbaCuloareAccent;
+window.toggleHelp = toggleHelp;
+window.toggleNav = toggleNav;
+
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');

@@ -31,7 +31,7 @@
 
     <div id="popup-automatizare" class="modal">
         <div class="modal-content" style="max-width: 450px;">
-            <span class="close-btn" onclick="document.getElementById('popup-automatizare').classList.remove('active')">&times;</span>
+            <span class="close-btn" onclick="inchidePopupAutomatizare()">&times;</span>
             <h2 style="margin-top: 0; margin-bottom: 25px; color: var(--accent-color);">🤖 Regulă Nouă</h2>
             
             <div style="display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
@@ -74,23 +74,24 @@
     </div>
 
     <smart-modal></smart-modal>
-    <script src="../js/main.js"></script>
-    <script src="../js/data.js"></script>
-    <script src="../js/ui.js"></script>
-    <script src="../js/app.js"></script>
-    <script>
-        let modTriggerCurent = 'disp';
-        function schimbaTabTrigger(mod) {
-            modTriggerCurent = mod;
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/app.js"></script>
+    <script type="module">
+        // Definim variabila de stare pe window pentru a fi accesibilă în app.js
+        window.modTriggerCurent = 'disp';
+
+        window.schimbaTabTrigger = function(mod) {
+            window.modTriggerCurent = mod;
             document.getElementById('tab-disp').classList.toggle('active', mod === 'disp');
             document.getElementById('tab-timp').classList.toggle('active', mod === 'timp');
             document.getElementById('trigger-disp-container').style.display = mod === 'disp' ? 'block' : 'none';
             document.getElementById('trigger-timp-container').style.display = mod === 'timp' ? 'block' : 'none';
-        }
-        function scrollCarousel(dir) {
+        };
+
+        window.scrollCarousel = function(dir) {
             const container = document.getElementById('sabloane-carousel');
             if (container) container.scrollBy({ left: dir * 280, behavior: 'smooth' });
-        }
+        };
     </script>
 </body>
 </html>

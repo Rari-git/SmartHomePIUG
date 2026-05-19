@@ -1,7 +1,7 @@
-const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="currentColor" class="hk-svg-icon"><rect x="0" y="5" width="100" height="18" rx="4" /><rect x="4" y="38" width="92" height="12" rx="3" /><rect x="4" y="68" width="92" height="12" rx="3" /><rect x="4" y="98" width="92" height="12" rx="3" /></svg>`;
-const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon"><rect x="12" y="12" width="76" height="96" rx="6" /><line x1="50" y1="12" x2="50" y2="108" /><line x1="12" y1="60" x2="88" y2="60" /></svg>`;
+export const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="currentColor" class="hk-svg-icon"><rect x="0" y="5" width="100" height="18" rx="4" /><rect x="4" y="38" width="92" height="12" rx="3" /><rect x="4" y="68" width="92" height="12" rx="3" /><rect x="4" y="98" width="92" height="12" rx="3" /></svg>`;
+export const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon"><rect x="12" y="12" width="76" height="96" rx="6" /><line x1="50" y1="12" x2="50" y2="108" /><line x1="12" y1="60" x2="88" y2="60" /></svg>`;
 
-const defaultScenes = [
+export const defaultScenes = [
     { id: 's_morning', nume: "🌅 Good Morning", descriere: "Deschide jaluzelele, pornește cafeaua.", action: "morning" },
     { id: 's_night', nume: "🌙 Good Night", descriere: "Oprește luminile, armează ușile.", action: "night" },
     { id: 's_away', nume: "👋 Leaving Home", descriere: "Oprește tot, robotul începe curățenia.", action: "away" },
@@ -12,7 +12,7 @@ const defaultScenes = [
     { id: 's_vacation', nume: "🧳 Vacation Mode", descriere: "Simulare prezență și securitate.", action: "vacation" }
 ];
 
-const sabloaneRecomandate = [
+export const sabloaneRecomandate = [
     { idSugestie: 'sug_1', icon: '<i class="ph-bold ph-clock"></i>', nume: 'Rutina de Dimineață', descriereScurta: 'Deschide jaluzelele în living zilnic la ora 07:00.', culoare: '#f1c40f', tipTrigger: 'timp', tOra: '07:00', aCat: 'jaluzele', aIdx: '1', aState: 'Deschis', descriere: '⏰ Zilnic la 07:00 ➔ Draperie Living se Deschide' },
     { idSugestie: 'sug_2', icon: iconFereastra, nume: 'Eco-Baie', descriereScurta: 'Oprește uscătorul dacă se deschide fereastra la baie.', culoare: '#e74c3c', tipTrigger: 'disp', tCat: 'senzoriContact', tIdx: '4', tState: 'Deschis', aCat: 'electrocasnice', aIdx: '1', aState: 'Oprit', descriere: 'DACĂ Fereastră Baie este Deschisă ➔ Uscătorul se Oprește' },
     { idSugestie: 'sug_3', icon: '<i class="ph-bold ph-person-simple-walk"></i>', nume: 'Securitate Hol', descriereScurta: 'Aprinde becul din living la detectarea mișcării pe hol.', culoare: '#2ecc71', tipTrigger: 'disp', tCat: 'senzoriMiscare', tIdx: '1', tState: 'Activ', aCat: 'becuri', aIdx: '1', aState: 'Pornit', descriere: 'DACĂ Senzor Mișcare Hol este Activ ➔ Bec Living devine Pornit' },
@@ -24,7 +24,7 @@ const sabloaneRecomandate = [
     { idSugestie: 'sug_9', icon: iconDraperie, nume: 'Intimitate Seara', descriereScurta: 'Închide automat draperiile din dormitor la ora 20:00.', culoare: '#3498db', tipTrigger: 'timp', tOra: '20:00', aCat: 'jaluzele', aIdx: '0', aState: 'Închis', descriere: '⏰ Zilnic la 20:00 ➔ Draperie Dormitor se Închide' }
 ];
 
-const defaultDispozitive = {
+export const defaultDispozitive = {
     becuri: [{ nume: "Bec Dormitor", stare: "Pornit", valoare: 75, camera: "Dormitor", icon: '<i class="ph-fill ph-lightbulb"></i>' }, { nume: "Bec Living", stare: "Oprit", valoare: 50, camera: "Living", icon: '<i class="ph-fill ph-lightbulb"></i>' }, { nume: "Bec Baie", stare: "Oprit", valoare: 50, camera: "Baie", icon: '<i class="ph-fill ph-lightbulb"></i>' }, { nume: "Bec Bucătărie", stare: "Oprit", valoare: 100, camera: "Bucătărie", icon: '<i class="ph-fill ph-lightbulb"></i>' }],
     luminiRGB: [{ nume: "Bandă LED TV", stare: "Oprit", valoare: 100, culoare: "#3498db", camera: "Living", icon: '<i class="ph-fill ph-lamp"></i>' }, { nume: "Lampă Birou", stare: "Oprit", valoare: 80, culoare: "#f1c40f", camera: "Dormitor", icon: '<i class="ph-fill ph-lamp"></i>' }],
     jaluzele: [{ nume: "Draperie", stare: "Închis", valoare: 0, camera: "Dormitor", icon: iconDraperie }, { nume: "Draperie 1 Living", stare: "Deschis", valoare: 100, camera: "Living", icon: iconDraperie }, { nume: "Draperie 2 Living", stare: "Deschis", valoare: 100, camera: "Living", icon: iconDraperie }, { nume: "Draperie Baie", stare: "Închis", valoare: 0, camera: "Baie", icon: iconDraperie }, { nume: "Draperie Bucătărie", stare: "Închis", valoare: 0, camera: "Bucătărie", icon: iconDraperie }],
