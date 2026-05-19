@@ -326,7 +326,7 @@ body.dark-mode .card-add-custom-scene:hover { background: rgba(0,0,0,0.5) !impor
 }
 .hvac-btn:active { transform: scale(0.95); }
 
-.danger-panel { text-align: center; transition: all 0.3s ease; }
+.danger-panel { text-align: center; transition: all 0.3s ease; max-width: 420px; height: 360px; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; }
 .danger-icon { font-size: 5em; margin-bottom: 15px; display: inline-block; }
 .status-safe { border-top: 6px solid var(--success-color); }
 .status-safe .danger-icon { color: var(--success-color); }
@@ -334,6 +334,15 @@ body.dark-mode .card-add-custom-scene:hover { background: rgba(0,0,0,0.5) !impor
 .status-alert-fire { border-top: 6px solid #e74c3c; animation: pulseFire 1.2s infinite; background-color: rgba(231, 76, 60, 0.05); }
 @keyframes pulseWater { 0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(52, 152, 219, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); } }
 @keyframes pulseFire { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.5); } 70% { box-shadow: 0 0 0 18px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
+
+@keyframes bodyAlarmFlash {
+    0% { box-shadow: inset 0 0 0 0 rgba(231, 76, 60, 0); }
+    50% { box-shadow: inset 0 0 150px 10px rgba(231, 76, 60, 0.2); }
+    100% { box-shadow: inset 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+body.alarm-flash {
+    animation: bodyAlarmFlash 2s infinite;
+}
 
 .btn-simulate { background: var(--bg-primary); border: 1px solid rgba(0,0,0,0.1); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; color: var(--text-color); }
 .btn-simulate:hover { background: var(--accent-color); color: white; }

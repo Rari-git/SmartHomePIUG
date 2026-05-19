@@ -100,18 +100,20 @@ function simuleazaInundatie() {
 
     if (stareElem) {
         stareElem.innerText = "INUNDAȚIE!";
-        stareElem.style.color = "white";
+        stareElem.style.color = "#3498db";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "var(--error-color)";
-        cardElem.style.color = "white";
-        cardElem.style.borderTop = "none";
+        cardElem.style.backgroundColor = "";
+        cardElem.style.color = "";
+        cardElem.style.borderTop = "";
+        cardElem.classList.remove('status-safe');
+        cardElem.classList.add('status-alert-water');
     }
     if (btnReset) btnReset.style.display = "block";
     if (btnSim) btnSim.style.display = "none";
 
     if (typeof showToast === "function") {
-        showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.");
+        showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.", true);
     }
 }
 
@@ -129,9 +131,11 @@ function reseteazaInundatie() {
         stareElem.style.color = "var(--success-color)";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "var(--card-bg)";
-        cardElem.style.color = "var(--text-color)";
-        cardElem.style.borderTop = "5px solid var(--accent-color)";
+        cardElem.style.backgroundColor = "";
+        cardElem.style.color = "";
+        cardElem.style.borderTop = "";
+        cardElem.classList.remove('status-alert-water');
+        cardElem.classList.add('status-safe');
     }
     if (btnReset) btnReset.style.display = "none";
     if (btnSim) btnSim.style.display = "block";
@@ -154,22 +158,24 @@ function simuleazaIncendiu() {
     
     if (stareElem) {
         stareElem.innerText = "PERICOL FUM!";
-        stareElem.style.color = "white";
+        stareElem.style.color = "#e74c3c";
     }
     if (detaliiElem) {
         detaliiElem.innerText = "CRITIC: Nivel ridicat de monoxid de carbon detectat!";
         detaliiElem.style.fontWeight = "bold";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "var(--error-color)";
-        cardElem.style.color = "white";
-        cardElem.style.borderTop = "none";
+        cardElem.style.backgroundColor = "";
+        cardElem.style.color = "";
+        cardElem.style.borderTop = "";
+        cardElem.classList.remove('status-safe');
+        cardElem.classList.add('status-alert-fire');
     }
     if (btnReset) btnReset.style.display = "block";
     if (btnSim) btnSim.style.display = "none";
 
     if (typeof showToast === "function") {
-        showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.");
+        showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.", true);
     }
 }
 
@@ -192,9 +198,11 @@ function reseteazaIncendiu() {
         detaliiElem.style.fontWeight = "normal";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "var(--card-bg)";
-        cardElem.style.color = "var(--text-color)";
-        cardElem.style.borderTop = "5px solid var(--accent-color)";
+        cardElem.style.backgroundColor = "";
+        cardElem.style.color = "";
+        cardElem.style.borderTop = "";
+        cardElem.classList.remove('status-alert-fire');
+        cardElem.classList.add('status-safe');
     }
     if (btnReset) btnReset.style.display = "none";
     if (btnSim) btnSim.style.display = "block";
