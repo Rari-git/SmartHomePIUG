@@ -1,5 +1,6 @@
 let dashTipCurent = 'energie';
 let dashPerioadaCurenta = '7z';
+let sortableInstante = { acc: null, scene: null };
 
 // Helper function for smooth modal fade-out
 function applyFadeOutAndClose(modal) {
@@ -81,10 +82,16 @@ function randareGraficDashboard() {
         let html = '<div style="display: flex; flex-direction: column; gap: 14px;">';
         date.forEach(p => {
             let procent = (p.v / maxVal) * 100;
-            html += `<div style="display: flex; align-items: center; gap: 15px;"><div style="width: 110px; font-weight: 600; font-size: 0.9em; opacity: 0.8;">${p.e}</div><div style="flex: 1; background: rgba(0,0,0,0.05); height: 16px; border-radius: 8px; overflow: hidden;"><div style="background: var(--accent-color); width: ${procent}%; height: 100%; border-radius: 8px; transition: width 0.3s;"></div></div><div style="width: 80px; text-align: right; font-weight: 700; color: var(--accent-color);">${p.v} kWh</div></div>`;
+            html += `<div style="display: flex; align-items: center; gap: 15px;"><div style="width: 110px; font-weight: 600; font-size: 0.9em; opacity: 0.8;">${p.e}</div><div style="flex: 1; background: rgba(0,0,0,0.05); height: 16px; border-radius: 8px; overflow: hidden;"><div class="anim-bar" data-width="${procent}%" style="background: var(--accent-color); width: 0%; height: 100%; border-radius: 8px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);"></div></div><div style="width: 80px; text-align: right; font-weight: 700; color: var(--accent-color);">${p.v} kWh</div></div>`;
         });
         html += '</div>';
         container.innerHTML = html;
+        
+        setTimeout(() => {
+            container.querySelectorAll('.anim-bar').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width');
+            });
+        }, 50);
         
     } else {
         if (dashPerioadaCurenta === '1z') {
@@ -111,14 +118,14 @@ function randareGraficDashboard() {
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 0.8em; font-weight: bold; width: 45px; opacity: 0.7;">Temp:</span>
                         <div style="flex: 1; background: rgba(0,0,0,0.04); height: 10px; border-radius: 5px; overflow: hidden;">
-                            <div style="background: var(--warning-color); width: ${prT}%; height: 100%; border-radius: 5px;"></div>
+                            <div class="anim-bar" data-width="${prT}%" style="background: var(--warning-color); width: 0%; height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;"></div>
                         </div>
                         <span style="font-size: 0.85em; font-weight: bold; width: 55px; color: var(--warning-color); text-align: right;">${p.t}°C</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 0.8em; font-weight: bold; width: 45px; opacity: 0.7;">Umid:</span>
                         <div style="flex: 1; background: rgba(0,0,0,0.04); height: 10px; border-radius: 5px; overflow: hidden;">
-                            <div style="background: #3498db; width: ${prU}%; height: 100%; border-radius: 5px;"></div>
+                            <div class="anim-bar" data-width="${prU}%" style="background: #3498db; width: 0%; height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s;"></div>
                         </div>
                         <span style="font-size: 0.85em; font-weight: bold; width: 55px; color: #3498db; text-align: right;">${p.u}%</span>
                     </div>
@@ -127,6 +134,12 @@ function randareGraficDashboard() {
         });
         html += '</div>';
         container.innerHTML = html;
+        
+        setTimeout(() => {
+            container.querySelectorAll('.anim-bar').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width');
+            });
+        }, 50);
     }
 }
 
@@ -155,7 +168,8 @@ function randareHome() {
     setTimeout(() => {
         if (typeof Sortable !== 'undefined') {
             if (accContainer && accContainer.children.length > 0) {
-                new Sortable(accContainer, {
+                if (sortableInstante.acc) sortableInstante.acc.destroy();
+                sortableInstante.acc = new Sortable(accContainer, {
                     animation: 200,
                     delay: 150,
                     delayOnTouchOnly: true,
@@ -167,7 +181,8 @@ function randareHome() {
                 });
             }
             if (sceneContainer && sceneContainer.children.length > 0) {
-                new Sortable(sceneContainer, {
+                if (sortableInstante.scene) sortableInstante.scene.destroy();
+                sortableInstante.scene = new Sortable(sceneContainer, {
                     animation: 200,
                     delay: 150,
                     delayOnTouchOnly: true,
@@ -264,6 +279,14 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
     const isActive = ['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare);
     const idUnic = `${cat}_${idx}`;
     return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${idUnic}" onclick="toggleStareDispozitiv('${cat}', ${idx}, event)"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${idUnic}', 'acc', event)"><i class="ph-fill ph-star"></i></button><button class="hk-btn" onclick="deschideMeniuDispozitive('none', '${cat}', ${idx}); event.stopPropagation();"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
+    
+    let iconClass = '';
+    if (isActive) {
+        if (cat === 'purificator' || cat === 'aspirator' || (cat === 'electrocasnice' && disp.nume.includes('Spălat'))) iconClass = 'anim-spin';
+        else if (cat === 'camereVideo') iconClass = 'anim-pulse';
+    }
+    
+    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${idUnic}" onclick="toggleStareDispozitiv('${cat}', ${idx}, event)"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${idUnic}', 'acc', event)"><i class="ph-fill ph-star"></i></button><button class="hk-btn" onclick="deschideMeniuDispozitive('none', '${cat}', ${idx}); event.stopPropagation();"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon ${iconClass}">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
 }
 
 function construiesteScenaHTML(scena, isFav) {
@@ -515,6 +538,16 @@ window.onclick = function(event) {
     }
 }
 
+// Închidere rapidă a tuturor modalelor la apăsarea tastei Escape
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        inchidePopup();
+        inchidePopupAutomatizare();
+        inchidePopupIstoric();
+        if (typeof inchidePopupPin === 'function') inchidePopupPin();
+    }
+});
+
 function actualizeazaCardInDOM(cat, index) {
     const idUnic = `${cat}_${index}`;
     const disp = subDispozitive[cat][index];
@@ -559,4 +592,35 @@ function actualizeazaCardInDOM(cat, index) {
             }
         }
     }
+}
+
+// --- Sistem Global de Notificari (Toasts) ---
+function showToast(mesaj, isError = false, callback = null) {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.style.borderLeft = `4px solid ${isError ? 'var(--error-color)' : 'var(--success-color)'}`;
+    
+    const icon = isError ? '<i class="ph-bold ph-warning-circle" style="color: var(--error-color); font-size: 1.2em;"></i>' : '<i class="ph-bold ph-check-circle" style="color: var(--success-color); font-size: 1.2em;"></i>';
+    toast.innerHTML = `${icon} <span>${mesaj}</span>`;
+    
+    container.appendChild(toast);
+
+    // Declanșăm animația de slide-in
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+            if (callback) callback();
+        });
+    }, 3500);
 }

@@ -304,7 +304,24 @@ function stergeAutomatizare(id) {
 function comutaAutomatizare(id) {
     let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     const rule = rules.find(r => r.id === id);
-    if (rule) { rule.active = !rule.active; localStorage.setItem('userAutomations', JSON.stringify(rules)); randareAutomatizari(); }
+    if (rule) { 
+        rule.active = !rule.active; 
+        localStorage.setItem('userAutomations', JSON.stringify(rules)); 
+        
+        // Modificăm punctual stilurile DOM-ului fără a redesena lista completă (evităm lag-ul)
+        const checkbox = document.querySelector(`input[onchange="comutaAutomatizare(${id})"]`);
+        if (checkbox) {
+            const card = checkbox.closest('.hk-card');
+            if (card) {
+                card.style.borderLeft = `5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}`;
+                card.style.opacity = rule.active ? '1' : '0.5';
+                const titleEl = card.querySelector('div[style*="font-weight: bold;"]');
+                if (titleEl) {
+                    titleEl.style.color = rule.active ? 'var(--text-color)' : '#95a5a6';
+                }
+            }
+        }
+    }
 }
 
 function ajusteazaDinPopup(camera, directie) {
