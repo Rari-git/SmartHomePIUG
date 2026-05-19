@@ -545,6 +545,26 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+function sincronizeazaDOMcuMemoria() {
+    // 1. Actualizează discret toate cardurile individuale direct în DOM (evită innerHTML masiv)
+    Object.keys(subDispozitive).forEach(cat => {
+        (subDispozitive[cat] || []).forEach((disp, idx) => {
+            actualizeazaCardInDOM(cat, idx);
+        });
+    });
+
+    // 2. Actualizează vizual scenele selectate/active (dacă sunt vizibile pe ecran)
+    const activeSceneId = localStorage.getItem('activeScene');
+    document.querySelectorAll('.hk-card[data-action="execute-scene"]').forEach(card => {
+        if (card.dataset.sceneid === activeSceneId) card.classList.add('is-active');
+        else card.classList.remove('is-active');
+    });
+
+    // 3. Info global minim de sistem
+    actualizeazaStatusGlobal();
+    if (document.getElementById('notifications-container')) afiseazaNotificariHome();
+}
+
 function actualizeazaCardInDOM(cat, index) {
     const idUnic = `${cat}_${index}`;
     const disp = subDispozitive[cat][index];
@@ -582,10 +602,19 @@ function actualizeazaCardInDOM(cat, index) {
             btn.style.backgroundColor = isActive ? 'var(--success-color)' : '#95a5a6';
             if (cat === 'prize') {
                 btn.innerText = `Alimentare Priză: ${disp.stare}`;
-                const wDisplay = popup.querySelector('div[style*="font-size: 3.5em"]');
+                const wDisplay = popup.querySelector('.popup-val-display');
                 if(wDisplay) wDisplay.innerText = `${calculeazaConsumPriza(disp)} W`;
             } else {
                 btn.innerText = `Schimbă Stare (Curent: ${disp.stare})`;
+                // Actualizează instantaneu și interfața sliderelor (dacă există)
+                const slider = popup.querySelector('.device-slider');
+                const valDisplay = popup.querySelector('.slider-val span');
+                if (slider && valDisplay) {
+                    slider.value = disp.valoare || 0;
+                    valDisplay.innerText = disp.valoare || 0;
+                    slider.disabled = !isActive;
+                    slider.closest('.slider-container').classList.toggle('disabled-controls', !isActive);
+                }
             }
         }
     }

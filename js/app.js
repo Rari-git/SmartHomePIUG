@@ -223,7 +223,7 @@ function verificaCodPinIntrodus() {
             if (typeof adaugaInLog === 'function') adaugaInLog("🎭 Scenă: S-a activat scena I'm Home după confirmare PIN.");
             if (typeof showToast === 'function') showToast("Scena I'm Home a fost activată.");
         }
-        reincarcaInterfata();
+        if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata();
     } else {
         pinCurentIntrodus = "";
         const display = document.getElementById('pin-display');
@@ -270,19 +270,37 @@ function toggleFavorite(id, type, event) {
     
     localStorage.setItem(type === 'scene' ? 'favScenes' : 'favAcc', JSON.stringify(favs));
 
-    // Actualizăm efectul de umplere a steluței INSTANT pe ecran, fără încărcare de date
-    if (event && event.target) {
-        const starBtn = event.target.closest('.hk-star');
-        if (starBtn) {
-            if (isFav) starBtn.classList.remove('is-fav');
-            else starBtn.classList.add('is-fav');
-        }
-    }
+        // 1. Actualizăm vizual toate steluțele de pe ecran cu acest ID instantaneu
+        const starBtns = document.querySelectorAll(`[data-favid="${id}"]`);
+        starBtns.forEach(btn => {
+            if (isFav) btn.classList.remove('is-fav');
+            else btn.classList.add('is-fav');
+        });
 
-    // Facem render total doar dacă suntem fizic pe pagina principală (ca să apară noul card)
-    if (document.getElementById('fav-accessories-container')) {
-        randareHome();
-    }
+        // 2. 🚀 OPTIMIZARE DOM: Evităm innerHTML masiv pe ecranul Home
+        const containerId = type === 'scene' ? 'fav-scenes-container' : 'fav-accessories-container';
+        const container = document.getElementById(containerId);
+        
+        if (container) {
+            if (isFav) {
+                const card = container.querySelector(`.hk-card[data-id="${id}"]`);
+                if (card) card.remove();
+                if (container.children.length === 0) container.innerHTML = `<div class="popup-empty-text">Niciun ${type === 'scene' ? 'scenariu' : 'accesoriu'} favorit.</div>`;
+            } else {
+                const emptyText = container.querySelector('.popup-empty-text');
+                if (emptyText) emptyText.remove();
+
+                let html = '';
+                if (type === 'scene') {
+                    const scena = scenesDB.find(s => s.id === id);
+                    if (scena) html = construiesteScenaHTML(scena, true);
+                } else {
+                    const [cat, idx] = id.split('_');
+                    if (subDispozitive[cat] && subDispozitive[cat][idx]) html = construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
+                }
+                container.insertAdjacentHTML('beforeend', html);
+            }
+        }
 }
 
 function toggleStareDispozitiv(cat, index, event) {
@@ -353,7 +371,7 @@ function verificaAutomatizariTimp() {
             }
         }
     });
-    if (schimbare) { localStorage.setItem('userAutomations', JSON.stringify(rules)); salveazaStarea(); reincarcaInterfata(); }
+    if (schimbare) { localStorage.setItem('userAutomations', JSON.stringify(rules)); salveazaStarea(); if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata(); }
 }
 
 function verificaReguliAutomatizare(triggerCat, triggerIdx, newState) {
@@ -490,11 +508,16 @@ function aplicaMod(mod) {
             if (localStorage.getItem('activeScene') !== 's_vacation') { clearInterval(intervalVacanta); intervalVacanta = null; return; }
             const cats = ['becuri', 'luminiRGB', 'jaluzele'];
             const randomCat = cats[Math.floor(Math.random() * cats.length)];
-            const disp = subDispozitive[randomCat] ? subDispozitive[randomCat][Math.floor(Math.random() * (subDispozitive[randomCat] || []).length)] : null;
-            if (disp) { disp.stare = (randomCat === 'jaluzele') ? (disp.stare === "Închis" ? "Deschis" : "Închis") : (disp.stare === "Pornit" ? "Oprit" : "Pornit"); salveazaStarea(); reincarcaInterfata(); }
+            const elementeDisp = subDispozitive[randomCat] || [];
+            if (elementeDisp.length > 0) { 
+                const rIdx = Math.floor(Math.random() * elementeDisp.length);
+                const disp = elementeDisp[rIdx];
+                disp.stare = (randomCat === 'jaluzele') ? (disp.stare === "Închis" ? "Deschis" : "Închis") : (disp.stare === "Pornit" ? "Oprit" : "Pornit"); 
+                salveazaStarea(); if (typeof actualizeazaCardInDOM === 'function') actualizeazaCardInDOM(randomCat, rIdx); else reincarcaInterfata();
+            }
         }, 4000);
     }
-    salveazaStarea(); reincarcaInterfata();
+    salveazaStarea(); if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata();
 }
 
 function calculeazaConsumPriza(disp) {
@@ -531,8 +554,8 @@ function executaScena(idScena) {
     const scena = scenesDB.find(s => s.id === idScena);
     if (scena && scena.action) typeof scena.action === 'function' ? scena.action() : aplicaMod(scena.action);
 
-    // 2. Apelăm reincarcaInterfata (presupunând că ea redesenează cardurile)
-    reincarcaInterfata();
+    // 2. Apelăm sincronizeazaDOMcuMemoria în loc de reincarcaInterfata (nu mai distruge DOM-ul)
+    if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata();
 
     // 3. Eliminăm clasa după un scurt delay, astfel încât, 
     // dacă utilizatorul mai dă un refresh ulterior, animațiile să fie active
@@ -576,7 +599,7 @@ function executaSecurizareTotala() {
     if (subDispozitive.senzoriMiscare) subDispozitive.senzoriMiscare.forEach(s => s.stare = "Activ");
     if (subDispozitive.camereVideo) subDispozitive.camereVideo.forEach(c => c.stare = "LIVE");
     localStorage.setItem('alarmaDezactivata', 'false');
-    salveazaStarea(); reincarcaInterfata();
+    salveazaStarea(); if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata();
     if (typeof adaugaInLog === 'function') adaugaInLog("🛡️ Securitate: S-a efectuat o securizare totală instantă.");
     if (typeof showToast === 'function') showToast("Securizarea totală rapidă a fost activată.");
 }
