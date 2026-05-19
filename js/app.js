@@ -55,7 +55,12 @@ function deschidePopupPin(mod) {
 
 function inchidePopupPin() {
     const modal = document.getElementById('popup-pin-alarma');
-    if (modal) modal.classList.remove('active');
+    // Use the fade-out logic if available, otherwise fallback to direct removal
+    if (typeof applyFadeOutAndClose === 'function') {
+        applyFadeOutAndClose(modal);
+    } else {
+        if (modal) modal.classList.remove('active');
+    }
 }
 
 function apasatTastaPin(tasta) {
@@ -270,7 +275,13 @@ function salveazaAutomatizare() {
 
     let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     rules.unshift(rule); localStorage.setItem('userAutomations', JSON.stringify(rules));
-    inchidePopup(); randareSabloane(); randareAutomatizari();
+    // Call the correct closing function for the automatizare modal
+    if (typeof inchidePopupAutomatizare === 'function') {
+        inchidePopupAutomatizare();
+    } else {
+        const modal = document.getElementById('popup-automatizare'); if (modal) modal.classList.remove('active');
+    }
+    randareSabloane(); randareAutomatizari();
 }
 
 function adaugaSugestie(idSugestie) {

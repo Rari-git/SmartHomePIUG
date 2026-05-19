@@ -8,6 +8,13 @@ function createWindow() {
         height: 800,
         minWidth: 1024,
         minHeight: 768,
+        frame: false,
+        titleBarStyle: 'hidden',
+        titleBarOverlay: {
+            color: 'rgba(0,0,0,0)', // Transparent, pentru a lăsa fundalul CSS vizibil
+            symbolColor: '#8e8e93', // Culoare neutră pentru butoane
+            height: 40 // Înălțimea zonei pentru controale
+        },
         icon: path.join(__dirname, 'assets/icon.ico'), // Opțional: adaugă o pictogramă .ico aici
         webPreferences: {
             nodeIntegration: false,
@@ -16,7 +23,7 @@ function createWindow() {
     });
 
     // Ascunde meniul implicit de browser (File, Edit, View etc.)
-    mainWindow.setMenuBarVisibility(false);
+    // mainWindow.setMenuBarVisibility(false); // Nu mai este necesar cu frame: false
 
     // Încarcă pagina principală a aplicației tale SmartHome
     mainWindow.loadFile('index.html');

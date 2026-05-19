@@ -1,6 +1,37 @@
 let dashTipCurent = 'energie';
 let dashPerioadaCurenta = '7z';
 
+// Helper function for smooth modal fade-out
+function applyFadeOutAndClose(modal) {
+    if (!modal || !modal.classList.contains('active')) {
+        return;
+    }
+
+    const transitionDuration = 350; // ms, pentru a corespunde cu 0.35s din animația de fade-in
+
+    // Forțăm proprietățile de tranziție prin stiluri inline pentru a garanta efectul de fade-out
+    modal.style.transition = `opacity ${transitionDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
+    modal.style.opacity = '0';
+
+    let isCleanedUp = false;
+    const cleanup = () => {
+        if (isCleanedUp) return;
+        isCleanedUp = true;
+        
+        modal.classList.remove('active');
+        // Resetăm stilurile inline pentru a nu interfera cu animațiile de deschidere sau alte reguli CSS
+        modal.style.transition = '';
+        modal.style.opacity = '';
+        modal.removeEventListener('transitionend', cleanup);
+    };
+
+    // Ascultăm evenimentul de finalizare a tranziției pentru a închide modalul precis
+    modal.addEventListener('transitionend', cleanup, { once: true });
+
+    // Folosim un fallback (timeout) pentru a ne asigura că modalul se închide întotdeauna
+    setTimeout(cleanup, transitionDuration + 50);
+}
+
 function reincarcaInterfata() {
     actualizeazaStatusGlobal();
     if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
@@ -328,7 +359,14 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
         if (categorie === 'camereVideo') contentHtml += `<div style="background: #111; border-radius: 8px; height: 200px; display:flex; align-items:center; justify-content:center; color:white; position:relative; margin-bottom: 15px; overflow: hidden;">${disp.stare === 'LIVE' ? '<span style="position:absolute; top:10px; left:10px; color:red; font-weight:bold; font-size:0.9em;">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" style="opacity: 0.6; width: 100%; height: 100%; object-fit: cover;">' : '<span style="opacity:0.5;">[ Camera Feed Offline ]</span>'}</div>`;
         if (['becuri', 'audio', 'jaluzele', 'luminiRGB'].includes(categorie)) {
             const isOff = disp.stare === 'Oprit' || disp.stare === 'Închis';
-            contentHtml += `<div class="slider-container ${isOff ? 'disabled-controls' : ''}" style="margin-top: 20px;"><label>Intensitate / Volum: <span id="val-${categorie}-${elementIndex}">${disp.valoare}</span>%</label><input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} oninput="subDispozitive['${categorie}'][${elementIndex}].valoare = this.value; document.getElementById('val-${categorie}-${elementIndex}').innerText = this.value;"></div>`;
+            contentHtml += `
+                <div class="slider-container ${isOff ? 'disabled-controls' : ''}" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Intensitate / Volum:</label>
+                        <label style="font-weight: bold; color: var(--accent-color);"><span id="val-${categorie}-${elementIndex}">${disp.valoare}</span>%</label>
+                    </div>
+                    <input type="range" min="0" max="100" value="${disp.valoare}" ${isOff ? 'disabled' : ''} style="width: 100%; margin-top: 8px;" oninput="document.getElementById('val-${categorie}-${elementIndex}').innerText = this.value;" onchange="subDispozitive['${categorie}'][${elementIndex}].valoare = this.value; salveazaStarea();">
+                </div>`;
         }
     }
     continental.innerHTML = contentHtml;
@@ -347,6 +385,12 @@ function deschidePopupLuminiAprinse() {
         if (bec.stare === "Pornit") {
             areLumini = true;
             html += `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="deschideMeniuDispozitive('none', 'becuri', ${idx});"><div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5em; color: var(--warning-color);"><i class="ph-fill ph-lightbulb"></i></span><div><strong style="display:block;">${bec.nume}</strong><span style="font-size: 0.85em; opacity: 0.6;">${bec.camera} • ${bec.valoare}%</span></div></div><button onclick="toggleStareDispozitiv('becuri', ${idx}, event); deschidePopupLuminiAprinse();" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Stinge</button></div>`;
+        }
+    });
+    (subDispozitive.luminiRGB || []).forEach((lampa, idx) => {
+        if (lampa.stare === "Pornit") {
+            areLumini = true;
+            html += `<div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="deschideMeniuDispozitive('none', 'luminiRGB', ${idx});"><div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5em; color: var(--accent-color);"><i class="ph-fill ph-lamp"></i></span><div><strong style="display:block;">${lampa.nume}</strong><span style="font-size: 0.85em; opacity: 0.6;">${lampa.camera} • ${lampa.valoare}%</span></div></div><button onclick="toggleStareDispozitiv('luminiRGB', ${idx}, event); deschidePopupLuminiAprinse();" style="background: var(--error-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em;">Stinge</button></div>`;
         }
     });
     html += `</div>`;
@@ -432,23 +476,43 @@ function deschidePopupToateNotificarile() {
 
 function inchidePopup() {
     const modal = document.getElementById('popup-dispozitive');
-    if (modal) modal.classList.remove('active');
+    applyFadeOutAndClose(modal);
 }
 
 function inchidePopupIstoric() {
     const modal = document.getElementById('popup-istoric');
-    if (modal) modal.classList.remove('active');
+    applyFadeOutAndClose(modal);
+}
+
+// New function for closing the automatizare modal
+function inchidePopupAutomatizare() {
+    const modal = document.getElementById('popup-automatizare');
+    applyFadeOutAndClose(modal);
 }
 
 window.onclick = function(event) {
     const m1 = document.getElementById('popup-dispozitive');
     const m2 = document.getElementById('popup-automatizare');
     const m3 = document.getElementById('popup-istoric');
-    const m4 = document.getElementById('popup-pin-alarma');
-    if (event.target === m1) m1.classList.remove('active');
-    if (event.target === m2) m2.classList.remove('active');
-    if (event.target === m3) m3.classList.remove('active');
-    if (event.target === m4) m4.classList.remove('active');
+    const m4 = document.getElementById('popup-pin-alarma'); // This one has its primary close function in app.js
+
+    if (event.target === m1) {
+        inchidePopup();
+    }
+    if (event.target === m2) {
+        inchidePopupAutomatizare();
+    }
+    if (event.target === m3) {
+        inchidePopupIstoric();
+    }
+    if (event.target === m4) {
+        // Call the function from app.js if available, otherwise use fallback
+        if (typeof inchidePopupPin === 'function') {
+            inchidePopupPin();
+        } else {
+            applyFadeOutAndClose(m4);
+        }
+    }
 }
 
 function actualizeazaCardInDOM(cat, index) {
