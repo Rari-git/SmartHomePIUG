@@ -111,10 +111,17 @@
             camere.forEach(camera => {
                 let temp = localStorage.getItem(`temp-${camera}`) || "22";
                 let umid = localStorage.getItem(`umid-${camera}`) || "45";
-                document.getElementById(`temp-${camera}`).innerText = temp;
-                document.getElementById(`umid-${camera}`).innerText = umid;
-                actualizeazaCuloriTermostat(camera, parseFloat(temp));
-                actualizeazaCuloriUmiditate(camera, parseFloat(umid));
+                
+                let elTemp = document.getElementById(`temp-${camera}`);
+                if (elTemp) {
+                    elTemp.innerText = temp;
+                    actualizeazaCuloriTermostat(camera, parseFloat(temp));
+                }
+                let elUmid = document.getElementById(`umid-${camera}`);
+                if (elUmid) {
+                    elUmid.innerText = umid;
+                    actualizeazaCuloriUmiditate(camera, parseFloat(umid));
+                }
             });
             calculeazaMedii();
         });
@@ -159,13 +166,25 @@
 
         function calculeazaMedii() {
             const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
-            let sumaTemp = 0, sumaUmid = 0;
+            let sumaTemp = 0, countTemp = 0;
+            let sumaUmid = 0, countUmid = 0;
+            
             camere.forEach(camera => {
-                sumaTemp += parseFloat(document.getElementById(`temp-${camera}`).innerText);
-                sumaUmid += parseFloat(document.getElementById(`umid-${camera}`).innerText);
+                const elTemp = document.getElementById(`temp-${camera}`);
+                if (elTemp) {
+                    sumaTemp += parseFloat(elTemp.innerText);
+                    countTemp++;
+                }
+                
+                const elUmid = document.getElementById(`umid-${camera}`);
+                if (elUmid) {
+                    sumaUmid += parseFloat(elUmid.innerText);
+                    countUmid++;
+                }
             });
-            document.getElementById('widget-temp').innerText = (sumaTemp / camere.length).toFixed(1);
-            document.getElementById('widget-umiditate').innerText = Math.round(sumaUmid / camere.length);
+            
+            if (countTemp > 0) document.getElementById('widget-temp').innerText = (sumaTemp / countTemp).toFixed(1);
+            if (countUmid > 0) document.getElementById('widget-umiditate').innerText = Math.round(sumaUmid / countUmid);
         }
 
         function deschideGeamurile() {

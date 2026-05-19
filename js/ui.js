@@ -286,13 +286,18 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
         else if (cat === 'camereVideo') iconClass = 'anim-pulse';
     }
     
-    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${idUnic}" onclick="toggleStareDispozitiv('${cat}', ${idx}, event)"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${idUnic}', 'acc', event)"><i class="ph-fill ph-star"></i></button><button class="hk-btn" onclick="deschideMeniuDispozitive('none', '${cat}', ${idx}); event.stopPropagation();"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon ${iconClass}">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
+    // Adăugăm un delay progresiv (max 0.6s) pentru animația de tip cascadă
+    const animDelay = Math.min(idx * 0.04, 0.6);
+    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${idUnic}" style="animation-delay: ${animDelay}s;" onclick="toggleStareDispozitiv('${cat}', ${idx}, event)"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${idUnic}', 'acc', event)"><i class="ph-fill ph-star"></i></button><button class="hk-btn" onclick="deschideMeniuDispozitive('none', '${cat}', ${idx}); event.stopPropagation();"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon ${iconClass}">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
 }
 
 function construiesteScenaHTML(scena, isFav) {
     const isActive = localStorage.getItem('activeScene') === scena.id;
     const esteCustom = !scena.id.startsWith('s_'); 
-    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${scena.id}" style="height: 90px;" onclick="executaScena('${scena.id}')"><div class="hk-controls">${esteCustom ? `<button class="hk-btn" onclick="stergeScenaCustom('${scena.id}', event)" style="color: var(--error-color); margin-right: 2px;"><i class="ph-bold ph-trash"></i></button>` : ''}<button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${scena.id}', 'scene', event)"><i class="ph-fill ph-star"></i></button></div><div class="hk-name" style="font-size: 1.1em; margin-bottom: 5px;">${scena.nume}</div><div class="hk-state" style="margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${scena.descriere}</div></div>`;
+    
+    // Extragem un index din string-ul scenei pentru a genera progresia animației
+    const animDelay = (scena.id.charCodeAt(scena.id.length - 1) % 10) * 0.04;
+    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${scena.id}" style="height: 90px; animation-delay: ${animDelay}s;" onclick="executaScena('${scena.id}')"><div class="hk-controls">${esteCustom ? `<button class="hk-btn" onclick="stergeScenaCustom('${scena.id}', event)" style="color: var(--error-color); margin-right: 2px;"><i class="ph-bold ph-trash"></i></button>` : ''}<button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" onclick="toggleFavorite('${scena.id}', 'scene', event)"><i class="ph-fill ph-star"></i></button></div><div class="hk-name" style="font-size: 1.1em; margin-bottom: 5px;">${scena.nume}</div><div class="hk-state" style="margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${scena.descriere}</div></div>`;
 }
 
 function afiseazaNotificariHome() {

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFavorites();
     incarcaNumeCasa();
     reincarcaInterfata();
+    if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 });
 
 setInterval(verificaAutomatizariTimp, 60000);
@@ -330,6 +331,7 @@ function ajusteazaDinPopup(camera, directie) {
     if(val < 15) val = 15; if(val > 30) val = 30;
     localStorage.setItem(`temp-${camera}`, val);
     document.getElementById(`popup-temp-${camera}`).innerText = val;
+    if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 }
 
 function stingeTotGlobal() { 
@@ -455,4 +457,51 @@ function adaugaInLog(mesaj) {
     logs.unshift({ text: mesaj, ora: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) });
     localStorage.setItem('smartHomeLogs', JSON.stringify(logs.slice(0, 30)));
     if (document.getElementById('logs-container')) randareStatisticiLogs();
+}
+
+// --- Calcul Medii pentru Climat (Temperatură & Umiditate) ---
+function actualizeazaMediiClimat() {
+    const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
+    
+    // 1. Calcul Temperatură Medie
+    let sumaTemp = 0;
+    let countTemp = 0;
+    camere.forEach(camera => {
+        const val = parseFloat(localStorage.getItem(`temp-${camera}`));
+        if (!isNaN(val)) {
+            sumaTemp += val;
+            countTemp++;
+        }
+    });
+    
+    // Dacă nu avem nimic salvat per cameră, lăsăm o valoare implicită sau media existentă
+    const mediaTemp = countTemp > 0 ? Math.round(sumaTemp / countTemp) : 22;
+    
+    const tempCurenta = document.getElementById('tempCurenta');
+    const widgetTemp = document.getElementById('widget-temp');
+    const widgetMedieTemp = document.getElementById('medie-temp'); // ID pentru camere.html
+    if (tempCurenta) tempCurenta.innerText = mediaTemp;
+    if (widgetTemp) widgetTemp.innerText = mediaTemp;
+    if (widgetMedieTemp) widgetMedieTemp.innerText = mediaTemp;
+
+    // 2. Calcul Umiditate Medie (dacă se folosesc dezumidificatoare per cameră)
+    let sumaUmid = 0;
+    let countUmid = 0;
+    camere.forEach(camera => {
+        const val = parseFloat(localStorage.getItem(`umid-${camera}`));
+        if (!isNaN(val)) {
+            sumaUmid += val;
+            countUmid++;
+        }
+    });
+
+    // Setăm media, iar dacă nu există date, folosim 50% implicit
+    const mediaUmid = countUmid > 0 ? Math.round(sumaUmid / countUmid) : 50;
+    const widgetUmiditate = document.getElementById('widget-umiditate');
+    const umidCurenta = document.getElementById('umiditateCurenta');
+    const widgetMedieUmid = document.getElementById('medie-umid'); // ID pentru camere.html
+
+    if (widgetUmiditate) widgetUmiditate.innerText = mediaUmid;
+    if (umidCurenta) umidCurenta.innerText = mediaUmid + "%";
+    if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid;
 }

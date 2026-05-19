@@ -223,7 +223,15 @@ function valideazaTemperatura() {
         
         const widgetTemp = document.getElementById('widget-temp');
         if (widgetTemp) widgetTemp.innerText = input;
+        // Setăm temperatura pentru TOATE camerele ca media să devină egală cu valoarea setată
+        const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
+        camere.forEach(camera => {
+            localStorage.setItem(`temp-${camera}`, input);
+            const displayElem = document.getElementById(`temp-${camera}`);
+            if (displayElem) displayElem.innerText = input;
+        });
 
+        if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
         document.getElementById('tempInput').value = "";
 
         if (typeof showToast === "function") {
@@ -259,12 +267,15 @@ function valideazaTemperaturaCameră(camera) {
         displayElem.innerText = temp;
         
         localStorage.setItem(`temp-${camera}`, temp);
+        if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
+        
         document.getElementById(inputId).value = "";
 
         if (typeof showToast === "function") {
             showToast(`Temperatura în ${camera} a fost setată la ${temp}°C.`, true, () => {
                 displayElem.innerText = tempVeche;
                 localStorage.setItem(`temp-${camera}`, tempVeche);
+                if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
             });
         }
     }
@@ -430,5 +441,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (salvata && displayElem) {
             displayElem.innerText = salvata;
         }
+        
+        // Încărcare valori umiditate per cameră
+        const umidSalvata = localStorage.getItem(`umid-${camera}`);
+        const umidElem = document.getElementById(`umid-${camera}`);
+        if (umidSalvata && umidElem) {
+            umidElem.innerText = umidSalvata;
+        }
     });
+    if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 });
