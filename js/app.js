@@ -97,7 +97,10 @@ window.addEventListener('beforeunload', () => {
 
 function initIntro() {
     // 1. Verificăm dacă intro-ul a fost deja afișat în această sesiune
-    if (sessionStorage.getItem('introAfisat')) return;
+    if (sessionStorage.getItem('introAfisat')) {
+        document.body.classList.add('app-loaded');
+        return;
+    }
 
     const isHtmlFolder = window.location.pathname.includes('/html/');
     const basePath = isHtmlFolder ? '../assets' : 'assets';
@@ -122,11 +125,13 @@ function initIntro() {
         // 4. Durata totală: 4s animația + 0.6s tranziția de fade-out
         setTimeout(() => {
             introDiv.classList.add('hidden');
+            // 4.1. Afișăm interfața aplicației pe fundal în timp ce intro-ul face fade-out
+            document.body.classList.add('app-loaded');
             setTimeout(() => {
                 introDiv.remove();
                 document.documentElement.classList.remove('hide-scrollbar');
             }, 600);
-        }, 4000); 
+        }, 2500); 
     };
     
     // 5. Declanșăm animația doar când totul e gata

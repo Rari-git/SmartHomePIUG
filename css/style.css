@@ -514,6 +514,18 @@ body.dark-mode .hotspot-danger { color: #ff453a !important; }
 /* ========================================== */
 /* INTRO APP SPLASH SCREEN                    */
 /* ========================================== */
+
+/* Ascundem temporar tot conținutul principal pentru a preveni flash-ul vizual înainte de JavaScript */
+body:not(.app-loaded) {
+    background-color: var(--bg-primary) !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+body:not(.app-loaded) > *:not(#app-intro) {
+    display: none !important;
+}
+
 #app-intro {
     position: fixed;
     top: 0;
