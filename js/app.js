@@ -96,40 +96,47 @@ window.addEventListener('beforeunload', () => {
 });
 
 function initIntro() {
-    // Rulează intro-ul doar o dată pe sesiune (la deschiderea aplicației)
-    if (!sessionStorage.getItem('introAfisat')) {
-        const isHtmlFolder = window.location.pathname.includes('/html/');
-        const basePath = isHtmlFolder ? '../assets' : 'assets';
+    // 1. Verificăm dacă intro-ul a fost deja afișat în această sesiune
+    if (sessionStorage.getItem('introAfisat')) return;
+
+    const isHtmlFolder = window.location.pathname.includes('/html/');
+    const basePath = isHtmlFolder ? '../assets' : 'assets';
+    
+    // 2. Creăm elementul și îl stilizăm inițial pentru a fi invizibil/gata de animație
+    const introDiv = document.createElement('div');
+    introDiv.id = 'app-intro';
+    // Adăugăm stiluri inline pentru a preveni "flicker-ul" până când CSS-ul este încărcat
+    introDiv.style.opacity = '1'; 
+    introDiv.innerHTML = `
+        <img src="${basePath}/logo.svg" alt="OmniHome Logo" class="intro-logo">
+        <div class="intro-text">OmniHome</div>
+    `;
+    
+    // 3. Blochează scroll-ul imediat
+    document.documentElement.classList.add('hide-scrollbar');
+    (document.body || document.documentElement).appendChild(introDiv);
+
+    const playIntro = () => {
+        introDiv.classList.add('start-anim');
         
-        // Blochează scroll-ul și ascunde bara cât timp rulează intro-ul
-        document.documentElement.classList.add('hide-scrollbar');
-
-        const introDiv = document.createElement('div');
-        introDiv.id = 'app-intro';
-        introDiv.innerHTML = `
-            <img src="${basePath}/logo.svg" alt="OmniHome Logo" class="intro-logo">
-            <div class="intro-text">OmniHome</div>
-        `;
-        // În cazul în care 'body' nu e gata creat, îl atașăm de documentElement
-        (document.body || document.documentElement).appendChild(introDiv);
-
-        const playIntro = () => {
-            introDiv.classList.add('start-anim');
+        // 4. Durata totală: 4s animația + 0.6s tranziția de fade-out
+        setTimeout(() => {
+            introDiv.classList.add('hidden');
             setTimeout(() => {
-                introDiv.classList.add('hidden');
-                setTimeout(() => {
-                    introDiv.remove();
-                    document.documentElement.classList.remove('hide-scrollbar'); // Restaurăm scroll-ul
-                }, 600);
-            }, 2500);
-        };
-        
-        // Așteaptă ca elementele, imaginile și layout-ul să se încarce complet pentru a preveni lag/stutter-ul
-        if (document.readyState === 'complete') { playIntro(); } 
-        else { window.addEventListener('load', playIntro); }
-        
-        sessionStorage.setItem('introAfisat', 'true');
+                introDiv.remove();
+                document.documentElement.classList.remove('hide-scrollbar');
+            }, 600);
+        }, 4000); 
+    };
+    
+    // 5. Declanșăm animația doar când totul e gata
+    if (document.readyState === 'complete') {
+        playIntro();
+    } else {
+        window.addEventListener('load', playIntro);
     }
+    
+    sessionStorage.setItem('introAfisat', 'true');
 }
 
 function initFavorites() {
@@ -555,21 +562,12 @@ function executaScena(idScena) {
         return;
     }
 
-    // 1. Adăugăm clasa pentru a bloca animațiile
-    document.body.classList.add('ui-is-updating');
-
     localStorage.setItem('activeScene', idScena);
     const scena = scenesDB.find(s => s.id === idScena);
     if (scena && scena.action) typeof scena.action === 'function' ? scena.action() : aplicaMod(scena.action);
 
-    // 2. Apelăm sincronizeazaDOMcuMemoria în loc de reincarcaInterfata (nu mai distruge DOM-ul)
+    // Apelăm sincronizeazaDOMcuMemoria pentru a actualiza elegant stările
     if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata();
-
-    // 3. Eliminăm clasa după un scurt delay, astfel încât, 
-    // dacă utilizatorul mai dă un refresh ulterior, animațiile să fie active
-    setTimeout(() => {
-        document.body.classList.remove('ui-is-updating');
-    }, 100); 
 }
 
 function salveazaScenaCustomNoua() {

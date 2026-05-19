@@ -552,7 +552,7 @@ function sincronizeazaDOMcuMemoria() {
     // 1. Actualizează discret toate cardurile individuale direct în DOM (evită innerHTML masiv)
     Object.keys(subDispozitive).forEach(cat => {
         (subDispozitive[cat] || []).forEach((disp, idx) => {
-            actualizeazaCardInDOM(cat, idx);
+            actualizeazaCardInDOM(cat, idx, true); // Folosim 'true' pentru a sări temporar peste update-ul global
         });
     });
 
@@ -568,7 +568,7 @@ function sincronizeazaDOMcuMemoria() {
     if (document.getElementById('notifications-container')) afiseazaNotificariHome();
 }
 
-function actualizeazaCardInDOM(cat, index) {
+function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
     const idUnic = `${cat}_${index}`;
     const disp = subDispozitive[cat][index];
     if (!disp) return;
@@ -589,12 +589,14 @@ function actualizeazaCardInDOM(cat, index) {
         }
     });
 
-    // 2. Actualizează widget-urile globale silențios (Consumul de Energie de sus etc.)
-    actualizeazaStatusGlobal();
+    if (!skipGlobal) {
+        // 2. Actualizează widget-urile globale silențios (Consumul de Energie de sus etc.)
+        actualizeazaStatusGlobal();
 
-    // 3. Actualizează alertele doar dacă ne aflăm pe pagina Home
-    if (document.getElementById('notifications-container')) {
-        afiseazaNotificariHome();
+        // 3. Actualizează alertele doar dacă ne aflăm pe pagina Home
+        if (document.getElementById('notifications-container')) {
+            afiseazaNotificariHome();
+        }
     }
 
     // 4. Actualizare vizuală "live" în interiorul Meniului Popup (fără a-l închide)
