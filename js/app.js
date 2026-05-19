@@ -26,18 +26,24 @@ function initIntro() {
         
         const introDiv = document.createElement('div');
         introDiv.id = 'app-intro';
-        // Încearcă SVG-ul, iar la eroare aplică automat PNG-ul ca fallback
         introDiv.innerHTML = `
-            <img src="${basePath}/logo.svg" alt="SmartHome Logo" class="intro-logo" onerror="this.onerror=null; this.src='${basePath}/logo.png'">
-            <div class="intro-text">SmartHome</div>
+            <img src="${basePath}/logo.svg" alt="OmniHome Logo" class="intro-logo">
+            <div class="intro-text">OmniHome</div>
         `;
         // În cazul în care 'body' nu e gata creat, îl atașăm de documentElement
         (document.body || document.documentElement).appendChild(introDiv);
 
-        setTimeout(() => {
-            introDiv.classList.add('hidden');
-            setTimeout(() => introDiv.remove(), 600); // Curăță complet din cod după animație
-        }, 2200);
+nt        const playIntro = () => {
+            introDiv.classList.add('start-anim');
+            setTimeout(() => {
+                introDiv.classList.add('hidden');
+                setTimeout(() => introDiv.remove(), 600);
+            }, 2200);
+        };
+        
+        // Așteaptă ca elementele, imaginile și layout-ul să se încarce complet pentru a preveni lag/stutter-ul
+        if (document.readyState === 'complete') { playIntro(); } 
+        else { window.addEventListener('load', playIntro); }
         
         sessionStorage.setItem('introAfisat', 'true');
     }
