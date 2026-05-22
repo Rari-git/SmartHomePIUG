@@ -489,11 +489,23 @@ function comutaAutomatizare(id) {
 }
 
 function ajusteazaDinPopup(camera, directie) {
-    let val = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
-    val = directie === 'plus' ? val + 1 : val - 1;
-    if (val < 15) val = 15; if (val > 30) val = 30;
-    localStorage.setItem(`temp-${camera}`, val);
-    document.getElementById(`popup-temp-${camera}`).innerText = val;
+    let valC = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
+    let unit = getTempUnit();
+    let valDisp = unit === 'F' ? Math.round(valC * 9 / 5 + 32) : Math.round(valC);
+    
+    valDisp = directie === 'plus' ? valDisp + 1 : valDisp - 1;
+    
+    if (unit === 'F') {
+        if (valDisp < 59) valDisp = 59;
+        if (valDisp > 86) valDisp = 86;
+        valC = (valDisp - 32) * 5 / 9;
+    } else {
+        if (valDisp < 15) valDisp = 15;
+        if (valDisp > 30) valDisp = 30;
+        valC = valDisp;
+    }
+    localStorage.setItem(`temp-${camera}`, valC);
+    document.getElementById(`popup-temp-${camera}`).innerText = valDisp;
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 }
 
@@ -712,6 +724,18 @@ function adaugaInLog(mesaj) {
     if (document.getElementById('logs-container')) randareStatisticiLogs();
 }
 
+// --- Functii Utilitare Temperatura ---
+function getTempUnit() {
+    return localStorage.getItem('tempUnit') || 'C';
+}
+
+function convertTemp(celsius) {
+    if (getTempUnit() === 'F') {
+        return Math.round(celsius * 9 / 5 + 32);
+    }
+    return Math.round(celsius);
+}
+
 // --- Calcul Medii pentru Climat (Temperatură & Umiditate) ---
 function actualizeazaMediiClimat() {
     const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
@@ -720,22 +744,36 @@ function actualizeazaMediiClimat() {
     let sumaTemp = 0;
     let countTemp = 0;
     camere.forEach(camera => {
-        const val = parseFloat(localStorage.getItem(`temp-${camera}`));
-        if (!isNaN(val)) {
-            sumaTemp += val;
-            countTemp++;
+        let val = parseFloat(localStorage.getItem(`temp-${camera}`));
+        if (isNaN(val)) {
+            val = 22; // Valoarea implicită dacă nu a fost setată manual
+        }
+        
+        sumaTemp += val;
+        countTemp++;
+
+        // Actualizare a fiecărui display individual de pe pagina de Climatizare
+        const displayElem = document.getElementById(`temp-${camera}`);
+        if (displayElem) {
+            displayElem.innerText = convertTemp(val);
         }
     });
 
     // Dacă nu avem nimic salvat per cameră, lăsăm o valoare implicită sau media existentă
-    const mediaTemp = countTemp > 0 ? Math.round(sumaTemp / countTemp) : 22;
+    const mediaTemp = countTemp > 0 ? (sumaTemp / countTemp) : 22;
+    const displayVal = convertTemp(mediaTemp);
+    const unit = getTempUnit();
 
     const tempCurenta = document.getElementById('tempCurenta');
     const widgetTemp = document.getElementById('widget-temp');
     const widgetMedieTemp = document.getElementById('medie-temp'); // ID pentru camere.html
-    if (tempCurenta) tempCurenta.innerText = mediaTemp;
-    if (widgetTemp) widgetTemp.innerText = mediaTemp;
-    if (widgetMedieTemp) widgetMedieTemp.innerText = mediaTemp;
+    if (tempCurenta) tempCurenta.innerText = displayVal;
+    if (widgetTemp) widgetTemp.innerText = displayVal;
+    if (widgetMedieTemp) widgetMedieTemp.innerText = displayVal;
+
+    document.querySelectorAll('.climate-unit').forEach(el => {
+        if (el.innerText.includes('°')) el.innerText = `°${unit}`;
+    });
 
     // 2. Calcul Umiditate Medie (dacă se folosesc dezumidificatoare per cameră)
     let sumaUmid = 0;
@@ -778,7 +816,7 @@ async function fetchWeather() {
         const data = await response.json();
         const current = data.current;
 
-        const temp = Math.round(current.temperature_2m);
+        const tempC = current.temperature_2m;
         const humidity = current.relative_humidity_2m;
         const precip = current.precipitation;
         const code = current.weather_code;
@@ -794,7 +832,7 @@ async function fetchWeather() {
         else if (code >= 85 && code <= 86) icon = "❄️"; // Ninsoare
         else if (code >= 95) icon = "⛈️"; // Furtună
 
-        tempEl.innerText = `${temp}°C`;
+        tempEl.innerText = `${convertTemp(tempC)}°${getTempUnit()}`;
         detaliiEl.innerText = `Precip: ${precip}mm | Umid: ${humidity}%`;
         iconEl.innerText = icon;
     } catch (error) {
@@ -812,7 +850,7 @@ export {
     stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal,
     aplicaMod, calculeazaConsumPriza, calculeazaConsumDispozitiv, executaScena, salveazaScenaCustomNoua,
     stergeScenaCustom, stergeAccesoriu, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
-    fetchWeather
+    fetchWeather, getTempUnit, convertTemp
 };
 
 // === EXPUNERI GLOBALE PENTRU INLINE HTML (ONCLICK) ===
@@ -831,3 +869,5 @@ window.deschidePopupPin = deschidePopupPin;
 window.executaScena = executaScena;
 window.stergeAccesoriu = stergeAccesoriu;
 window.fetchWeather = fetchWeather;
+window.getTempUnit = getTempUnit;
+window.convertTemp = convertTemp;

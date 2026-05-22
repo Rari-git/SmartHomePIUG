@@ -1,4 +1,5 @@
 import { showToast } from './ui.js';
+import { actualizeazaMediiClimat, fetchWeather, getTempUnit } from './app.js';
 
 const BACKGROUNDS = [
     { url: "url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#007aff" }, // Albastru Ocean / Sky
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-mode');
     }
     initBackgroundAndAccent();
+    actualizeazaButoaneUnitate();
 
     if (!document.querySelector('meta[name="view-transition"]')) {
         const metaVT = document.createElement('meta');
@@ -116,6 +118,25 @@ function schimbaFundal(index) {
     showToast("Fundalul a fost actualizat.");
 }
 
+function setTempUnit(unit) {
+    localStorage.setItem('tempUnit', unit);
+    // Recalculează mediile și actualizează toate elementele DOM de temperatură
+    actualizeazaMediiClimat();
+    // Actualizează widget-ul meteo
+    fetchWeather();
+    // Actualizează starea vizuală a butoanelor în Setări
+    actualizeazaButoaneUnitate();
+    showToast(`Unitatea a fost schimbată în °${unit}.`);
+}
+
+function actualizeazaButoaneUnitate() {
+    const unit = getTempUnit();
+    const btnC = document.getElementById('btn-unit-c');
+    const btnF = document.getElementById('btn-unit-f');
+    if (btnC) btnC.classList.toggle('active', unit === 'C');
+    if (btnF) btnF.classList.toggle('active', unit === 'F');
+}
+
 export {
     showToast,
     toggleDarkMode,
@@ -125,6 +146,7 @@ export {
     toggleNav,
     schimbaFundal,
     toggleAutoAccent,
+    setTempUnit,
     getCurentBgIndex,
     isAutoAccentOn,
     actualizeazaUiSetariBackground
@@ -136,6 +158,7 @@ window.toggleHelp = toggleHelp;
 window.toggleNav = toggleNav;
 window.schimbaFundal = schimbaFundal;
 window.toggleAutoAccent = toggleAutoAccent;
+window.setTempUnit = setTempUnit;
 window.actualizeazaUiSetariBackground = actualizeazaUiSetariBackground;
 
 function toggleDarkMode() {

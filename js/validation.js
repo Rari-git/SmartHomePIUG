@@ -1,4 +1,4 @@
-import { actualizeazaMediiClimat, subDispozitive, adaugaInLog } from './app.js';
+import { actualizeazaMediiClimat, subDispozitive, adaugaInLog, getTempUnit, convertTemp } from './app.js';
 import { showToast, actualizeazaCardInDOM } from './ui.js';
 
 function apasăTastăNumpad(valoare) {
@@ -239,12 +239,18 @@ function valideazaTemperatura() {
     errorMsg.style.display = 'none';
     successMsg.style.display = 'none';
 
-    if (input === "" || isNaN(input) || input < 15 || input > 30) {
-        errorMsg.innerText = "❌ Alege o valoare între 15 și 30.";
+    const unit = getTempUnit();
+    const minVal = unit === 'F' ? 59 : 15;
+    const maxVal = unit === 'F' ? 86 : 30;
+
+    if (input === "" || isNaN(input) || input < minVal || input > maxVal) {
+        errorMsg.innerText = `❌ Alege o valoare între ${minVal} și ${maxVal}.`;
         errorMsg.style.display = 'block';
     } else {
-        successMsg.innerText = `✅ Temperatura a fost setată la ${input}°C.`;
+        successMsg.innerText = `✅ Temperatura a fost setată la ${input}°${unit}.`;
         successMsg.style.display = 'block';
+
+        const tempC = unit === 'F' ? (parseFloat(input) - 32) * 5 / 9 : parseFloat(input);
 
         const tempCur = document.getElementById('tempCurenta');
         if (tempCur) tempCur.innerText = input;
@@ -254,7 +260,7 @@ function valideazaTemperatura() {
         // Setăm temperatura pentru TOATE camerele ca media să devină egală cu valoarea setată
         const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
         camere.forEach(camera => {
-            localStorage.setItem(`temp-${camera}`, input);
+            localStorage.setItem(`temp-${camera}`, tempC);
             const displayElem = document.getElementById(`temp-${camera}`);
             if (displayElem) displayElem.innerText = input;
         });
@@ -263,7 +269,7 @@ function valideazaTemperatura() {
         document.getElementById('tempInput').value = "";
 
         if (typeof showToast === "function") {
-            showToast(`Temperatura generală a fost setată la ${input}°C.`);
+            showToast(`Temperatura generală a fost setată la ${input}°${unit}.`);
         }
     }
 }
@@ -286,23 +292,29 @@ function valideazaTemperaturaCameră(camera) {
         return;
     }
 
-    const temp = parseFloat(inputVal);
-    if (temp < 15 || temp > 30) {
-        errorElem.innerText = "❌ Alege o valoare între 15°C și 30°C.";
+    const unit = getTempUnit();
+    const minVal = unit === 'F' ? 59 : 15;
+    const maxVal = unit === 'F' ? 86 : 30;
+
+    const tempInput = parseFloat(inputVal);
+    if (tempInput < minVal || tempInput > maxVal) {
+        errorElem.innerText = `❌ Alege o valoare între ${minVal}°${unit} și ${maxVal}°${unit}.`;
         errorElem.style.display = 'block';
     } else {
         const tempVeche = displayElem.innerText;
-        displayElem.innerText = temp;
+        displayElem.innerText = tempInput;
 
-        localStorage.setItem(`temp-${camera}`, temp);
+        const tempC = unit === 'F' ? (tempInput - 32) * 5 / 9 : tempInput;
+        localStorage.setItem(`temp-${camera}`, tempC);
         if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 
         document.getElementById(inputId).value = "";
 
         if (typeof showToast === "function") {
-            showToast(`Temperatura în ${camera} a fost setată la ${temp}°C.`, true, () => {
+            showToast(`Temperatura în ${camera} a fost setată la ${tempInput}°${unit}.`, true, () => {
                 displayElem.innerText = tempVeche;
-                localStorage.setItem(`temp-${camera}`, tempVeche);
+                const oldC = unit === 'F' ? (parseFloat(tempVeche) - 32) * 5 / 9 : parseFloat(tempVeche);
+                localStorage.setItem(`temp-${camera}`, oldC);
                 if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
             });
         }
@@ -464,10 +476,11 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizeazăEcranSecuritate();
     const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
     camere.forEach(camera => {
-        const salvata = localStorage.getItem(`temp-${camera}`);
+        let salvata = localStorage.getItem(`temp-${camera}`);
+        let tempValue = salvata ? parseFloat(salvata) : 22;
         const displayElem = document.getElementById(`temp-${camera}`);
-        if (salvata && displayElem) {
-            displayElem.innerText = salvata;
+        if (displayElem) {
+            displayElem.innerText = convertTemp(tempValue);
         }
 
         // Încărcare valori umiditate per cameră

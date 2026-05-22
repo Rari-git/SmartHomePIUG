@@ -1,5 +1,5 @@
 import { iconDraperie, iconFereastra, sabloaneRecomandate } from './data.js';
-import { subDispozitive, scenesDB, calculeazaConsumPriza, calculeazaConsumDispozitiv, salveazaStarea, adaugaInLog, actualizeazaMediiClimat, inchidePopupPin } from './app.js';
+import { subDispozitive, scenesDB, calculeazaConsumPriza, calculeazaConsumDispozitiv, salveazaStarea, adaugaInLog, actualizeazaMediiClimat, inchidePopupPin, getTempUnit, convertTemp } from './app.js';
 
 export let dashTipCurent = 'energie';
 export let dashPerioadaCurenta = '7z';
@@ -123,7 +123,7 @@ function randareGraficDashboard() {
                         <div class="chart-track small-track">
                             <div class="anim-bar chart-bar temp" data-width="${prT}%" style="width: 0%;"></div>
                         </div>
-                        <span class="chart-val temp">${p.t}°C</span>
+                        <span class="chart-val temp">${convertTemp(p.t)}°${getTempUnit()}</span>
                     </div>
                     <div class="chart-row small-gap">
                         <span class="chart-sub-label">Umid:</span>
@@ -431,7 +431,7 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
         const camera = categorie.split('-')[1];
         titlu.innerHTML = `🌡️ Termostat ${camera.charAt(0).toUpperCase() + camera.slice(1)}`;
         let temp = localStorage.getItem(`temp-${camera}`) || "22";
-        continental.innerHTML = `<div class="popup-content-box"><h3 class="popup-subtitle">Setare Temperatură</h3><div class="popup-val-display"><span id="popup-temp-${camera}">${temp}</span>°C</div><div class="popup-ctrl-row"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" class="popup-ctrl-btn">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" class="popup-ctrl-btn">+</button></div></div>`;
+        continental.innerHTML = `<div class="popup-content-box"><h3 class="popup-subtitle">Setare Temperatură</h3><div class="popup-val-display"><span id="popup-temp-${camera}">${convertTemp(parseFloat(temp))}</span>°${getTempUnit()}</div><div class="popup-ctrl-row"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" class="popup-ctrl-btn">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" class="popup-ctrl-btn">+</button></div></div>`;
         modal.classList.add('active'); return;
     }
     const disp = subDispozitive[categorie][elementIndex];
