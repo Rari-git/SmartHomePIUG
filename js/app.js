@@ -90,8 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 setInterval(verificaAutomatizariTimp, 60000);
 
+// Funcție centralizată pentru prevenirea scurgerilor de memorie (Memory Leaks)
+function opresteIntervalVacanta() {
+    if (intervalVacanta) {
+        clearInterval(intervalVacanta);
+        intervalVacanta = null;
+    }
+}
+
 // 🛡️ Siguranță: Forțăm salvarea datelor dacă fereastra aplicației este închisă brusc
 window.addEventListener('beforeunload', () => {
+    opresteIntervalVacanta();
     if (timeoutSalvareStare) {
         clearTimeout(timeoutSalvareStare);
         localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
@@ -330,10 +339,7 @@ function toggleStareDispozitiv(cat, index, event) {
     if (event) event.stopPropagation();
     localStorage.removeItem('activeScene');
 
-    if (typeof intervalVacanta !== 'undefined' && intervalVacanta) {
-        clearInterval(intervalVacanta);
-        intervalVacanta = null;
-    }
+    opresteIntervalVacanta();
 
     const disp = subDispozitive[cat][index];
     const dictionarStari = {
@@ -521,7 +527,7 @@ function stingeTotGlobal() {
 }
 
 function aplicaMod(mod) {
-    if (intervalVacanta) { clearInterval(intervalVacanta); intervalVacanta = null; }
+    opresteIntervalVacanta();
     stingeTotGlobal();
     if (mod === 'morning') {
         (subDispozitive.jaluzele || []).forEach(d => d.stare = "Deschis");
@@ -546,7 +552,7 @@ function aplicaMod(mod) {
     } else if (mod === 'vacation') {
         localStorage.setItem('alarmaDezactivata', 'false');
         intervalVacanta = setInterval(() => {
-            if (localStorage.getItem('activeScene') !== 's_vacation') { clearInterval(intervalVacanta); intervalVacanta = null; return; }
+            if (localStorage.getItem('activeScene') !== 's_vacation') { opresteIntervalVacanta(); return; }
             const cats = ['becuri', 'luminiRGB', 'jaluzele'];
             const randomCat = cats[Math.floor(Math.random() * cats.length)];
             const elementeDisp = subDispozitive[randomCat] || [];
@@ -604,6 +610,8 @@ function executaScena(idScena) {
         deschidePopupPin('scena_home');
         return;
     }
+
+    opresteIntervalVacanta(); // Asigurăm curățarea oricărui interval activ anterior
 
     localStorage.setItem('activeScene', idScena);
     const scena = scenesDB.find(s => s.id === idScena);
@@ -815,17 +823,34 @@ async function fetchWeather() {
     const detaliiEl = document.getElementById('vremea-detalii');
     const iconEl = document.getElementById('vremea-icon');
     if (!tempEl || !detaliiEl || !iconEl) return;
+    
+    const cacheKey = 'weatherCacheData';
+    const cacheTimeKey = 'weatherCacheTime';
+    const cacheDuration = 30 * 60 * 1000; // 30 minute
 
     try {
-        // Coordonatele pentru Timișoara
-        const lat = 45.7537;
-        const lon = 21.2257;
+        const now = Date.now();
+        const cachedTime = localStorage.getItem(cacheTimeKey);
+        const cachedData = localStorage.getItem(cacheKey);
+        let data;
 
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code&timezone=auto`);
+        if (cachedTime && cachedData && (now - parseInt(cachedTime)) < cacheDuration) {
+            // Folosim datele din cache dacă nu au expirat
+            data = JSON.parse(cachedData);
+        } else {
+            // Coordonatele pentru Timișoara
+            const lat = 45.7537;
+            const lon = 21.2257;
+            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code&timezone=auto`);
 
-        if (!response.ok) throw new Error("Eroare la preluarea datelor meteo");
-
-        const data = await response.json();
+            if (!response.ok) throw new Error("Eroare la preluarea datelor meteo");
+            data = await response.json();
+            
+            // Salvăm datele noi și timestamp-ul curent în cache
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+            localStorage.setItem(cacheTimeKey, now.toString());
+        }
+        
         const current = data.current;
 
         const tempC = current.temperature_2m;
@@ -849,7 +874,16 @@ async function fetchWeather() {
         iconEl.innerText = icon;
     } catch (error) {
         console.error("Eroare API Vreme:", error);
-        detaliiEl.innerText = "Eroare la încărcare";
+        
+        // Fallback la cache-ul expirat în caz de eroare/lipsă rețea
+        const cachedFallback = localStorage.getItem('weatherCacheData');
+        if (cachedFallback) {
+            const fallbackData = JSON.parse(cachedFallback).current;
+            tempEl.innerText = `${convertTemp(fallbackData.temperature_2m)}°${getTempUnit()}`;
+            detaliiEl.innerText = `Precip: ${fallbackData.precipitation}mm | Umid: ${fallbackData.relative_humidity_2m}% (Offline)`;
+        } else {
+            detaliiEl.innerText = "Eroare la încărcare";
+        }
     }
 }
 
@@ -859,7 +893,7 @@ export {
     inchidePopupPin, apasatTastaPin, verificaCodPinIntrodus, salveazaCodPinNou,
     toggleFavorite, toggleStareDispozitiv, verificaAutomatizariTimp,
     verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie,
-    stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal,
+    stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal, opresteIntervalVacanta,
     aplicaMod, calculeazaConsumPriza, calculeazaConsumDispozitiv, executaScena, salveazaScenaCustomNoua,
     stergeScenaCustom, stergeAccesoriu, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
     fetchWeather, getTempUnit, convertTemp

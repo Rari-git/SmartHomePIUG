@@ -1477,6 +1477,14 @@ nav,
     /* Previne clipirile la animatii 3D */
 }
 
+/* Optimizare memorie VRAM: Aplicăm will-change doar înainte/în timpul interacțiunii sau animării */
+.hk-card:hover,
+nav.active,
+.modal.active .modal-content,
+.toast-notification.show {
+    will-change: transform, opacity;
+}
+
 /* Stare dezactivată pentru zona de culori manuale */
 .disabled-zone {
     opacity: 0.5;
