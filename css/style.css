@@ -1413,6 +1413,14 @@ nav,
     /* Previne clipirile la animatii 3D */
 }
 
+/* Stare dezactivată pentru zona de culori manuale */
+.disabled-zone {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(0.6);
+    cursor: not-allowed;
+    transition: all 0.4s ease;
+}
 /* ========================================== */
 /* INTRO APP SPLASH SCREEN                    */
 /* ========================================== */

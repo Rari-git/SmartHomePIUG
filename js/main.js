@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         metaVT.content = 'same-origin';
         document.head.appendChild(metaVT);
     }
+    actualizeazaUiSetariBackground();
 });
 
 function initBackgroundAndAccent() {
@@ -79,7 +80,22 @@ function getCurentBgIndex() {
 }
 
 function isAutoAccentOn() {
-    return localStorage.getItem('autoAccent') !== 'false'; // Implicit true
+    const val = localStorage.getItem('autoAccentColor');
+    // Dacă nu e setat deloc, implicit punem true (sau false, depinde cum doriți)
+    if (val === null) return true; 
+    return val === 'true'; // Returnează true DOAR dacă este stringul 'true'
+}
+
+function seteazaCuloareAccentManual(color) {
+    if (isAutoAccentOn()) {
+        // Dacă isAutoAccentOn() este pe bune activ (true), blocăm schimbarea
+        showToast("Dezactivează 'Detecție Automată' pentru a alege o culoare manual.", { isError: true });
+        return;
+    }
+    // Dacă este OFF (false), aplicăm culoarea fără probleme
+    document.documentElement.style.setProperty('--accent-color', color);
+    localStorage.setItem('accentColor', color);
+    showToast("Culoarea de accent a fost salvată.");
 }
 
 function schimbaFundal(index) {
@@ -100,34 +116,17 @@ function schimbaFundal(index) {
     showToast("Fundalul a fost actualizat.");
 }
 
-function toggleAutoAccent() {
-    const isNowAuto = !isAutoAccentOn();
-    localStorage.setItem('autoAccent', isNowAuto);
-
-    if (isNowAuto) {
-        const bgIndex = getCurentBgIndex();
-        document.documentElement.style.setProperty('--accent-color', BACKGROUNDS[bgIndex].dominantColor);
-        showToast("Culoare accent: Automată.");
-    } else {
-        const savedColor = localStorage.getItem('accentColor') || '#007aff';
-        document.documentElement.style.setProperty('--accent-color', savedColor);
-        showToast("Culoare accent: Manuală.");
-    }
-
-    if (window.actualizeazaUiSetariBackground) {
-        window.actualizeazaUiSetariBackground();
-    }
-}
-
 export {
     toggleDarkMode,
     schimbaCuloareAccent,
+    seteazaCuloareAccentManual,
     toggleHelp,
     toggleNav,
     schimbaFundal,
     toggleAutoAccent,
     getCurentBgIndex,
-    isAutoAccentOn
+    isAutoAccentOn,
+    actualizeazaUiSetariBackground
 };
 
 window.toggleDarkMode = toggleDarkMode;
@@ -136,6 +135,7 @@ window.toggleHelp = toggleHelp;
 window.toggleNav = toggleNav;
 window.schimbaFundal = schimbaFundal;
 window.toggleAutoAccent = toggleAutoAccent;
+window.actualizeazaUiSetariBackground = actualizeazaUiSetariBackground;
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
@@ -143,17 +143,50 @@ function toggleDarkMode() {
     localStorage.setItem('darkMode', isDark);
 }
 
+function toggleAutoAccent() {
+    const curent = isAutoAccentOn();
+    const nouaStare = !curent;
+    
+    // Salvăm explicit ca text 'true' sau 'false'
+    localStorage.setItem('autoAccentColor', nouaStare ? 'true' : 'false');
+
+    // CORECTURĂ: Verificăm direct nouaStare în care a trecut aplicația
+    if (nouaStare === true) {
+        // Dacă s-a activat (nouaStare este true)
+        initBackgroundAndAccent();
+        showToast("Detecția automată a culorii a fost activată.");
+    } else {
+        // Dacă s-a dezactivat (nouaStare este false)
+        const savedColor = localStorage.getItem('accentColor') || '#007aff';
+        document.documentElement.style.setProperty('--accent-color', savedColor);
+        showToast("Detecția automată dezactivată. Acum poți alege o culoare manual.");
+    }
+
+    // Actualizăm și starea vizuală a switch-ului și a zonelor blocate din setări
+    actualizeazaUiSetariBackground();
+}
+
+function actualizeazaUiSetariBackground() {
+    const isAuto = isAutoAccentOn();
+    
+    // Sincronizăm switch-ul din interfață
+    const switchEl = document.getElementById('auto-accent-switch');
+    if (switchEl) switchEl.checked = isAuto;
+
+    // Blocăm/Deblocăm vizual zona de culori manuale
+    const manualZone = document.getElementById('manual-accent-colors');
+    if (manualZone) {
+        manualZone.classList.toggle('disabled-zone', isAuto);
+    }
+}
+
 function schimbaCuloareAccent(color) {
+    if (isAutoAccentOn()) {
+        showToast("Dezactivează 'Detecție Automată' pentru a alege o culoare manual.", { isError: true });
+        return;
+    }
     document.documentElement.style.setProperty('--accent-color', color);
     localStorage.setItem('accentColor', color);
-
-    // Dezactivează automat auto-accent dacă utilizatorul alege manual o culoare
-    if (isAutoAccentOn()) {
-        localStorage.setItem('autoAccent', 'false');
-        if (window.actualizeazaUiSetariBackground) {
-            window.actualizeazaUiSetariBackground();
-        }
-    }
 }
 
 document.addEventListener('keypress', function (e) {
