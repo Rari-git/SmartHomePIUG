@@ -23,7 +23,7 @@ body.dark-mode {
 
 html {
     /* Mutăm fundalul aici pentru a permite body-ului să aibă padding transparent */
-    --app-bg: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80');
+    --app-bg: url('../assets/bg-blue.jpg');
     background: var(--app-bg) no-repeat center center fixed;
     background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), var(--app-bg) no-repeat center center fixed;
     background-size: cover;

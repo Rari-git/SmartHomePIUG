@@ -2,17 +2,20 @@ import { showToast } from './ui.js';
 import { actualizeazaMediiClimat, fetchWeather, getTempUnit } from './app.js';
 
 const BACKGROUNDS = [
-    { url: "url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#007aff" }, // Albastru Ocean / Sky
-    { url: "url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#ff9500" }, // Portocaliu / Gradient Warm
-    { url: "url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#34c759" }, // Verde Natural (Calibrat la nuanța iOS/HomeKit)
-    { url: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#af52de" }  // Mov / Purple Vibrant (Corectat din #9b59b6 în nuanța exactă)
+    { filename: "bg-blue.jpg", dominantColor: "#007aff" }, // Albastru Ocean / Sky
+    { filename: "bg-orange.jpg", dominantColor: "#ff9500" }, // Portocaliu / Gradient Warm
+    { filename: "bg-green.jpg", dominantColor: "#34c759" }, // Verde Natural (Calibrat la nuanța iOS/HomeKit)
+    { filename: "bg-purple.jpg", dominantColor: "#af52de" }  // Mov / Purple Vibrant (Corectat din #9b59b6 în nuanța exactă)
 ];
 
+// Inițializare imediată a temei și fundalului pentru a preveni flash-ul negru (înainte de DOMContentLoaded)
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    document.documentElement.classList.add('dark-mode');
+}
+initBackgroundAndAccent();
+
 document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-    }
-    initBackgroundAndAccent();
     actualizeazaButoaneUnitate();
 
     if (!document.querySelector('meta[name="view-transition"]')) {
@@ -24,14 +27,25 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizeazaUiSetariBackground();
 });
 
+function getBasePath() {
+    // Detectăm dacă suntem într-un subfolder (cum e /html/) sau la rădăcină
+    const isSubfolder = window.location.pathname.includes('/html/') || window.location.pathname.includes('\\html\\');
+    return isSubfolder ? '../assets' : 'assets';
+}
+
 function initBackgroundAndAccent() {
     const bgIndex = getCurentBgIndex();
+    const basePath = getBasePath();
     const bgConfig = BACKGROUNDS[bgIndex];
-    document.documentElement.style.setProperty('--app-bg', bgConfig.url);
+
+    // Construim calea relativă corectă pentru CSS injectat în HTML
+    const relativePath = `${basePath}/${bgConfig.filename}`;
+
+    const bgUrl = `url('${relativePath}')`;
+    document.documentElement.style.setProperty('--app-bg', bgUrl);
 
     if (isAutoAccentOn()) {
-        // Extragem URL-ul curat din string-ul url('...')
-        const cleanUrl = bgConfig.url.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+        const cleanUrl = `${basePath}/${bgConfig.filename}`;
         
         const img = new Image();
         img.crossOrigin = "Anonymous"; // Previne erorile de securitate CORS în Electron
@@ -104,8 +118,12 @@ function schimbaFundal(index) {
     if (index < 0 || index >= BACKGROUNDS.length) return;
     localStorage.setItem('appBgIndex', index);
 
+    const basePath = getBasePath();
     const bgConfig = BACKGROUNDS[index];
-    document.documentElement.style.setProperty('--app-bg', bgConfig.url);
+    const relativePath = `${basePath}/${bgConfig.filename}`;
+    
+    const bgUrl = `url('${relativePath}')`;
+    document.documentElement.style.setProperty('--app-bg', bgUrl);
 
     if (isAutoAccentOn()) {
         // Apelăm re-inițializarea pentru a declanșa recalcularea dinamică a culorii
