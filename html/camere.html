@@ -241,12 +241,32 @@
             if (countTemp > 0) {
                 let mediaC = sumaTempC / countTemp;
                 let unit = getTempUnit();
-                // Dacă suntem pe F, afișăm valoarea rotunjită în F. Altfel, media zecimală din C.
+                // Calculează media: rotunjită pentru Fahrenheit, cu o zecimală pentru Celsius
                 let afisajMedia = unit === 'F' ? Math.round((mediaC * 9/5) + 32) : mediaC.toFixed(1);
-                document.getElementById('widget-temp').innerText = afisajMedia;
+                
+                let widgetTemp = document.getElementById('widget-temp');
+                if (widgetTemp) {
+                    widgetTemp.innerText = afisajMedia;
+                    
+                    // --- CORECTURĂ PENTRU SCHIMBAREA SEMNULUI °C -> °F ---
+                    let urmatorulElement = widgetTemp.nextElementSibling;
+                    
+                    // Cazul 1: Simbolul are deja un <span> sau un element separat
+                    if (urmatorulElement && urmatorulElement.innerText.includes('°')) {
+                        urmatorulElement.innerText = `°${unit}`;
+                    } 
+                    // Cazul 2: Simbolul "°C" este lipit de număr direct în HTML
+                    else if (widgetTemp.parentElement && widgetTemp.parentElement.innerHTML.includes('°')) {
+                        widgetTemp.parentElement.innerHTML = `<span id="widget-temp">${afisajMedia}</span><span class="climate-unit" style="font-size:0.6em; color:var(--accent-color); margin-left:2px;">°${unit}</span>`;
+                    }
+                }
             }
+            
             if (countUmid > 0) {
-                document.getElementById('widget-umiditate').innerText = Math.round(sumaUmid / countUmid);
+                let widgetUmid = document.getElementById('widget-umiditate');
+                if (widgetUmid) {
+                    widgetUmid.innerText = Math.round(sumaUmid / countUmid);
+                }
             }
         }
 

@@ -773,6 +773,7 @@ function actualizeazaMediiClimat() {
 
     document.querySelectorAll('.climate-unit').forEach(el => {
         if (el.innerText.includes('°')) el.innerText = `°${unit}`;
+        el.innerText = `°${unit}`;
     });
 
     // 2. Calcul Umiditate Medie (dacă se folosesc dezumidificatoare per cameră)
