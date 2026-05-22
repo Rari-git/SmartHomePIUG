@@ -1,5 +1,5 @@
-import { actualizeazaMediiClimat } from './app.js';
-import { showToast } from './ui.js';
+import { actualizeazaMediiClimat, subDispozitive, adaugaInLog } from './app.js';
+import { showToast, actualizeazaCardInDOM } from './ui.js';
 
 function apasăTastăNumpad(valoare) {
     const input = document.getElementById('pinInput');
@@ -93,47 +93,60 @@ function simuleazaInundatie(isManual = true) {
     localStorage.setItem('pericolInundatie', 'true');
     document.body.classList.add('alarm-flash');
 
-    const stareElem = document.getElementById('stareInundatie');
-    const cardElem = document.getElementById('card-inundatie');
-    const btnReset = document.getElementById('btn-reset-inundatie');
-    const btnSim = document.getElementById('btn-sim-inundatie');
+    // Sincronizăm starea din memorie pentru ca și cardul mic din Dashboard să pulseze albastru
+    if (subDispozitive && subDispozitive.senzoriContact && subDispozitive.senzoriContact[0]) {
+        subDispozitive.senzoriContact[0].stare = 'APĂ DETECTATĂ!';
+        if (typeof actualizeazaCardInDOM === 'function') actualizeazaCardInDOM('senzoriContact', 0);
+    }
+
+    // Mapare folosind ID-urile REALE din pericole.html
+    const stareElem = document.getElementById('status-inundatie');
+    const cardElem = document.getElementById('panel-inundatie');
+    const btnReset = document.querySelector('#panel-inundatie .btn-stop');
+    const btnSim = document.querySelector('#panel-inundatie .btn-simulate');
 
     if (stareElem) {
-        stareElem.innerText = "INUNDAȚIE!";
-        stareElem.style.color = "#3498db";
+        stareElem.innerText = "ALERTĂ: Scurgere de apă detectată!";
+        stareElem.className = "text-error";
+        stareElem.style.color = "var(--error-color)";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "";
-        cardElem.style.color = "";
-        cardElem.style.borderTop = "";
         cardElem.classList.remove('status-safe');
-        cardElem.classList.add('status-alert-water');
+        cardElem.classList.add('status-alert-water'); // Activează pulsația CSS albastră
     }
     if (btnReset) btnReset.style.display = "block";
     if (btnSim) btnSim.style.display = "none";
 
-    if (isManual && typeof showToast === "function") {
-        showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.", true);
+    if (isManual) {
+        if (typeof showToast === "function") showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.", { isError: true });
+        if (typeof adaugaInLog === "function") adaugaInLog("Senzor Inundație: Scurgere de apă detectată în Baie.");
     }
 }
 
 function reseteazaInundatie() {
     localStorage.setItem('pericolInundatie', 'false');
-    document.body.classList.remove('alarm-flash');
+    
+    // Eliminăm flash-ul doar dacă nu mai este și celălalt pericol activ
+    if (localStorage.getItem('pericolIncendiu') !== 'true') {
+        document.body.classList.remove('alarm-flash');
+    }
 
-    const stareElem = document.getElementById('stareInundatie');
-    const cardElem = document.getElementById('card-inundatie');
-    const btnReset = document.getElementById('btn-reset-inundatie');
-    const btnSim = document.getElementById('btn-sim-inundatie');
+    if (subDispozitive && subDispozitive.senzoriContact && subDispozitive.senzoriContact[0]) {
+        subDispozitive.senzoriContact[0].stare = 'Închis';
+        if (typeof actualizeazaCardInDOM === 'function') actualizeazaCardInDOM('senzoriContact', 0);
+    }
+
+    const stareElem = document.getElementById('status-inundatie');
+    const cardElem = document.getElementById('panel-inundatie');
+    const btnReset = document.querySelector('#panel-inundatie .btn-stop');
+    const btnSim = document.querySelector('#panel-inundatie .btn-simulate');
 
     if (stareElem) {
-        stareElem.innerText = "USCAT";
+        stareElem.innerText = "Stare Normală";
+        stareElem.className = "text-success";
         stareElem.style.color = "var(--success-color)";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "";
-        cardElem.style.color = "";
-        cardElem.style.borderTop = "";
         cardElem.classList.remove('status-alert-water');
         cardElem.classList.add('status-safe');
     }
@@ -143,64 +156,67 @@ function reseteazaInundatie() {
     if (typeof showToast === "function") {
         showToast("✅ Problema a fost rezolvată. Valva de apă a fost repornită.");
     }
+    if (typeof adaugaInLog === "function") adaugaInLog("Senzor Inundație: Stare normală restabilită de utilizator.");
 }
 
-// --- SIMULARE INCENDIU SIGURĂ ---
+// --- SIMULARE INCENDIU REPARATĂ COMPLET ---
 function simuleazaIncendiu(isManual = true) {
     localStorage.setItem('pericolIncendiu', 'true');
     document.body.classList.add('alarm-flash');
 
-    const stareElem = document.getElementById('stareIncendiu');
-    const cardElem = document.getElementById('card-incendiu');
-    const btnReset = document.getElementById('btn-reset-incendiu');
-    const btnSim = document.getElementById('btn-sim-incendiu');
-    const detaliiElem = document.getElementById('detaliiIncendiu');
+    // Sincronizăm starea din memorie pentru ca și cardul mic din Dashboard să pulseze roșu
+    if (subDispozitive && subDispozitive.senzoriContact && subDispozitive.senzoriContact[1]) {
+        subDispozitive.senzoriContact[1].stare = 'FUM DETECTAT!';
+        if (typeof actualizeazaCardInDOM === 'function') actualizeazaCardInDOM('senzoriContact', 1);
+    }
+
+    // Mapare folosind ID-urile REALE din pericole.html
+    const stareElem = document.getElementById('status-incendiu');
+    const cardElem = document.getElementById('panel-incendiu');
+    const btnReset = document.querySelector('#panel-incendiu .btn-stop');
+    const btnSim = document.querySelector('#panel-incendiu .btn-simulate');
 
     if (stareElem) {
-        stareElem.innerText = "PERICOL FUM!";
-        stareElem.style.color = "#e74c3c";
-    }
-    if (detaliiElem) {
-        detaliiElem.innerText = "CRITIC: Nivel ridicat de monoxid de carbon detectat!";
-        detaliiElem.style.fontWeight = "bold";
+        stareElem.innerText = "PERICOL: Detecție Fum și Gaz!";
+        stareElem.className = "text-error";
+        stareElem.style.color = "var(--error-color)";
     }
     if (cardElem) {
-        cardElem.style.backgroundColor = "";
-        cardElem.style.color = "";
-        cardElem.style.borderTop = "";
         cardElem.classList.remove('status-safe');
-        cardElem.classList.add('status-alert-fire');
+        cardElem.classList.add('status-alert-fire'); // Activează pulsația CSS roșie
     }
     if (btnReset) btnReset.style.display = "block";
     if (btnSim) btnSim.style.display = "none";
 
-    if (isManual && typeof showToast === "function") {
-        showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.", true);
+    if (isManual) {
+        if (typeof showToast === "function") showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Verificați bucătăria.", { isError: true });
+        if (typeof adaugaInLog === "function") adaugaInLog("Detector Fum: Concentrație mare de fum detectată în Bucătărie.");
     }
 }
 
 function reseteazaIncendiu() {
     localStorage.setItem('pericolIncendiu', 'false');
-    document.body.classList.remove('alarm-flash');
 
-    const stareElem = document.getElementById('stareIncendiu');
-    const cardElem = document.getElementById('card-incendiu');
-    const btnReset = document.getElementById('btn-reset-incendiu');
-    const btnSim = document.getElementById('btn-sim-incendiu');
-    const detaliiElem = document.getElementById('detaliiIncendiu');
+    if (localStorage.getItem('pericolInundatie') !== 'true') {
+        document.body.classList.remove('alarm-flash');
+    }
+
+    if (subDispozitive && subDispozitive.senzoriContact && subDispozitive.senzoriContact[1]) {
+        subDispozitive.senzoriContact[1].stare = 'Închis';
+        if (typeof actualizeazaCardInDOM === 'function') actualizeazaCardInDOM('senzoriContact', 1);
+    }
+
+    const stareElem = document.getElementById('status-incendiu');
+    const cardElem = document.getElementById('panel-incendiu');
+    const btnReset = document.querySelector('#panel-incendiu .btn-stop');
+    const btnSim = document.querySelector('#panel-incendiu .btn-simulate');
 
     if (stareElem) {
-        stareElem.innerText = "SIGUR";
+        stareElem.innerText = "Stare Normală";
+        stareElem.className = "text-success";
         stareElem.style.color = "var(--success-color)";
     }
-    if (detaliiElem) {
-        detaliiElem.innerText = "Nivel de particule și gaz în parametri normali.";
-        detaliiElem.style.fontWeight = "normal";
-    }
     if (cardElem) {
-        cardElem.style.backgroundColor = "";
-        cardElem.style.color = "";
-        cardElem.style.borderTop = "";
         cardElem.classList.remove('status-alert-fire');
         cardElem.classList.add('status-safe');
     }
@@ -210,6 +226,7 @@ function reseteazaIncendiu() {
     if (typeof showToast === "function") {
         showToast("✅ Aer curat. Sistemul de alarmă a fost dezactivat.");
     }
+    if (typeof adaugaInLog === "function") adaugaInLog("Detector Fum: Sistem resetat în parametri normali.");
 }
 
 function valideazaTemperatura() {

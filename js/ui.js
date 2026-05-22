@@ -688,6 +688,11 @@ function showToast(mesaj, opts = {}) {
         document.body.appendChild(container);
     }
 
+    // Eliminăm orice notificare existentă înainte de a afișa una nouă.
+    // Acest lucru previne suprapunerea mesajelor de succes peste cele de alarmă.
+    const existingToasts = container.querySelectorAll('.toast-notification');
+    existingToasts.forEach(t => t.remove());
+
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.style.borderLeft = `4px solid ${opts.isError ? 'var(--error-color)' : 'var(--success-color)'}`;

@@ -47,7 +47,6 @@
     <script type="module">
         import { simuleazaInundatie, reseteazaInundatie, simuleazaIncendiu, reseteazaIncendiu } from '../js/validation.js';
 
-        // Atașăm evenimentele dinamic și sigur la nivel de DOM
         document.addEventListener('DOMContentLoaded', () => {
             // Mapare butoane Inundație
             const btnSimInundatie = document.querySelector('#panel-inundatie .btn-simulate');
@@ -61,13 +60,15 @@
             if (btnSimIncendiu) btnSimIncendiu.addEventListener('click', () => simuleazaIncendiu(true));
             if (btnStopIncendiu) btnStopIncendiu.addEventListener('click', () => reseteazaIncendiu());
 
-            // Verificare stare persistentă la încărcare pagină
-            if (localStorage.getItem('pericolInundatie') === 'true') {
-                simuleazaInundatie(false);
-            }
-            if (localStorage.getItem('pericolIncendiu') === 'true') {
-                simuleazaIncendiu(false);
-            }
+            // Oferim 100ms timp structurii globale JSON smartHomeData să se încarce stabil
+            setTimeout(() => {
+                if (localStorage.getItem('pericolInundatie') === 'true') {
+                    simuleazaInundatie(false);
+                }
+                if (localStorage.getItem('pericolIncendiu') === 'true') {
+                    simuleazaIncendiu(false);
+                }
+            }, 100);
         });
     </script>
 </body>

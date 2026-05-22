@@ -1007,6 +1007,20 @@ body.alarm-flash {
     box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
+/* Îmbunătățire vizibilitate butoane Stop pe fundaluri colorate de alertă */
+.status-alert-fire .btn-stop {
+    background: #ffffff !important;
+    color: #e74c3c !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.status-alert-water .btn-stop {
+    background: #ffffff !important;
+    color: #3498db !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
 .security-grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -2134,46 +2148,73 @@ body.dark-mode .popup-ctrl-btn:hover {
     opacity: 0.9;
 }
 
-/* --- Animații Senzori de Pericol SmartHome --- */
+/* ========================================================== */
+/* STILURI CARDURI ȘI PANOURI ALERTE OPACE (NON-TRANSPARENT)   */
+/* ========================================================== */
 
-/* Detector Fum / Foc - Red Flashing Light */
+/* Detector Fum / Incendiu - Roșu Solid Opac (Pentru panoul mare și cardul mic) */
+.danger-panel.status-alert-fire,
 .hk-card.alarm-fire {
-    background: rgba(231, 76, 60, 0.25) !important;
-    border-color: #e74c3c !important;
-    animation: cardFlashRed 1.4s infinite ease-in-out !important;
-    box-shadow: 0 0 20px rgba(231, 76, 60, 0.35) !important;
-}
-.hk-card.alarm-fire .hk-icon,
-.hk-card.alarm-fire .hk-name,
-.hk-card.alarm-fire .hk-state {
-    color: #ff3b30 !important;
-    animation: lightPulseRed 1.4s infinite ease-in-out !important;
+    background: #e74c3c !important; /* Culoare solidă, complet opacă */
+    border-color: #ff3b30 !important;
+    box-shadow: 0 8px 24px rgba(231, 76, 60, 0.5) !important;
+    animation: cardFlashRedOpaque 1.5s infinite ease-in-out !important;
 }
 
-/* Inundație - Blue Flashing Light */
+/* Forțăm textul și iconițele din interior să fie albe pentru lizibilitate pe fundal roșu */
+.danger-panel.status-alert-fire *:not(.btn-stop),
+.hk-card.alarm-fire *:not(.btn-stop) {
+    color: #ffffff !important;
+}
+
+/* Inundație - Albastru Solid Opac (Pentru panoul mare și cardul mic) */
+.danger-panel.status-alert-water,
 .hk-card.alarm-water {
-    background: rgba(52, 152, 219, 0.25) !important;
-    border-color: #3498db !important;
-    animation: cardFlashBlue 1.4s infinite ease-in-out !important;
-    box-shadow: 0 0 20px rgba(52, 152, 219, 0.35) !important;
-}
-.hk-card.alarm-water .hk-icon,
-.hk-card.alarm-water .hk-name,
-.hk-card.alarm-water .hk-state {
-    color: #007aff !important;
-    animation: lightPulseBlue 1.4s infinite ease-in-out !important;
+    background: #3498db !important; /* Culoare solidă, complet opacă */
+    border-color: #007aff !important;
+    box-shadow: 0 8px 24px rgba(52, 152, 219, 0.5) !important;
+    animation: cardFlashBlueOpaque 1.5s infinite ease-in-out !important;
 }
 
-/* --- Keyframes Background --- */
-@keyframes cardFlashRed {
-    0% { background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.5); }
-    50% { background: rgba(231, 76, 60, 0.5); border-color: #ff3b30; box-shadow: 0 0 25px rgba(231, 76, 60, 0.6); }
-    100% { background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.5); }
+/* Forțăm textul și iconițele din interior să fie albe pentru lizibilitate pe fundal albastru */
+.danger-panel.status-alert-water *:not(.btn-stop),
+.hk-card.alarm-water *:not(.btn-stop) {
+    color: #ffffff !important;
 }
-@keyframes cardFlashBlue {
-    0% { background: rgba(52, 152, 219, 0.15); border-color: rgba(52, 152, 219, 0.5); }
-    50% { background: rgba(52, 152, 219, 0.5); border-color: #007aff; box-shadow: 0 0 25px rgba(52, 152, 219, 0.6); }
-    100% { background: rgba(52, 152, 219, 0.15); border-color: rgba(52, 152, 219, 0.5); }
+
+
+/* --- Animații Keyframes (Tranziție între nuanțe intense, fără transparență) --- */
+
+@keyframes cardFlashRedOpaque {
+    0% { 
+        background-color: #c0392b; /* Roșu închis solid */
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+    50% { 
+        background-color: #e74c3c; /* Roșu aprins solid */
+        box-shadow: 0 12px 30px rgba(255, 59, 48, 0.7);
+        transform: scale(1.01); /* Un ușor efect de impuls fizic discret */
+    }
+    100% { 
+        background-color: #c0392b;
+        box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+}
+
+@keyframes cardFlashBlueOpaque {
+    0% { 
+        background-color: #2980b9; /* Albastru închis solid */
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+    50% { 
+        background-color: #3498db; /* Albastru deschis solid */
+        box-shadow: 0 12px 30px rgba(0, 122, 255, 0.7);
+        transform: scale(1.01); /* Un ușor efect de impuls fizic discret */
+    }
+    100% { 
+        background-color: #2980b9;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
 }
 
 /* --- Keyframes Text & Icon Glow --- */
