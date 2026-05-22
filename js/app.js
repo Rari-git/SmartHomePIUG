@@ -3,7 +3,7 @@ import {
     reincarcaInterfata, actualizeazaCardInDOM, sincronizeazaDOMcuMemoria,
     afiseazaNotificariHome, construiesteScenaHTML, construiesteCardHTML,
     deschideMeniuDispozitive, deschidePopupLuminiAprinse, deschidePopupAudioPornit,
-    deschidePopupToateNotificarile, applyFadeOutAndClose, showToast
+    deschidePopupToateNotificarile, applyFadeOutAndClose, showToast, inchidePopup
 } from './ui.js';
 
 export let intervalVacanta = null;
@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopPropagation(); toggleStareDispozitiv(target.dataset.cat, parseInt(target.dataset.idx), e); deschidePopupLuminiAprinse();
         } else if (action === 'toggle-and-refresh-audio') {
             e.stopPropagation(); toggleStareDispozitiv(target.dataset.cat, parseInt(target.dataset.idx), e); deschidePopupAudioPornit();
+        } else if (action === 'delete-device-popup') {
+            e.stopPropagation(); stergeAccesoriu(target.dataset.cat, parseInt(target.dataset.idx));
         }
     });
 
@@ -628,6 +630,70 @@ function stergeScenaCustom(idScena, event) {
     }
 }
 
+function stergeAccesoriu(cat, idx) {
+    const disp = subDispozitive[cat][idx];
+    if (!disp) return;
+
+    if (confirm(`Esti sigur ca vrei sa elimini obiectul ${disp.nume} din sistem?`)) {
+        // Corectare indecși în lista de favorite (dacă se afla acolo, îl ștergem, și actualizăm obiectele de după el)
+        let favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
+        let newFavAcc = [];
+        favAcc.forEach(id => {
+            const [fCat, fIdxStr] = id.split('_');
+            const fIdx = parseInt(fIdxStr);
+            if (fCat === cat) {
+                if (fIdx === idx) return; // Eliminat
+                if (fIdx > idx) { newFavAcc.push(`${fCat}_${fIdx - 1}`); return; } // Scalare index
+            }
+            newFavAcc.push(id);
+        });
+        localStorage.setItem('favAcc', JSON.stringify(newFavAcc));
+
+        // Corectare indecși în automatizări
+        let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
+        let newRules = [];
+        rules.forEach(rule => {
+            let keep = true;
+            if (rule.tipTrigger === 'disp' && rule.tCat === cat) {
+                const tIdx = parseInt(rule.tIdx);
+                if (tIdx === idx) keep = false;
+                else if (tIdx > idx) rule.tIdx = (tIdx - 1).toString();
+            }
+            if (rule.aCat === cat) {
+                const aIdx = parseInt(rule.aIdx);
+                if (aIdx === idx) keep = false;
+                else if (aIdx > idx) rule.aIdx = (aIdx - 1).toString();
+            }
+            if (keep) newRules.push(rule);
+        });
+        localStorage.setItem('userAutomations', JSON.stringify(newRules));
+
+        // Corectare statistici de utilizare dispozitiv
+        let usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
+        let newUsage = {};
+        Object.keys(usage).forEach(id => {
+            const [uCat, uIdxStr] = id.split('_');
+            const uIdx = parseInt(uIdxStr);
+            if (uCat === cat) {
+                if (uIdx === idx) return;
+                if (uIdx > idx) { newUsage[`${uCat}_${uIdx - 1}`] = usage[id]; return; }
+            }
+            newUsage[id] = usage[id];
+        });
+        localStorage.setItem('deviceUsage', JSON.stringify(newUsage));
+
+        // Ștergere fizică din memorie
+        subDispozitive[cat].splice(idx, 1);
+        salveazaStarea();
+
+        if (typeof adaugaInLog === 'function') adaugaInLog(`Accesoriu șters: ${disp.nume} (${disp.camera})`);
+        if (typeof showToast === 'function') showToast("Obiectul a fost șters din sistem.");
+
+        inchidePopup();
+        reincarcaInterfata();
+    }
+}
+
 function executaSecurizareTotala() {
     if (subDispozitive.senzoriContact) subDispozitive.senzoriContact.forEach(g => g.stare = "Închis");
     if (subDispozitive.incuietori) subDispozitive.incuietori.forEach(u => u.stare = "Blocat");
@@ -745,7 +811,7 @@ export {
     verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie,
     stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal,
     aplicaMod, calculeazaConsumPriza, calculeazaConsumDispozitiv, executaScena, salveazaScenaCustomNoua,
-    stergeScenaCustom, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
+    stergeScenaCustom, stergeAccesoriu, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
     fetchWeather
 };
 
@@ -763,4 +829,5 @@ window.actualizeazaMediiClimat = actualizeazaMediiClimat;
 window.adaugaInLog = adaugaInLog;
 window.deschidePopupPin = deschidePopupPin;
 window.executaScena = executaScena;
+window.stergeAccesoriu = stergeAccesoriu;
 window.fetchWeather = fetchWeather;

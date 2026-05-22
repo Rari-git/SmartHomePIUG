@@ -454,6 +454,9 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
                 </div>`;
         }
     }
+    
+    contentHtml += `<div class="popup-action-row" style="margin-top: 15px;"><button class="sensor-action-btn" data-action="delete-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: var(--error-color);"><i class="ph-bold ph-trash"></i> Șterge Accesoriu</button></div>`;
+    
     continental.innerHTML = contentHtml;
     modal.classList.add('active');
 }
