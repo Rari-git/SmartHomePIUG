@@ -553,6 +553,13 @@ body.dark-mode .hk-card.is-active .hk-controls button i {
     fill: #ffffff !important;
 }
 
+body.dark-mode .hk-card.is-active .hk-controls .hk-star.is-fav,
+body.dark-mode .hk-card.is-active .hk-controls .hk-star.is-fav i {
+    color: var(--warning-color) !important;
+    fill: var(--warning-color) !important;
+    stroke: transparent !important;
+}
+
 .hk-name {
     font-size: 0.95em;
     font-weight: 700;
