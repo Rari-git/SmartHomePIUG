@@ -102,6 +102,19 @@ body {
     box-sizing: border-box;
 }
 
+/* Zonă invizibilă de drag (mutare fereastră) în spațiul de padding superior */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - 138px); /* Lăsăm loc pentru butoanele de control native (Min/Max/Close) */
+    height: 40px;
+    -webkit-app-region: drag;
+    z-index: 100;
+    pointer-events: auto;
+}
+
 /* Fundal pentru butoanele de control ale ferestrei (Minimizare, Maximizare, Închidere) */
 body::before {
     content: '';
@@ -113,6 +126,8 @@ body::before {
     background: white;
     border-bottom-left-radius: 12px;
     z-index: 1;
+    z-index: 101; /* Trebuie să fie deasupra zonei de drag pentru a nu bloca butoanele de control */
+    -webkit-app-region: no-drag;
 }
 
 input,

@@ -133,7 +133,7 @@
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/app.js"></script>
     <script type="module">
-        import { showToast, getCurentBgIndex, isAutoAccentOn } from '../js/main.js';
+        import { showToast, getCurentBgIndex, isAutoAccentOn, actualizeazaUiSetariBackground } from '../js/main.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             const isDark = localStorage.getItem('darkMode') === 'true';
@@ -145,24 +145,6 @@
             // UI Init pentru fundal și accent automat
             actualizeazaUiSetariBackground();
         });
-
-        function actualizeazaUiSetariBackground() {
-            const autoAccent = isAutoAccentOn();
-            document.getElementById('auto-accent-toggle').checked = autoAccent;
-            document.getElementById('manual-accent-container').style.opacity = autoAccent ? '0.5' : '1';
-            document.getElementById('manual-accent-container').style.pointerEvents = autoAccent ? 'none' : 'auto';
-
-            const curentBgIndex = getCurentBgIndex();
-            document.querySelectorAll('.bg-option').forEach((el, index) => {
-                if (index === curentBgIndex) {
-                    el.style.borderColor = 'var(--accent-color)';
-                    el.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-                } else {
-                    el.style.borderColor = 'transparent';
-                    el.style.boxShadow = 'none';
-                }
-            });
-        }
 
         function salveazaNumeCasa() {
             const inputVal = document.getElementById('nume-casa-input').value.trim();
@@ -177,7 +159,6 @@
         }
 
         window.salveazaNumeCasa = salveazaNumeCasa;
-        window.actualizeazaUiSetariBackground = actualizeazaUiSetariBackground;
     </script>
 </body>
 

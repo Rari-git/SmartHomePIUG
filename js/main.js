@@ -117,6 +117,7 @@ function schimbaFundal(index) {
 }
 
 export {
+    showToast,
     toggleDarkMode,
     schimbaCuloareAccent,
     seteazaCuloareAccentManual,
@@ -170,14 +171,26 @@ function actualizeazaUiSetariBackground() {
     const isAuto = isAutoAccentOn();
     
     // Sincronizăm switch-ul din interfață
-    const switchEl = document.getElementById('auto-accent-switch');
+    const switchEl = document.getElementById('auto-accent-toggle');
     if (switchEl) switchEl.checked = isAuto;
 
     // Blocăm/Deblocăm vizual zona de culori manuale
-    const manualZone = document.getElementById('manual-accent-colors');
+    const manualZone = document.getElementById('manual-accent-container');
     if (manualZone) {
         manualZone.classList.toggle('disabled-zone', isAuto);
     }
+
+    // Actualizăm highlight-ul fundalului selectat (vizibil în pagina de setări)
+    const curentBgIndex = getCurentBgIndex();
+    document.querySelectorAll('.bg-option').forEach((el, index) => {
+        if (index === curentBgIndex) {
+            el.style.borderColor = 'var(--accent-color)';
+            el.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+        } else {
+            el.style.borderColor = 'transparent';
+            el.style.boxShadow = 'none';
+        }
+    });
 }
 
 function schimbaCuloareAccent(color) {
