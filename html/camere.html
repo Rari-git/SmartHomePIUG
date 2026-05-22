@@ -127,20 +127,30 @@
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/app.js"></script>
     <script type="module">
-        // Importăm showToast pentru a-l folosi local în acest modul
+        // Importăm funcțiile utilitare pentru conversia temperaturii și toast-ul
         import { showToast } from '../js/ui.js';
+        import { getTempUnit, convertTemp } from '../js/app.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
+            const unit = getTempUnit(); // Obținem "C" sau "F"
+
+            // 1. Schimbăm toate simbolurile "°C" cu unitatea corectă în interfață la încărcare
+            document.querySelectorAll('.climate-unit').forEach(el => {
+                if (el.innerText.includes('°')) el.innerText = `°${unit}`;
+            });
+
             camere.forEach(camera => {
-                let temp = localStorage.getItem(`temp-${camera}`) || "22";
+                // Citim din memorie valoarea de referință în Celsius (default 22)
+                let tempC = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
                 let umid = localStorage.getItem(`umid-${camera}`) || "45";
 
                 let elTemp = document.getElementById(`temp-${camera}`);
                 if (elTemp) {
-                    elTemp.innerText = temp;
-                    actualizeazaCuloriTermostat(camera, parseFloat(temp));
+                    elTemp.innerText = convertTemp(tempC); // Afișăm valoarea convertită pentru ecran
+                    actualizeazaCuloriTermostat(camera, tempC); // Judecăm culorile tot în Celsius
                 }
+                
                 let elUmid = document.getElementById(`umid-${camera}`);
                 if (elUmid) {
                     elUmid.innerText = umid;
@@ -153,30 +163,57 @@
         function ajusteazaValoareCameră(tip, camera, directie) {
             const displayElem = document.getElementById(`${tip}-${camera}`);
             if (!displayElem) return;
-            let valoareAcum = parseFloat(displayElem.innerText);
-            let increment = tip === 'temp' ? 1 : 5;
-            let nouaValoare = directie === 'plus' ? valoareAcum + increment : valoareAcum - increment;
 
             if (tip === 'temp') {
-                if (nouaValoare < 15) nouaValoare = 15;
-                if (nouaValoare > 30) nouaValoare = 30;
-                actualizeazaCuloriTermostat(camera, nouaValoare);
-            } else {
-                if (nouaValoare < 30) nouaValoare = 30;
-                if (nouaValoare > 70) nouaValoare = 70;
-                actualizeazaCuloriUmiditate(camera, nouaValoare);
-            }
+                // AICI ERA PROBLEMA! Acum citim din memorie (unde stocăm mereu în Celsius)
+                let valC = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
+                let unit = getTempUnit();
+                
+                // Convertim în valoarea care trebuie afișată (ca să putem aduna "1 grad F" logic pe ecran)
+                let valDisp = unit === 'F' ? Math.round((valC * 9/5) + 32) : Math.round(valC);
+                
+                // Aplicăm click-ul butonului pe valoarea afișată
+                valDisp = directie === 'plus' ? valDisp + 1 : valDisp - 1;
 
-            displayElem.innerText = nouaValoare;
-            localStorage.setItem(`${tip}-${camera}`, nouaValoare);
+                // Aplicăm limitele corespunzătoare fiecărei unități de măsură
+                if (unit === 'F') {
+                    if (valDisp < 59) valDisp = 59; // Limita de jos (aprox 15°C)
+                    if (valDisp > 86) valDisp = 86; // Limita de sus (aprox 30°C)
+                    // Transformăm înapoi în Celsius pentru a salva corect în localStorage
+                    valC = (valDisp - 32) * 5/9;
+                } else {
+                    if (valDisp < 15) valDisp = 15;
+                    if (valDisp > 30) valDisp = 30;
+                    valC = valDisp;
+                }
+
+                // Salvăm valoarea de bază și actualizăm textul ecranului
+                localStorage.setItem(`temp-${camera}`, valC);
+                displayElem.innerText = valDisp;
+                actualizeazaCuloriTermostat(camera, valC);
+            } else {
+                // Logica pentru Umiditate rămâne nemodificată
+                let valUmid = parseFloat(localStorage.getItem(`umid-${camera}`)) || 45;
+                let increment = 5;
+                valUmid = directie === 'plus' ? valUmid + increment : valUmid - increment;
+                
+                if (valUmid < 30) valUmid = 30;
+                if (valUmid > 70) valUmid = 70;
+                
+                localStorage.setItem(`umid-${camera}`, valUmid);
+                displayElem.innerText = valUmid;
+                actualizeazaCuloriUmiditate(camera, valUmid);
+            }
+            
             calculeazaMedii();
         }
 
-        function actualizeazaCuloriTermostat(camera, temperatura) {
+        // Culorile sunt judecate întotdeauna folosind valoarea Celsius de bază pentru consistență
+        function actualizeazaCuloriTermostat(camera, temperaturaC) {
             const card = document.getElementById(`card-temp-${camera}`);
             const status = document.getElementById(`status-temp-${camera}`);
-            if (temperatura <= 19) { status.innerText = "Răcoare (Eco)"; status.style.color = "#3498db"; card.style.borderBottomColor = "#3498db"; }
-            else if (temperatura >= 20 && temperatura <= 24) { status.innerText = "Confortabil"; status.style.color = "var(--success-color)"; card.style.borderBottomColor = "var(--success-color)"; }
+            if (temperaturaC <= 19) { status.innerText = "Răcoare (Eco)"; status.style.color = "#3498db"; card.style.borderBottomColor = "#3498db"; }
+            else if (temperaturaC >= 20 && temperaturaC <= 24) { status.innerText = "Confortabil"; status.style.color = "var(--success-color)"; card.style.borderBottomColor = "var(--success-color)"; }
             else { status.innerText = "Călduros (High)"; status.style.color = "#e67e22"; card.style.borderBottomColor = "#e67e22"; }
         }
 
@@ -190,25 +227,27 @@
 
         function calculeazaMedii() {
             const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
-            let sumaTemp = 0, countTemp = 0;
+            let sumaTempC = 0, countTemp = 0;
             let sumaUmid = 0, countUmid = 0;
 
             camere.forEach(camera => {
-                const elTemp = document.getElementById(`temp-${camera}`);
-                if (elTemp) {
-                    sumaTemp += parseFloat(elTemp.innerText);
-                    countTemp++;
-                }
-
-                const elUmid = document.getElementById(`umid-${camera}`);
-                if (elUmid) {
-                    sumaUmid += parseFloat(elUmid.innerText);
-                    countUmid++;
-                }
+                let tempC = parseFloat(localStorage.getItem(`temp-${camera}`));
+                if (!isNaN(tempC)) { sumaTempC += tempC; countTemp++; }
+                
+                let umid = parseFloat(localStorage.getItem(`umid-${camera}`));
+                if (!isNaN(umid)) { sumaUmid += umid; countUmid++; }
             });
 
-            if (countTemp > 0) document.getElementById('widget-temp').innerText = (sumaTemp / countTemp).toFixed(1);
-            if (countUmid > 0) document.getElementById('widget-umiditate').innerText = Math.round(sumaUmid / countUmid);
+            if (countTemp > 0) {
+                let mediaC = sumaTempC / countTemp;
+                let unit = getTempUnit();
+                // Dacă suntem pe F, afișăm valoarea rotunjită în F. Altfel, media zecimală din C.
+                let afisajMedia = unit === 'F' ? Math.round((mediaC * 9/5) + 32) : mediaC.toFixed(1);
+                document.getElementById('widget-temp').innerText = afisajMedia;
+            }
+            if (countUmid > 0) {
+                document.getElementById('widget-umiditate').innerText = Math.round(sumaUmid / countUmid);
+            }
         }
 
         function deschideGeamurile() {
@@ -217,6 +256,7 @@
             if (typeof showToast === "function") showToast("Sistemul HVAC a reîmprospătat aerul din casă.");
         }
 
+        // Expunem elementele pe window pentru HTML
         window.ajusteazaValoareCameră = ajusteazaValoareCameră;
         window.actualizeazaCuloriTermostat = actualizeazaCuloriTermostat;
         window.actualizeazaCuloriUmiditate = actualizeazaCuloriUmiditate;
