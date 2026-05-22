@@ -271,6 +271,12 @@ function toggleNav() {
     const nav = document.querySelector('nav');
     let backdrop = document.getElementById('nav-backdrop');
 
+    // Modificăm automat titlul meniului în OmniHome
+    if (nav) {
+        const titluNav = nav.querySelector('h2');
+        if (titluNav) titluNav.innerText = "OmniHome";
+    }
+
     if (!backdrop) {
         backdrop = document.createElement('div');
         backdrop.id = 'nav-backdrop';
