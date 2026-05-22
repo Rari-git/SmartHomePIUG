@@ -89,16 +89,17 @@ body {
     overflow-x: hidden;
     transition: color 0.3s ease;
     -webkit-font-smoothing: antialiased;
+    
+    /* Păstrăm DOAR no-drag aici pentru a debloca scrollbar-ul */
     -webkit-app-region: no-drag;
-    /* Oprim drag-ul pe body pentru a debloca bara de scroll */
     user-select: none;
-    -webkit-app-region: drag;
-    /* Permite tragerea ferestrei din orice zonă goală a body-ului */
     -webkit-user-select: none;
+    
+    /* ȘTERGEȚI SAU COMENTAȚI linia de mai jos: */
+    /* -webkit-app-region: drag; */
+    
     padding-top: 40px;
-    /* Adaugă spațiu pentru bara de titlu, făcând această zonă parte din body (trăgabilă) și scurtând scrollbar-ul */
     box-sizing: border-box;
-    /* Asigură că padding-ul este inclus în înălțimea totală */
 }
 
 /* Fundal pentru butoanele de control ale ferestrei (Minimizare, Maximizare, Închidere) */
@@ -151,13 +152,20 @@ p,
     align-items: center;
     gap: 20px;
     margin-bottom: 5px;
-    -webkit-app-region: drag;
-    /* Permitem mutarea ferestrei trăgând de header-ul paginii */
+    -webkit-app-region: drag; /* Această linie va permite mutarea ferestrei trăgând de titlu */
 }
 
 .menu-toggle-btn {
-    -webkit-app-region: no-drag;
-    /* Butonul de meniu trebuie să rămână interactiv */
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    transition: transform 0.2s;
+    /* Obligatoriu pentru ca butonul să primească click-uri în interiorul unui header drăgăbil */
+    -webkit-app-region: no-drag; 
 }
 
 .page-header h1 {
