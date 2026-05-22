@@ -133,6 +133,7 @@ body::before {
     border-left: 1px solid rgba(255, 255, 255, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     border-bottom-left-radius: 12px;
+    box-shadow: var(--shadow-soft);
     z-index: 1;
     z-index: 101;
     /* Trebuie să fie deasupra zonei de drag pentru a nu bloca butoanele de control */
@@ -180,7 +181,7 @@ p,
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-bottom: 5px;
+    margin-bottom: 30px;
     -webkit-app-region: drag;
     /* Această linie va permite mutarea ferestrei trăgând de titlu */
 }
@@ -209,7 +210,7 @@ p,
     color: var(--text-color);
     opacity: 0.65;
     font-size: 1.05em;
-    margin: 0 0 30px 0;
+    margin: -25px 0 30px 0;
     font-weight: 400;
     line-height: 1.5;
 }
@@ -1183,6 +1184,17 @@ body.alarm-flash {
     color: white !important;
     opacity: 1;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Butoane de selecție mai mari în panoul de Setări */
+.settings-card .filter-btn {
+    padding: 10px 20px;
+    font-size: 0.95em;
+}
+
+/* Eliminare spațiu dublu sub butoanele din Setări */
+.settings-card .form-row .flex-row {
+    margin-bottom: 0;
 }
 
 .toast-container {
