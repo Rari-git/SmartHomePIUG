@@ -217,17 +217,22 @@ p,
 
 .info-banner {
     background: var(--card-bg);
-    padding: 15px 20px;
+    padding: 30px 20px;
     border-radius: 12px;
     box-shadow: var(--shadow-soft);
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 }
 
 nav {
     position: fixed;
     top: 0;
-    left: -280px;
+    left: -300px; /* Corectează linia albă verticală de 1px de pe fundal */
     width: 240px;
     height: 100vh;
     background: rgba(255, 255, 255, 0.4);
@@ -777,7 +782,7 @@ svg.hk-svg-icon {
 
 .climate-unit {
     font-size: 1.1em;
-    color: #000000;
+    color: var(--text-color) !important; /* Asigură că 'C' este negru pe light și alb pe dark */
     font-weight: bold;
     margin-left: 2px;
 }
@@ -879,13 +884,16 @@ input:checked+.slider:before {
     transform: translateX(20px);
 }
 
-.card-add-custom-scene {
-    background: var(--card-bg);
+.card-add-custom-scene,
+.card-add-accessory {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: var(--shadow-soft);
     border: 2px dashed var(--accent-color) !important;
     border-radius: var(--card-radius);
     padding: 10px;
     height: 110px;
-    width: 110px;
     width: 100%;
     box-sizing: border-box;
     display: flex;
@@ -894,35 +902,46 @@ input:checked+.slider:before {
     justify-content: center;
     gap: 15px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-.card-add-custom-scene:hover {
+.card-add-custom-scene:active,
+.card-add-accessory:active {
+    transform: scale(0.96);
+}
+
+.card-add-custom-scene:hover,
+.card-add-accessory:hover {
     background: rgba(0, 122, 255, 0.05) !important;
 }
 
-body.dark-mode .card-add-custom-scene:hover {
+body.dark-mode .card-add-custom-scene:hover,
+body.dark-mode .card-add-accessory:hover {
     background: rgba(0, 122, 255, 0.15) !important;
 }
 
-.card-add-custom-scene .plus-icon {
+.card-add-custom-scene .plus-icon,
+.card-add-accessory .plus-icon {
     font-size: 1.8em;
     color: var(--accent-color);
 }
 
-.card-add-custom-scene .scene-info {
+.card-add-custom-scene .scene-info,
+.card-add-accessory .acc-info {
     display: flex;
     flex-direction: column;
     text-align: left;
 }
 
-.card-add-custom-scene .scene-title {
+.card-add-custom-scene .scene-title,
+.card-add-accessory .acc-title {
     font-size: 1.05em;
     font-weight: 700;
     color: var(--accent-color);
 }
 
-.card-add-custom-scene .scene-desc {
+.card-add-custom-scene .scene-desc,
+.card-add-accessory .acc-desc {
     font-size: 0.85em;
     opacity: 0.7;
     color: var(--text-color);
@@ -953,7 +972,7 @@ body.dark-mode .card-add-custom-scene:hover {
     transition: all 0.3s ease;
     max-width: 420px;
     height: 360px;
-    margin: 0 auto;
+    margin: 0 auto 30px auto; /* Adăugăm un spațiu la baza cardurilor de pericol */
     display: flex;
     flex-direction: column;
     justify-content: center;

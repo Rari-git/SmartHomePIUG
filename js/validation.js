@@ -333,7 +333,7 @@ function actualizeazaSenzori() {
     if (nouaUmiditate < 30) nouaUmiditate = 30;
     if (nouaUmiditate > 70) nouaUmiditate = 70;
 
-    displayElem.innerText = nouaUmiditate + "%";
+    displayElem.innerText = nouaUmiditate;
 
     if (nouaUmiditate >= 40 && nouaUmiditate <= 60) {
         stareElem.innerText = "Optimă";
@@ -393,7 +393,7 @@ function pornesteDezumidificator() {
 
     if (nouaUmiditate < 35) nouaUmiditate = 35;
 
-    displayElem.innerText = nouaUmiditate + "%";
+    displayElem.innerText = nouaUmiditate;
 
     if (nouaUmiditate >= 40 && nouaUmiditate <= 60) {
         stareElem.innerText = "Optimă";
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const umidSalvata = localStorage.getItem(`umid-${camera}`);
         const umidElem = document.getElementById(`umid-${camera}`);
         if (umidSalvata && umidElem) {
-            umidElem.innerText = umidSalvata + "%";
+            umidElem.innerText = umidSalvata;
         }
     });
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();

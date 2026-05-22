@@ -871,7 +871,7 @@ function actualizeazaMediiClimat() {
         // Aici afișăm per cameră corect, cu % 
         const umidElem = document.getElementById(`umid-${camera}`);
         if (umidElem && !isNaN(val)) {
-            umidElem.innerText = val + "%";
+            umidElem.innerText = val;
         }
     });
 
@@ -881,9 +881,9 @@ function actualizeazaMediiClimat() {
     const umidCurenta = document.getElementById('umiditateCurenta');
     const widgetMedieUmid = document.getElementById('medie-umid'); // ID pentru camere.html
 
-    if (widgetUmiditate) widgetUmiditate.innerText = mediaUmid + "%";
-    if (umidCurenta) umidCurenta.innerText = mediaUmid + "%";
-    if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid + "%";
+    if (widgetUmiditate) widgetUmiditate.innerText = mediaUmid;
+    if (umidCurenta) umidCurenta.innerText = mediaUmid;
+    if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid;
 }
 
 // --- Integrare API Vreme Timișoara ---
