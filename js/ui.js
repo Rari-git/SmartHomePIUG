@@ -5,6 +5,16 @@ export let dashTipCurent = 'energie';
 export let dashPerioadaCurenta = '7z';
 export let sortableInstante = { acc: null, scene: null };
 
+// Funcție pentru formatarea dinamică a temperaturii în funcție de setarea utilizatorului
+function formateazaTemperatura(valoareCelsius) {
+    const unitate = localStorage.getItem('tempUnit') || 'C'; // presupunând că folosești 'C' și 'F'
+    if (unitate === 'F') {
+        const fahrenheit = Math.round((valoareCelsius * 9/5) + 32);
+        return `${fahrenheit}°F`;
+    }
+    return `${valoareCelsius}°C`;
+}
+
 // Helper function for smooth modal fade-out
 function applyFadeOutAndClose(modal) {
     if (!modal || !modal.classList.contains('active')) {
@@ -312,7 +322,14 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
         clasaAlarma = 'alarm-water';
     }
 
-    return `<div class="hk-card ${isActive ? 'is-active' : ''} ${clasaAlarma}" data-id="${idUnic}" style="animation-delay: ${animDelay}s;" data-action="toggle-device" data-cat="${cat}" data-idx="${idx}"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${idUnic}" data-favtype="acc"><i class="ph-fill ph-star"></i></button><button class="hk-btn" data-action="open-device-menu" data-cat="${cat}" data-idx="${idx}"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
+    // --- AICI ESTE NOUA LOGICĂ DE TEMPERATURĂ ---
+    let afisareStare = disp.stare;
+    // Verificăm dacă dispozitivul ține de climă și dacă starea conține un număr
+    if (cat && (cat.toLowerCase().includes('clima') || cat.toLowerCase().includes('termostat') || cat.toLowerCase().includes('senzor')) && !isNaN(parseFloat(disp.stare))) {
+        afisareStare = formateazaTemperatura(parseFloat(disp.stare));
+    }
+
+    return `<div class="hk-card ${isActive ? 'is-active' : ''} ${clasaAlarma}" data-id="${idUnic}" style="animation-delay: ${animDelay}s;" data-action="toggle-device" data-cat="${cat}" data-idx="${idx}"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${idUnic}" data-favtype="acc"><i class="ph-fill ph-star"></i></button><button class="hk-btn" data-action="open-device-menu" data-cat="${cat}" data-idx="${idx}"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${afisareStare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
 }
 
 function construiesteScenaHTML(scena, isFav) {
@@ -431,7 +448,9 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
         const camera = categorie.split('-')[1];
         titlu.innerHTML = `🌡️ Termostat ${camera.charAt(0).toUpperCase() + camera.slice(1)}`;
         let temp = localStorage.getItem(`temp-${camera}`) || "22";
-        continental.innerHTML = `<div class="popup-content-box"><h3 class="popup-subtitle">Setare Temperatură</h3><div class="popup-val-display"><span id="popup-temp-${camera}">${convertTemp(parseFloat(temp))}</span>°${getTempUnit()}</div><div class="popup-ctrl-row"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" class="popup-ctrl-btn">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" class="popup-ctrl-btn">+</button></div></div>`;
+        
+        // Folosim direct formateazaTemperatura care returnează și valoarea și simbolul 
+        continental.innerHTML = `<div class="popup-content-box"><h3 class="popup-subtitle">Setare Temperatură</h3><div class="popup-val-display"><span id="popup-temp-${camera}">${formateazaTemperatura(parseFloat(temp))}</span></div><div class="popup-ctrl-row"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" class="popup-ctrl-btn">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" class="popup-ctrl-btn">+</button></div></div>`;
         modal.classList.add('active'); return;
     }
     const disp = subDispozitive[categorie][elementIndex];
@@ -657,7 +676,12 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
 
         const stateEl = card.querySelector('.hk-state');
         if (stateEl) {
-            stateEl.innerText = `${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}`;
+            let afisareStare = disp.stare;
+            // APLICĂM CONVERSIA LA UPDATE-UL DOM-ULUI
+            if (cat && (cat.toLowerCase().includes('clima') || cat.toLowerCase().includes('termostat') || cat.toLowerCase().includes('senzor')) && !isNaN(parseFloat(disp.stare))) {
+                afisareStare = formateazaTemperatura(parseFloat(disp.stare));
+            }
+            stateEl.innerText = `${afisareStare} ${disp.camera ? `• ${disp.camera}` : ''}`;
         }
     });
 

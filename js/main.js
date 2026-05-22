@@ -126,6 +126,12 @@ function setTempUnit(unit) {
     fetchWeather();
     // Actualizează starea vizuală a butoanelor în Setări
     actualizeazaButoaneUnitate();
+    
+    // -- NOU: Forțează cardurile din pagină să preia noua conversie --
+    if (typeof window.sincronizeazaDOMcuMemoria === 'function') {
+        window.sincronizeazaDOMcuMemoria();
+    }
+    
     showToast(`Unitatea a fost schimbată în °${unit}.`);
 }
 
