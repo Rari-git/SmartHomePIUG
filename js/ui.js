@@ -1,5 +1,5 @@
 import { iconDraperie, iconFereastra, sabloaneRecomandate } from './data.js';
-import { subDispozitive, scenesDB, calculeazaConsumPriza, salveazaStarea, adaugaInLog, actualizeazaMediiClimat, inchidePopupPin } from './app.js';
+import { subDispozitive, scenesDB, calculeazaConsumPriza, calculeazaConsumDispozitiv, salveazaStarea, adaugaInLog, actualizeazaMediiClimat, inchidePopupPin } from './app.js';
 
 export let dashTipCurent = 'energie';
 export let dashPerioadaCurenta = '7z';
@@ -339,19 +339,40 @@ function afiseazaNotificariHome() {
 function genereazaListaNotificari() {
     let notificari = [];
     
+    // Luminile
     const becuriAprinse = (subDispozitive.becuri || []).filter(d => d.stare === "Pornit");
     const rgbAprinse = (subDispozitive.luminiRGB || []).filter(d => d.stare === "Pornit");
     const totalLumini = becuriAprinse.length + rgbAprinse.length;
     if (totalLumini > 0) notificari.push({ id: "notif_lumini", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLumini} ${totalLumini === 1 ? 'lumină aprinsă' : 'lumini aprinse'}` });
     
+    // Audio
     const audioPornit = (subDispozitive.audio || []).filter(d => d.stare === "Pornit");
     if (audioPornit.length > 0) notificari.push({ id: "notif_audio", text: `<i class="ph-fill ph-speaker-high"></i> ${audioPornit.length} sisteme active` });
     
+    // Diverse dispozitive specifice (TV, Aspirator)
     const tvPornit = (subDispozitive.tv || []).filter(d => d.stare === "Pornit");
     if (tvPornit.length > 0) { const idx = subDispozitive.tv.findIndex(d => d === tvPornit[0]); notificari.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV pornit în ${tvPornit[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'tv', ${idx})` }); }
     
     if (subDispozitive.aspirator && subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === "Curăță") notificari.push({ id: "notif_aspirator", text: `<i class="ph-fill ph-robot"></i> Robotul curăță în ${subDispozitive.aspirator[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'aspirator', 0)` });
     
+    if (subDispozitive.purificator && subDispozitive.purificator[0] && subDispozitive.purificator[0].stare !== "Oprit") notificari.push({ id: "notif_purificator", text: `<i class="ph-fill ph-wind"></i> Purificator activ în ${subDispozitive.purificator[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'purificator', 0)` });
+
+    // Draperii/Jaluzele deschise
+    (subDispozitive.jaluzele || []).forEach((d, idx) => {
+        if(d.stare === "Deschis") notificari.push({ id: `notif_jaluzele_${idx}`, text: `<i class="ph-fill ph-blinds"></i> ${d.nume} din ${d.camera} e deschisă`, actiune: `deschideMeniuDispozitive('none', 'jaluzele', ${idx})` });
+    });
+
+    // Electrocasnice
+    (subDispozitive.electrocasnice || []).forEach((d, idx) => {
+        if(d.stare === "Pornit") notificari.push({ id: `notif_electrocasnic_${idx}`, text: `<i class="ph-fill ph-coffee"></i> ${d.nume} este pornit`, actiune: `deschideMeniuDispozitive('none', 'electrocasnice', ${idx})` });
+    });
+
+    // Prize
+    (subDispozitive.prize || []).forEach((d, idx) => {
+        if(d.stare === "Pornit") notificari.push({ id: `notif_priza_${idx}`, text: `<i class="ph-fill ph-plug"></i> ${d.nume} este sub tensiune`, actiune: `deschideMeniuDispozitive('none', 'prize', ${idx})` });
+    });
+    
+    // Securitate și uși/ferestre
     if (subDispozitive.incuietori && subDispozitive.incuietori[0] && subDispozitive.incuietori[0].stare === "Deblocat") notificari.push({ id: "notif_usa", text: `<i class="ph-fill ph-lock-key"></i> Ușa de intrare este deblocată!`, actiune: `deschideMeniuDispozitive('none', 'incuietori', 0)` });
     
     if (subDispozitive.senzoriContact) subDispozitive.senzoriContact.forEach((d, idx) => { if(d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `🚪 Fereastră deschisă în ${d.camera}`, actiune: `deschideMeniuDispozitive('none', 'senzoriContact', ${idx})` }); });
@@ -364,18 +385,27 @@ function genereazaListaNotificari() {
 
 function actualizeazaStatusGlobal() {
     const sec = document.getElementById('global-securitate'); const con = document.getElementById('global-consum');
-    if(!sec) return;
-    let consumTotal = 150; 
-    if (subDispozitive.prize) subDispozitive.prize.forEach(priză => { consumTotal += calculeazaConsumPriza(priză); });
-    con.innerText = (consumTotal/1000).toFixed(2) + " kW";
     
-    const esteDezarmat = localStorage.getItem('alarmaDezactivata') === 'true';
-    sec.innerText = esteDezarmat ? "Dezactivată" : "Armată";
+    if (con) {
+        let consumTotal = 150; 
+        Object.keys(subDispozitive).forEach(cat => {
+            if (cat === 'prize') return;
+            (subDispozitive[cat] || []).forEach(disp => {
+                consumTotal += calculeazaConsumDispozitiv(disp, cat);
+            });
+        });
+        con.innerText = (consumTotal/1000).toFixed(2) + " kW";
+    }
 
-    const txtSecuritateAlarma = document.getElementById('txt-status-alarma');
-    if(txtSecuritateAlarma) {
-        txtSecuritateAlarma.innerText = esteDezarmat ? "Sistem Dezarmat" : "Sistem Armat";
-        txtSecuritateAlarma.style.color = esteDezarmat ? "var(--error-color)" : "var(--success-color)";
+    if (sec) {
+        const esteDezarmat = localStorage.getItem('alarmaDezactivata') === 'true';
+        sec.innerText = esteDezarmat ? "Dezactivată" : "Armată";
+
+        const txtSecuritateAlarma = document.getElementById('txt-status-alarma');
+        if(txtSecuritateAlarma) {
+            txtSecuritateAlarma.innerText = esteDezarmat ? "Sistem Dezarmat" : "Sistem Armat";
+            txtSecuritateAlarma.style.color = esteDezarmat ? "var(--error-color)" : "var(--success-color)";
+        }
     }
 }
 

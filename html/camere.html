@@ -63,8 +63,8 @@
         </div>
 
         <h2 class="hk-section-title">💧 Dezumidificatoare</h2>
-        <div class="thermostat-grid">
-            <div class="climate-card hk-card" id="card-umid-living" style="border-color: #3498db;">
+        <div class="thermostat-grid" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
+            <div class="climate-card hk-card" id="card-umid-living" style="flex: 1 1 280px; max-width: 320px; justify-self: flex-start;">
                 <h3 class="m-0 text-muted">🛋️ Living Room</h3>
                 <div class="climate-display"><span class="climate-value" id="umid-living">45</span><span class="climate-unit">%</span></div>
                 <div class="climate-status" id="status-umid-living" style="color: #3498db;">Umiditate Optimă</div>
@@ -73,7 +73,7 @@
                     <button class="ctrl-btn" onclick="ajusteazaValoareCameră('umid', 'living', 'plus')">+</button>
                 </div>
             </div>
-            <div class="climate-card hk-card" id="card-umid-dormitor" style="border-color: #3498db;">
+            <div class="climate-card hk-card" id="card-umid-dormitor" style="flex: 1 1 280px; max-width: 320px; justify-self: flex-start;">
                 <h3 class="m-0 text-muted">🛏️ Dormitor</h3>
                 <div class="climate-display"><span class="climate-value" id="umid-dormitor">40</span><span class="climate-unit">%</span></div>
                 <div class="climate-status" id="status-umid-dormitor" style="color: #3498db;">Umiditate Optimă</div>
@@ -152,17 +152,17 @@
         function actualizeazaCuloriTermostat(camera, temperatura) {
             const card = document.getElementById(`card-temp-${camera}`);
             const status = document.getElementById(`status-temp-${camera}`);
-            if (temperatura <= 19) { status.innerText = "Răcoare (Eco)"; status.style.color = "#3498db"; card.style.borderColor = "#3498db"; } 
-            else if (temperatura >= 20 && temperatura <= 24) { status.innerText = "Confortabil"; status.style.color = "var(--success-color)"; card.style.borderColor = "var(--success-color)"; } 
-            else { status.innerText = "Călduros (High)"; status.style.color = "#e67e22"; card.style.borderColor = "#e67e22"; }
+            if (temperatura <= 19) { status.innerText = "Răcoare (Eco)"; status.style.color = "#3498db"; card.style.borderBottomColor = "#3498db"; } 
+            else if (temperatura >= 20 && temperatura <= 24) { status.innerText = "Confortabil"; status.style.color = "var(--success-color)"; card.style.borderBottomColor = "var(--success-color)"; } 
+            else { status.innerText = "Călduros (High)"; status.style.color = "#e67e22"; card.style.borderBottomColor = "#e67e22"; }
         }
 
         function actualizeazaCuloriUmiditate(camera, umiditate) {
             const card = document.getElementById(`card-umid-${camera}`);
             const status = document.getElementById(`status-umid-${camera}`);
-            if (umiditate < 40) { status.innerText = "Aer Uscat"; status.style.color = "#e67e22"; card.style.borderColor = "#e67e22"; } 
-            else if (umiditate >= 40 && umiditate <= 55) { status.innerText = "Umiditate Optimă"; status.style.color = "#3498db"; card.style.borderColor = "#3498db"; } 
-            else { status.innerText = "Aer Umed (Alertă)"; status.style.color = "var(--error-color)"; card.style.borderColor = "var(--error-color)"; }
+            if (umiditate < 40) { status.innerText = "Aer Uscat"; status.style.color = "#e67e22"; card.style.borderBottomColor = "#e67e22"; } 
+            else if (umiditate >= 40 && umiditate <= 55) { status.innerText = "Umiditate Optimă"; status.style.color = "#3498db"; card.style.borderBottomColor = "#3498db"; } 
+            else { status.innerText = "Aer Umed (Alertă)"; status.style.color = "var(--error-color)"; card.style.borderBottomColor = "var(--error-color)"; }
         }
 
         function calculeazaMedii() {

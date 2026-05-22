@@ -547,25 +547,42 @@ function aplicaMod(mod) {
     salveazaStarea(); if (typeof sincronizeazaDOMcuMemoria === 'function') sincronizeazaDOMcuMemoria(); else reincarcaInterfata();
 }
 
+function calculeazaConsumDispozitiv(disp, cat) {
+    const activeStates = ['Pornit', 'Curăță', 'Auto', 'Boost', 'Deschis'];
+    if (!activeStates.includes(disp.stare)) return 0;
+    
+    if (disp.consum && typeof disp.consum === 'number' && cat !== 'prize') return disp.consum;
+
+    switch(cat) {
+        case 'becuri': return 10;
+        case 'luminiRGB': return 15;
+        case 'tv': return 100;
+        case 'audio': return 50;
+        case 'aspirator': return 60;
+        case 'purificator': return 35;
+        case 'electrocasnice':
+            if (disp.nume.toLowerCase().includes('spălat')) return 2000;
+            if (disp.nume.toLowerCase().includes('uscător')) return 2400;
+            if (disp.nume.toLowerCase().includes('espressor') || disp.nume.toLowerCase().includes('cafea')) return 1200;
+            return 500;
+        case 'prize': return 0;
+        case 'jaluzele': return 0;
+        default: return 0;
+    }
+}
+
 function calculeazaConsumPriza(disp) {
     if (disp.stare !== 'Pornit') return 0;
-    let consumReal = 0;
-    if (disp.camera === 'Baie') {
-        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[0] && subDispozitive.electrocasnice[0].stare === 'Pornit') consumReal += 2000;
-        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[1] && subDispozitive.electrocasnice[1].stare === 'Pornit') consumReal += 2400;
-    } else if (disp.camera === 'Dormitor') {
-        if (subDispozitive.tv && subDispozitive.tv[0] && subDispozitive.tv[0].stare === 'Pornit') consumReal += 90;
-        if (subDispozitive.purificator && subDispozitive.purificator[0] && subDispozitive.purificator[0].stare !== 'Oprit') consumReal += 30;
-    } else if (disp.camera === 'Bucătărie') {
-        consumReal += 150; 
-        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[2] && subDispozitive.electrocasnice[2].stare === 'Pornit') consumReal += 1200;
-    } else if (disp.camera === 'Living') {
-        if (subDispozitive.tv && subDispozitive.tv[1] && subDispozitive.tv[1].stare === 'Pornit') consumReal += 150;
-        if (subDispozitive.audio && subDispozitive.audio[1] && subDispozitive.audio[1].stare === 'Pornit') consumReal += 40;
-        if (subDispozitive.audio && subDispozitive.audio[2] && subDispozitive.audio[2].stare === 'Pornit') consumReal += 200;
-        if (subDispozitive.aspirator && subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === 'Curăță') consumReal += 60;
-    }
-    return consumReal;
+    let consumCamera = 0;
+    Object.keys(subDispozitive).forEach(cat => {
+        if (cat === 'prize') return;
+        (subDispozitive[cat] || []).forEach(otherDisp => {
+            if (otherDisp.camera === disp.camera) {
+                consumCamera += calculeazaConsumDispozitiv(otherDisp, cat);
+            }
+        });
+    });
+    return consumCamera;
 }
 
 function executaScena(idScena) {
@@ -727,7 +744,7 @@ export {
     toggleFavorite, toggleStareDispozitiv, verificaAutomatizariTimp, 
     verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie, 
     stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal, 
-    aplicaMod, calculeazaConsumPriza, executaScena, salveazaScenaCustomNoua, 
+    aplicaMod, calculeazaConsumPriza, calculeazaConsumDispozitiv, executaScena, salveazaScenaCustomNoua, 
     stergeScenaCustom, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
     fetchWeather
 };
