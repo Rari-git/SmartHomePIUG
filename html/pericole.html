@@ -55,10 +55,10 @@
         // La încărcarea paginii, verificăm starea pericolelor și actualizăm UI-ul
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('pericolInundatie') === 'true') {
-                simuleazaInundatie();
+                simuleazaInundatie(false);
             }
             if (localStorage.getItem('pericolIncendiu') === 'true') {
-                simuleazaIncendiu();
+                simuleazaIncendiu(false);
             }
         });
     </script>

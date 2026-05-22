@@ -89,7 +89,7 @@ function actualizeazăEcranSecuritate() {
 }
 
 // --- SIMULARE INUNDAȚIE EFICIENTĂ ȘI SIGURĂ (Fără crash-uri în pagini secundare) ---
-function simuleazaInundatie() {
+function simuleazaInundatie(isManual = true) {
     localStorage.setItem('pericolInundatie', 'true');
     document.body.classList.add('alarm-flash'); 
 
@@ -112,7 +112,7 @@ function simuleazaInundatie() {
     if (btnReset) btnReset.style.display = "block";
     if (btnSim) btnSim.style.display = "none";
 
-    if (typeof showToast === "function") {
+    if (isManual && typeof showToast === "function") {
         showToast("⚠️ ALARMĂ: Scurgere de apă detectată! Sistemul necesită intervenție.", true);
     }
 }
@@ -146,7 +146,7 @@ function reseteazaInundatie() {
 }
 
 // --- SIMULARE INCENDIU SIGURĂ ---
-function simuleazaIncendiu() {
+function simuleazaIncendiu(isManual = true) {
     localStorage.setItem('pericolIncendiu', 'true');
     document.body.classList.add('alarm-flash');
 
@@ -174,7 +174,7 @@ function simuleazaIncendiu() {
     if (btnReset) btnReset.style.display = "block";
     if (btnSim) btnSim.style.display = "none";
 
-    if (typeof showToast === "function") {
+    if (isManual && typeof showToast === "function") {
         showToast("🔥 ALARMĂ GENERALĂ: Fum detectat! Evacuați zona sau verificați bucătăria.", true);
     }
 }

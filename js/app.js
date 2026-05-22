@@ -366,6 +366,12 @@ function toggleStareDispozitiv(cat, index, event) {
         adaugaInLog(`${disp.nume || 'Dispozitiv'} a fost comutat în starea [${disp.stare}]`);
     }
     
+    // Contorizare utilizare dispozitiv
+    const deviceId = `${cat}_${index}`;
+    let usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
+    usage[deviceId] = (usage[deviceId] || 0) + 1;
+    localStorage.setItem('deviceUsage', JSON.stringify(usage));
+    
     verificaReguliAutomatizare(cat, index, disp.stare);
     salveazaStarea();
     

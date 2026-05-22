@@ -146,9 +146,30 @@ function randareGraficDashboard() {
     }
 }
 
+function randareCeleMaiFolosite() {
+    const mostUsedContainer = document.getElementById('most-used-accessories-container');
+    if (!mostUsedContainer) return;
+
+    const usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
+    let mostUsedHtml = '';
+    const sortedDevices = Object.keys(usage).sort((a, b) => usage[b] - usage[a]).slice(0, 4);
+
+    if (sortedDevices.length > 0) {
+        sortedDevices.forEach(deviceId => {
+            const [cat, idx] = deviceId.split('_');
+            if (subDispozitive[cat] && subDispozitive[cat][idx]) {
+                mostUsedHtml += construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
+            }
+        });
+    }
+
+    mostUsedContainer.innerHTML = mostUsedHtml || '<div style="width: 100%; grid-column: 1 / -1;"><div style="background: var(--card-bg); padding: 20px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); box-shadow: var(--shadow-soft); opacity: 0.9;"><span style="font-size: 0.95em; font-weight: 500; color: var(--text-color);">Fără date de utilizare încă. Acționează dispozitive pentru a le vedea aici.</span></div></div>';
+}
 function randareHome() {
     const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
     const favScenes = JSON.parse(localStorage.getItem('favScenes')) || [];
+
+    randareCeleMaiFolosite();
     
     let accHtml = '';
     favAcc.forEach(idSalvat => {
@@ -261,7 +282,7 @@ function randareAutomatizari() {
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     let html = '';
     rules.forEach(rule => {
-        html += `<div class="hk-card auto-card" style="border-left: 5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}; opacity: ${rule.active ? '1' : '0.5'};"><div class="auto-header"><div class="auto-title" style="color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div class="auto-controls"><label class="toggle-switch"><input type="checkbox" data-action="toggle-automation" data-autoid="${rule.id}" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button data-action="delete-automation" data-autoid="${rule.id}" class="auto-delete-btn"><i class="ph-bold ph-trash"></i></button></div></div><div class="auto-desc">${rule.descriere}</div><div class="auto-footer"><i class="ph-bold ph-clock-counter-clockwise"></i> Ultima rulare: ${rule.lastRun || 'Niciodată'}</div></div>`;
+        html += `<div class="hk-card auto-card" style="border-left: 5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}; opacity: ${rule.active ? '1' : '0.5'};"><div class="auto-header"><div class="auto-title" style="color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div class="auto-controls"><label class="toggle-switch"><input type="checkbox" data-action="toggle-automation" data-autoid="${rule.id}" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button data-action="delete-automation" data-autoid="${rule.id}" class="auto-delete-btn"><i class="ph-bold ph-trash"></i></button></div></div><div class="auto-desc">${rule.descriere}</div></div>`;
     });
     html += `<div class="hk-card card-add-new" onclick="deschideModalAutomatizare()"><div class="plus-icon"><i class="ph-bold ph-plus"></i></div><div class="add-title">Regulă Nouă</div><div class="add-desc">Configurare complet manuală</div></div>`;
     container.innerHTML = html;
@@ -596,6 +617,7 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
         // 3. Actualizează alertele doar dacă ne aflăm pe pagina Home
         if (document.getElementById('notifications-container')) {
             afiseazaNotificariHome();
+            randareCeleMaiFolosite(); // Actualizare live a celor mai folosite dispozitive
         }
     }
 
