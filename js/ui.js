@@ -300,11 +300,19 @@ function randareStatisticiLogs() {
 }
 
 function construiesteCardHTML(disp, cat, idx, isFav) {
-    const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost'].includes(disp.stare);
+    const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost', 'Pericol', 'FUM DETECTAT!', 'APĂ DETECTATĂ!'].includes(disp.stare);
     const idUnic = `${cat}_${idx}`;
-    // Adăugăm un delay progresiv (max 0.6s) pentru animația de tip cascadă
     const animDelay = Math.min(idx * 0.04, 0.6);
-    return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${idUnic}" style="animation-delay: ${animDelay}s;" data-action="toggle-device" data-cat="${cat}" data-idx="${idx}"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${idUnic}" data-favtype="acc"><i class="ph-fill ph-star"></i></button><button class="hk-btn" data-action="open-device-menu" data-cat="${cat}" data-idx="${idx}"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
+    
+    // DETECTARE DINAMICĂ CLASĂ DE ALARMĂ PENTRU SENZORII DE RISC
+    let clasaAlarma = '';
+    if (disp.stare === 'Pericol' || disp.stare === 'FUM DETECTAT!') {
+        clasaAlarma = 'alarm-fire';
+    } else if (disp.stare === 'APĂ DETECTATĂ!') {
+        clasaAlarma = 'alarm-water';
+    }
+
+    return `<div class="hk-card ${isActive ? 'is-active' : ''} ${clasaAlarma}" data-id="${idUnic}" style="animation-delay: ${animDelay}s;" data-action="toggle-device" data-cat="${cat}" data-idx="${idx}"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${idUnic}" data-favtype="acc"><i class="ph-fill ph-star"></i></button><button class="hk-btn" data-action="open-device-menu" data-cat="${cat}" data-idx="${idx}"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
 }
 
 function construiesteScenaHTML(scena, isFav) {
@@ -627,16 +635,23 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
     const disp = subDispozitive[cat][index];
     if (!disp) return;
 
-    // Verificăm dacă e considerat "activ" pentru a colora fundalul
-    const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost'].includes(disp.stare);
+    const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost', 'Pericol', 'FUM DETECTAT!', 'APĂ DETECTATĂ!'].includes(disp.stare);
 
-    // 1. Caută TOATE cardurile cu acest ID pe ecran și modifică doar atributele lor
     const carduri = document.querySelectorAll(`.hk-card[data-id="${idUnic}"]`);
     carduri.forEach(card => {
         if (isActive) card.classList.add('is-active');
         else card.classList.remove('is-active');
 
-        // Modificăm strict textul stării (fără a recrea iconițele SVG)
+        // Resetăm stările anterioare de alarmă
+        card.classList.remove('alarm-fire', 'alarm-water');
+        
+        // Aplicăm noul efect vizual în interiorul cardului
+        if (disp.stare === 'Pericol' || disp.stare === 'FUM DETECTAT!') {
+            card.classList.add('alarm-fire');
+        } else if (disp.stare === 'APĂ DETECTATĂ!') {
+            card.classList.add('alarm-water');
+        }
+
         const stateEl = card.querySelector('.hk-state');
         if (stateEl) {
             stateEl.innerText = `${disp.stare} ${disp.camera ? `• ${disp.camera}` : ''}`;
@@ -644,38 +659,20 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
     });
 
     if (!skipGlobal) {
-        // 2. Actualizează widget-urile globale silențios (Consumul de Energie de sus etc.)
         actualizeazaStatusGlobal();
-
-        // 3. Actualizează alertele doar dacă ne aflăm pe pagina Home
         if (document.getElementById('notifications-container')) {
             afiseazaNotificariHome();
-            randareCeleMaiFolosite(); // Actualizare live a celor mai folosite dispozitive
+            randareCeleMaiFolosite();
         }
     }
 
-    // 4. Actualizare vizuală "live" în interiorul Meniului Popup (fără a-l închide)
+    // Suport meniu popup deschis
     const popup = document.getElementById('popup-dispozitive');
     if (popup && popup.classList.contains('active')) {
         const btn = popup.querySelector('.sensor-action-btn');
         if (btn && btn.dataset.cat === cat && parseInt(btn.dataset.idx) === index) {
             btn.style.backgroundColor = isActive ? 'var(--success-color)' : '#95a5a6';
-            if (cat === 'prize') {
-                btn.innerText = `Alimentare Priză: ${disp.stare}`;
-                const wDisplay = popup.querySelector('.popup-val-display');
-                if (wDisplay) wDisplay.innerText = `${calculeazaConsumPriza(disp)} W`;
-            } else {
-                btn.innerText = `Schimbă Stare (Curent: ${disp.stare})`;
-                // Actualizează instantaneu și interfața sliderelor (dacă există)
-                const slider = popup.querySelector('.device-slider');
-                const valDisplay = popup.querySelector('.slider-val span');
-                if (slider && valDisplay) {
-                    slider.value = disp.valoare || 0;
-                    valDisplay.innerText = disp.valoare || 0;
-                    slider.disabled = !isActive;
-                    slider.closest('.slider-container').classList.toggle('disabled-controls', !isActive);
-                }
-            }
+            btn.innerText = `Schimbă Stare (Curent: ${disp.stare})`;
         }
     }
 }

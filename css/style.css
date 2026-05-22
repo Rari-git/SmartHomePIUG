@@ -2133,3 +2133,57 @@ body.dark-mode .popup-ctrl-btn:hover {
 .btn-full-success:hover {
     opacity: 0.9;
 }
+
+/* --- Animații Senzori de Pericol SmartHome --- */
+
+/* Detector Fum / Foc - Red Flashing Light */
+.hk-card.alarm-fire {
+    background: rgba(231, 76, 60, 0.25) !important;
+    border-color: #e74c3c !important;
+    animation: cardFlashRed 1.4s infinite ease-in-out !important;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.35) !important;
+}
+.hk-card.alarm-fire .hk-icon,
+.hk-card.alarm-fire .hk-name,
+.hk-card.alarm-fire .hk-state {
+    color: #ff3b30 !important;
+    animation: lightPulseRed 1.4s infinite ease-in-out !important;
+}
+
+/* Inundație - Blue Flashing Light */
+.hk-card.alarm-water {
+    background: rgba(52, 152, 219, 0.25) !important;
+    border-color: #3498db !important;
+    animation: cardFlashBlue 1.4s infinite ease-in-out !important;
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.35) !important;
+}
+.hk-card.alarm-water .hk-icon,
+.hk-card.alarm-water .hk-name,
+.hk-card.alarm-water .hk-state {
+    color: #007aff !important;
+    animation: lightPulseBlue 1.4s infinite ease-in-out !important;
+}
+
+/* --- Keyframes Background --- */
+@keyframes cardFlashRed {
+    0% { background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.5); }
+    50% { background: rgba(231, 76, 60, 0.5); border-color: #ff3b30; box-shadow: 0 0 25px rgba(231, 76, 60, 0.6); }
+    100% { background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.5); }
+}
+@keyframes cardFlashBlue {
+    0% { background: rgba(52, 152, 219, 0.15); border-color: rgba(52, 152, 219, 0.5); }
+    50% { background: rgba(52, 152, 219, 0.5); border-color: #007aff; box-shadow: 0 0 25px rgba(52, 152, 219, 0.6); }
+    100% { background: rgba(52, 152, 219, 0.15); border-color: rgba(52, 152, 219, 0.5); }
+}
+
+/* --- Keyframes Text & Icon Glow --- */
+@keyframes lightPulseRed {
+    0% { opacity: 0.6; text-shadow: 0 0 2px rgba(231, 76, 60, 0.3); }
+    50% { opacity: 1; text-shadow: 0 0 15px #ff3b30; color: #ffffff !important; }
+    100% { opacity: 0.6; text-shadow: 0 0 2px rgba(231, 76, 60, 0.3); }
+}
+@keyframes lightPulseBlue {
+    0% { opacity: 0.6; text-shadow: 0 0 2px rgba(52, 152, 219, 0.3); }
+    50% { opacity: 1; text-shadow: 0 0 15px #007aff; color: #ffffff !important; }
+    100% { opacity: 0.6; text-shadow: 0 0 2px rgba(52, 152, 219, 0.3); }
+}

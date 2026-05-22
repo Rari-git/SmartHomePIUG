@@ -45,19 +45,23 @@
     <script type="module" src="../js/app.js"></script>
     <script type="module" src="../js/validation.js"></script>
     <script type="module">
-        // Importăm funcțiile necesare din module
         import { simuleazaInundatie, reseteazaInundatie, simuleazaIncendiu, reseteazaIncendiu } from '../js/validation.js';
-        import { adaugaInLog } from '../js/app.js';
-        import { showToast } from '../js/ui.js';
 
-        // Expunem funcțiile pe window pentru a fi accesibile din HTML (onclick)
-        window.simuleazaInundatie = simuleazaInundatie;
-        window.reseteazaInundatie = reseteazaInundatie;
-        window.simuleazaIncendiu = simuleazaIncendiu;
-        window.reseteazaIncendiu = reseteazaIncendiu;
-
-        // La încărcarea paginii, verificăm starea pericolelor și actualizăm UI-ul
+        // Atașăm evenimentele dinamic și sigur la nivel de DOM
         document.addEventListener('DOMContentLoaded', () => {
+            // Mapare butoane Inundație
+            const btnSimInundatie = document.querySelector('#panel-inundatie .btn-simulate');
+            const btnStopInundatie = document.querySelector('#panel-inundatie .btn-stop');
+            if (btnSimInundatie) btnSimInundatie.addEventListener('click', () => simuleazaInundatie(true));
+            if (btnStopInundatie) btnStopInundatie.addEventListener('click', () => reseteazaInundatie());
+
+            // Mapare butoane Incendiu
+            const btnSimIncendiu = document.querySelector('#panel-incendiu .btn-simulate');
+            const btnStopIncendiu = document.querySelector('#panel-incendiu .btn-stop');
+            if (btnSimIncendiu) btnSimIncendiu.addEventListener('click', () => simuleazaIncendiu(true));
+            if (btnStopIncendiu) btnStopIncendiu.addEventListener('click', () => reseteazaIncendiu());
+
+            // Verificare stare persistentă la încărcare pagină
             if (localStorage.getItem('pericolInundatie') === 'true') {
                 simuleazaInundatie(false);
             }

@@ -1,10 +1,10 @@
 import { showToast } from './ui.js';
 
 const BACKGROUNDS = [
-    { url: "url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#007aff" },
-    { url: "url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#ff9500" },
-    { url: "url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#2ecc71" },
-    { url: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#9b59b6" }
+    { url: "url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#007aff" }, // Albastru Ocean / Sky
+    { url: "url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#ff9500" }, // Portocaliu / Gradient Warm
+    { url: "url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#34c759" }, // Verde Natural (Calibrat la nuanța iOS/HomeKit)
+    { url: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#af52de" }  // Mov / Purple Vibrant (Corectat din #9b59b6 în nuanța exactă)
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,7 +27,45 @@ function initBackgroundAndAccent() {
     document.documentElement.style.setProperty('--app-bg', bgConfig.url);
 
     if (isAutoAccentOn()) {
-        document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
+        // Extragem URL-ul curat din string-ul url('...')
+        const cleanUrl = bgConfig.url.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+        
+        const img = new Image();
+        img.crossOrigin = "Anonymous"; // Previne erorile de securitate CORS în Electron
+        img.src = cleanUrl;
+        
+        img.onload = function() {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 1;
+                canvas.height = 1;
+                
+                // Desenarea imaginii la scară 1x1 calculează automat media culorilor
+                ctx.drawImage(img, 0, 0, 1, 1);
+                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                
+                // Convertim în format HEX
+                let hexColor = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                
+                // OPTIMIZARE PENTRU LIZIBILITATE (Evităm culorile prea șterse sau prea închise)
+                // Dacă fundalul este prea întunecat sau spălat, aplicăm un factor de saturație/luminanță
+                const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+                if (hsp < 60) {
+                    // Dacă e prea închis (ex: fundal de noapte), forțăm o nuanță mai deschisă din același spectru
+                    hexColor = `rgb(${Math.min(r + 60, 255)}, ${Math.min(g + 60, 255)}, ${Math.min(b + 60, 255)})`;
+                }
+                
+                document.documentElement.style.setProperty('--accent-color', hexColor);
+            } catch (e) {
+                // Fallback în caz de eroare la canvas
+                document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
+            }
+        };
+        
+        img.onerror = function() {
+            document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
+        };
     } else {
         const savedColor = localStorage.getItem('accentColor');
         if (savedColor) {
@@ -52,7 +90,8 @@ function schimbaFundal(index) {
     document.documentElement.style.setProperty('--app-bg', bgConfig.url);
 
     if (isAutoAccentOn()) {
-        document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
+        // Apelăm re-inițializarea pentru a declanșa recalcularea dinamică a culorii
+        initBackgroundAndAccent();
     }
 
     if (window.actualizeazaUiSetariBackground) {
