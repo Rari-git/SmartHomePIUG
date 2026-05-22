@@ -78,6 +78,7 @@ function randareGraficDashboard() {
     if (!container) return;
 
     let date = [];
+    // Logica de calcul a datelor rămâne aceeași
     if (dashTipCurent === 'energie') {
         if (dashPerioadaCurenta === '1z') {
             date = [{ e: '00:00 - 06:00', v: 1.2 }, { e: '06:00 - 12:00', v: 4.5 }, { e: '12:00 - 18:00', v: 3.8 }, { e: '18:00 - 00:00', v: 6.2 }];
@@ -91,14 +92,23 @@ function randareGraficDashboard() {
             date = [{ e: 'Trim. 1', v: 1460 }, { e: 'Trim. 2', v: 980 }, { e: 'Trim. 3', v: 820 }, { e: 'Trim. 4', v: 1240 }];
         }
 
-        let maxVal = Math.max(...date.map(d => d.v), 1);
-        let html = '<div class="chart-container">';
+        const fragment = document.createDocumentFragment();
+        const chartContainer = document.createElement('div');
+        chartContainer.className = 'chart-container';
+
+        const maxVal = Math.max(...date.map(d => d.v), 1);
+
         date.forEach(p => {
-            let procent = (p.v / maxVal) * 100;
-            html += `<div class="chart-row"><div class="chart-label">${p.e}</div><div class="chart-track"><div class="anim-bar chart-bar energy" data-width="${procent}%" style="width: 0%;"></div></div><div class="chart-val energy">${p.v} kWh</div></div>`;
+            const procent = (p.v / maxVal) * 100;
+            const row = document.createElement('div');
+            row.className = 'chart-row';
+            row.innerHTML = `<div class="chart-label">${p.e}</div><div class="chart-track"><div class="anim-bar chart-bar energy" data-width="${procent}%" style="width: 0%;"></div></div><div class="chart-val energy">${p.v} kWh</div>`;
+            chartContainer.appendChild(row);
         });
-        html += '</div>';
-        container.innerHTML = html;
+
+        fragment.appendChild(chartContainer);
+        container.innerHTML = '';
+        container.appendChild(fragment);
 
         setTimeout(() => {
             container.querySelectorAll('.anim-bar').forEach(bar => {
@@ -119,13 +129,19 @@ function randareGraficDashboard() {
             date = [{ e: 'Trim. 1', t: 19.1, u: 51 }, { e: 'Trim. 2', t: 22.4, u: 44 }, { e: 'Trim. 3', t: 25.2, u: 41 }, { e: 'Trim. 4', t: 20.5, u: 49 }];
         }
 
-        let maxT = Math.max(...date.map(d => d.t), 1);
-        let maxU = Math.max(...date.map(d => d.u), 1);
-        let html = '<div class="chart-container-climate">';
+        const fragment = document.createDocumentFragment();
+        const chartContainer = document.createElement('div');
+        chartContainer.className = 'chart-container-climate';
+
+        const maxT = Math.max(...date.map(d => d.t), 1);
+        const maxU = Math.max(...date.map(d => d.u), 1);
+
         date.forEach(p => {
-            let prT = (p.t / maxT) * 100;
-            let prU = (p.u / maxU) * 100;
-            html += `
+            const prT = (p.t / maxT) * 100;
+            const prU = (p.u / maxU) * 100;
+            const group = document.createElement('div');
+            group.className = 'chart-climate-group';
+            group.innerHTML = `
                 <div class="chart-climate-group">
                     <div class="chart-climate-title">${p.e}</div>
                     <div class="chart-row small-gap">
@@ -144,9 +160,12 @@ function randareGraficDashboard() {
                     </div>
                 </div>
             `;
+            chartContainer.appendChild(group);
         });
-        html += '</div>';
-        container.innerHTML = html;
+
+        fragment.appendChild(chartContainer);
+        container.innerHTML = '';
+        container.appendChild(fragment);
 
         setTimeout(() => {
             container.querySelectorAll('.anim-bar').forEach(bar => {
@@ -161,19 +180,24 @@ function randareCeleMaiFolosite() {
     if (!mostUsedContainer) return;
 
     const usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
-    let mostUsedHtml = '';
     const sortedDevices = Object.keys(usage).sort((a, b) => usage[b] - usage[a]).slice(0, 4);
 
+    mostUsedContainer.innerHTML = ''; // Curățăm containerul
+
     if (sortedDevices.length > 0) {
+        const fragment = document.createDocumentFragment();
         sortedDevices.forEach(deviceId => {
             const [cat, idx] = deviceId.split('_');
             if (subDispozitive[cat] && subDispozitive[cat][idx]) {
-                mostUsedHtml += construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
+                fragment.appendChild(tempDiv.firstChild);
             }
         });
+        mostUsedContainer.appendChild(fragment);
+    } else {
+        mostUsedContainer.innerHTML = '<div style="width: 100%; grid-column: 1 / -1;"><div style="background: var(--card-bg); padding: 20px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); box-shadow: var(--shadow-soft); opacity: 0.9;"><span style="font-size: 0.95em; font-weight: 500; color: var(--text-color);">Fără date de utilizare încă. Acționează dispozitive pentru a le vedea aici.</span></div></div>';
     }
-
-    mostUsedContainer.innerHTML = mostUsedHtml || '<div style="width: 100%; grid-column: 1 / -1;"><div style="background: var(--card-bg); padding: 20px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); box-shadow: var(--shadow-soft); opacity: 0.9;"><span style="font-size: 0.95em; font-weight: 500; color: var(--text-color);">Fără date de utilizare încă. Acționează dispozitive pentru a le vedea aici.</span></div></div>';
 }
 function randareHome() {
     const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
@@ -181,23 +205,43 @@ function randareHome() {
 
     randareCeleMaiFolosite();
 
-    let accHtml = '';
-    favAcc.forEach(idSalvat => {
-        const [cat, idx] = idSalvat.split('_');
-        if (subDispozitive[cat] && subDispozitive[cat][idx]) {
-            accHtml += construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
-        }
-    });
     const accContainer = document.getElementById('fav-accessories-container');
-    if (accContainer) accContainer.innerHTML = accHtml || '<p style="opacity:0.5;">Niciun accesoriu favorit.</p>';
+    if (accContainer) {
+        accContainer.innerHTML = ''; // Clear
+        if (favAcc.length > 0) {
+            const fragment = document.createDocumentFragment();
+            favAcc.forEach(idSalvat => {
+                const [cat, idx] = idSalvat.split('_');
+                if (subDispozitive[cat] && subDispozitive[cat][idx]) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+            });
+            accContainer.appendChild(fragment);
+        } else {
+            accContainer.innerHTML = '<p style="opacity:0.5;">Niciun accesoriu favorit.</p>';
+        }
+    }
 
-    let sceneHtml = '';
-    favScenes.forEach(idScena => {
-        const scena = scenesDB.find(s => s.id === idScena);
-        if (scena) sceneHtml += construiesteScenaHTML(scena, true);
-    });
     const sceneContainer = document.getElementById('fav-scenes-container');
-    if (sceneContainer) sceneContainer.innerHTML = sceneHtml || '<p style="opacity:0.5;">Nicio scenă favorită.</p>';
+    if (sceneContainer) {
+        sceneContainer.innerHTML = ''; // Clear
+        if (favScenes.length > 0) {
+            const fragment = document.createDocumentFragment();
+            favScenes.forEach(idScena => {
+                const scena = scenesDB.find(s => s.id === idScena);
+                if (scena) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = construiesteScenaHTML(scena, true);
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+            });
+            sceneContainer.appendChild(fragment);
+        } else {
+            sceneContainer.innerHTML = '<p style="opacity:0.5;">Nicio scenă favorită.</p>';
+        }
+    }
 
     setTimeout(() => {
         if (typeof Sortable !== 'undefined') {
@@ -232,6 +276,9 @@ function randareHome() {
 }
 
 function randareAccesorii() {
+    const container = document.getElementById('all-accessories-container');
+    if (!container) return;
+
     const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
     const camereMap = {};
     Object.keys(subDispozitive).forEach(cat => {
@@ -240,33 +287,67 @@ function randareAccesorii() {
             camereMap[disp.camera].push({ disp, cat, idx });
         });
     });
-    let html = '';
+
+    const fragment = document.createDocumentFragment();
     Object.keys(camereMap).sort().forEach(camera => {
-        html += `<h2 class="hk-section-title">${camera}</h2><div class="hk-grid">`;
-        camereMap[camera].forEach(item => { html += construiesteCardHTML(item.disp, item.cat, item.idx, favAcc.includes(`${item.cat}_${item.idx}`)); });
-        html += `</div>`;
+        const title = document.createElement('h2');
+        title.className = 'hk-section-title';
+        title.textContent = camera;
+        fragment.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'hk-grid';
+        
+        const gridFragment = document.createDocumentFragment();
+        camereMap[camera].forEach(item => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = construiesteCardHTML(item.disp, item.cat, item.idx, favAcc.includes(`${item.cat}_${item.idx}`));
+            gridFragment.appendChild(tempDiv.firstChild);
+        });
+        grid.appendChild(gridFragment);
+        fragment.appendChild(grid);
     });
-    document.getElementById('all-accessories-container').innerHTML = html;
+
+    container.innerHTML = '';
+    container.appendChild(fragment);
 }
 
 function randareScene() {
+    const container = document.getElementById('all-scenes-container');
+    if (!container) return;
+
     const favScenes = JSON.parse(localStorage.getItem('favScenes')) || [];
-    let html = '';
-    scenesDB.forEach(scena => { html += construiesteScenaHTML(scena, favScenes.includes(scena.id)); });
-    document.getElementById('all-scenes-container').innerHTML = html;
+    const fragment = document.createDocumentFragment();
+    
+    scenesDB.forEach(scena => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = construiesteScenaHTML(scena, favScenes.includes(scena.id));
+        fragment.appendChild(tempDiv.firstChild);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(fragment);
 }
 
 function randareSecuritate() {
     const container = document.getElementById('security-devices-container');
     if (!container) return;
+
     const favAcc = JSON.parse(localStorage.getItem('favAcc')) || [];
-    let html = '';
+    const fragment = document.createDocumentFragment();
+
     ['camereVideo', 'senzoriMiscare', 'senzoriContact', 'incuietori'].forEach(cat => {
         if (subDispozitive[cat]) {
-            subDispozitive[cat].forEach((disp, idx) => { html += construiesteCardHTML(disp, cat, idx, favAcc.includes(`${cat}_${idx}`)); });
+            subDispozitive[cat].forEach((disp, idx) => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = construiesteCardHTML(disp, cat, idx, favAcc.includes(`${cat}_${idx}`));
+                fragment.appendChild(tempDiv.firstChild);
+            });
         }
     });
-    container.innerHTML = html;
+
+    container.innerHTML = '';
+    container.appendChild(fragment);
 }
 
 function randareSabloane() {
@@ -274,39 +355,75 @@ function randareSabloane() {
     if (!container) return;
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     const activeIds = rules.map(r => r.idSugestie).filter(id => id);
-    let html = '';
+    
+    container.innerHTML = ''; // Clear
+    const fragment = document.createDocumentFragment();
     let counter = 0;
 
     sabloaneRecomandate.forEach(sug => {
         if (!activeIds.includes(sug.idSugestie)) {
-            html += `<div class="suggestion-card" style="border-top: 5px solid ${sug.culoare};"><div class="sug-icon">${sug.icon}</div><strong class="sug-name">${sug.nume}</strong><p class="sug-desc">${sug.descriereScurta}</p><button class="sug-btn" data-action="add-suggestion" data-sugid="${sug.idSugestie}">+ Adaugă Regula</button></div>`;
+            const card = document.createElement('div');
+            card.className = 'suggestion-card';
+            card.style.borderTop = `5px solid ${sug.culoare}`;
+            card.innerHTML = `<div class="sug-icon">${sug.icon}</div><strong class="sug-name">${sug.nume}</strong><p class="sug-desc">${sug.descriereScurta}</p><button class="sug-btn" data-action="add-suggestion" data-sugid="${sug.idSugestie}">+ Adaugă Regula</button>`;
+            fragment.appendChild(card);
             counter++;
         }
     });
-    container.innerHTML = counter === 0 ? `<div class="popup-empty-text">Ai activat toate șabloanele recomandate!</div>` : html;
+
+    if (counter === 0) {
+        container.innerHTML = `<div class="popup-empty-text">Ai activat toate șabloanele recomandate!</div>`;
+    } else {
+        container.appendChild(fragment);
+    }
 }
 
 function randareAutomatizari() {
     const container = document.getElementById('automations-list');
     if (!container) return;
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    let html = '';
+    
+    container.innerHTML = ''; // Clear
+    const fragment = document.createDocumentFragment();
+
     rules.forEach(rule => {
-        html += `<div class="hk-card auto-card" style="border-left: 5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}; opacity: ${rule.active ? '1' : '0.5'};"><div class="auto-header"><div class="auto-title" style="color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div class="auto-controls"><label class="toggle-switch"><input type="checkbox" data-action="toggle-automation" data-autoid="${rule.id}" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button data-action="delete-automation" data-autoid="${rule.id}" class="auto-delete-btn"><i class="ph-bold ph-trash"></i></button></div></div><div class="auto-desc">${rule.descriere}</div></div>`;
+        const card = document.createElement('div');
+        card.className = `hk-card auto-card`;
+        card.style.borderLeft = `5px solid ${rule.active ? 'var(--accent-color)' : '#95a5a6'}`;
+        card.style.opacity = rule.active ? '1' : '0.5';
+        card.innerHTML = `<div class="auto-header"><div class="auto-title" style="color: ${rule.active ? 'var(--text-color)' : '#95a5a6'};">${rule.tipTrigger === 'timp' ? '<i class="ph-bold ph-clock"></i>' : '<i class="ph-bold ph-gear"></i>'} Regula Activă</div><div class="auto-controls"><label class="toggle-switch"><input type="checkbox" data-action="toggle-automation" data-autoid="${rule.id}" ${rule.active ? 'checked' : ''}><span class="slider"></span></label><button data-action="delete-automation" data-autoid="${rule.id}" class="auto-delete-btn"><i class="ph-bold ph-trash"></i></button></div></div><div class="auto-desc">${rule.descriere}</div>`;
+        fragment.appendChild(card);
     });
-    html += `<div class="hk-card card-add-new" onclick="deschideModalAutomatizare()"><div class="plus-icon"><i class="ph-bold ph-plus"></i></div><div class="add-title">Regulă Nouă</div><div class="add-desc">Configurare complet manuală</div></div>`;
-    container.innerHTML = html;
+
+    const addCard = document.createElement('div');
+    addCard.className = 'hk-card card-add-new';
+    addCard.setAttribute('onclick', 'deschideModalAutomatizare()');
+    addCard.innerHTML = `<div class="plus-icon"><i class="ph-bold ph-plus"></i></div><div class="add-title">Regulă Nouă</div><div class="add-desc">Configurare complet manuală</div>`;
+    fragment.appendChild(addCard);
+
+    container.appendChild(fragment);
 }
 
 function randareStatisticiLogs() {
     const container = document.getElementById('logs-container');
     if (!container) return;
     const logs = JSON.parse(localStorage.getItem('smartHomeLogs')) || [];
+    
+    container.innerHTML = ''; // Clear
+
     if (logs.length === 0) {
         container.innerHTML = `<div class="popup-empty-text">Niciun eveniment înregistrat încă.</div>`;
         return;
     }
-    container.innerHTML = logs.map(log => `<div class="log-item"><span class="log-text">${log.text}</span><span class="log-time"><i class="ph-bold ph-clock"></i> ${log.ora}</span></div>`).join('');
+
+    const fragment = document.createDocumentFragment();
+    logs.forEach(log => {
+        const item = document.createElement('div');
+        item.className = 'log-item';
+        item.innerHTML = `<span class="log-text">${log.text}</span><span class="log-time"><i class="ph-bold ph-clock"></i> ${log.ora}</span>`;
+        fragment.appendChild(item);
+    });
+    container.appendChild(fragment);
 }
 
 function construiesteCardHTML(disp, cat, idx, isFav) {
@@ -351,23 +468,46 @@ function afiseazaNotificariHome() {
     const container = document.getElementById('notifications-container');
     if (!container) return;
     const toateNotificarile = genereazaListaNotificari();
+    
+    container.innerHTML = ''; // Clear
+
     if (toateNotificarile.length === 0) {
         container.innerHTML = `<p style="margin:0; opacity:0.5; font-size:0.95em;">Toate sistemele sunt în standby.</p>`;
         return;
     }
 
-    let html = "";
+    const fragment = document.createDocumentFragment();
     const limita = Math.min(toateNotificarile.length, 3);
+
     for (let i = 0; i < limita; i++) {
         const notif = toateNotificarile[i];
-        if (notif.id === "notif_lumini") html += `<div class="notification-item" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
-        else if (notif.id === "notif_audio") html += `<div class="notification-item" data-action="open-popup-audio"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
-        else if (notif.actiune) html += `<div class="notification-item hover-accent" onclick="${notif.actiune}"><span>${notif.text}</span></div>`;
-        else html += `<div class="notification-item"><span>${notif.text}</span></div>`;
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+        if (notif.id === "notif_lumini") {
+            item.dataset.action = "open-popup-lumini";
+            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
+        } else if (notif.id === "notif_audio") {
+            item.dataset.action = "open-popup-audio";
+            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
+        } else if (notif.actiune) {
+            item.classList.add('hover-accent');
+            item.setAttribute('onclick', notif.actiune);
+            item.innerHTML = `<span>${notif.text}</span>`;
+        } else {
+            item.innerHTML = `<span>${notif.text}</span>`;
+        }
+        fragment.appendChild(item);
     }
-    if (toateNotificarile.length > 3) html += `<button class="see-more-btn" data-action="open-popup-all-notifs">Vezi mai multe &gt;</button>`;
 
-    container.innerHTML = html;
+    if (toateNotificarile.length > 3) {
+        const button = document.createElement('button');
+        button.className = 'see-more-btn';
+        button.dataset.action = 'open-popup-all-notifs';
+        button.innerHTML = 'Vezi mai multe &gt;';
+        fragment.appendChild(button);
+    }
+
+    container.appendChild(fragment);
 }
 
 function genereazaListaNotificari() {
@@ -492,24 +632,48 @@ function deschidePopupLuminiAprinse() {
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
     if (!modal || !titlu || !continental) return;
+
     titlu.innerHTML = "<i class='ph-fill ph-lightbulb'></i> Lumini Active în Casă";
-    let html = `<div class="popup-list-container">`;
+    continental.innerHTML = ''; // Clear
+    
+    const listContainer = document.createElement('div');
+    listContainer.className = 'popup-list-container';
+    
+    const fragment = document.createDocumentFragment();
     let areLumini = false;
+
     (subDispozitive.becuri || []).forEach((bec, idx) => {
         if (bec.stare === "Pornit") {
             areLumini = true;
-            html += `<div class="popup-list-item" data-action="open-device-menu" data-cat="becuri" data-idx="${idx}"><div class="popup-list-left"><span class="popup-item-icon warning"><i class="ph-fill ph-lightbulb"></i></span><div><strong class="popup-item-title">${bec.nume}</strong><span class="popup-item-desc">${bec.camera} • ${bec.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="becuri" data-idx="${idx}" class="popup-item-btn error">Stinge</button></div>`;
+            const item = document.createElement('div');
+            item.className = 'popup-list-item';
+            item.dataset.action = 'open-device-menu';
+            item.dataset.cat = 'becuri';
+            item.dataset.idx = idx;
+            item.innerHTML = `<div class="popup-list-left"><span class="popup-item-icon warning"><i class="ph-fill ph-lightbulb"></i></span><div><strong class="popup-item-title">${bec.nume}</strong><span class="popup-item-desc">${bec.camera} • ${bec.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="becuri" data-idx="${idx}" class="popup-item-btn error">Stinge</button>`;
+            fragment.appendChild(item);
         }
     });
     (subDispozitive.luminiRGB || []).forEach((lampa, idx) => {
         if (lampa.stare === "Pornit") {
             areLumini = true;
-            html += `<div class="popup-list-item" data-action="open-device-menu" data-cat="luminiRGB" data-idx="${idx}"><div class="popup-list-left"><span class="popup-item-icon accent"><i class="ph-fill ph-lamp"></i></span><div><strong class="popup-item-title">${lampa.nume}</strong><span class="popup-item-desc">${lampa.camera} • ${lampa.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="luminiRGB" data-idx="${idx}" class="popup-item-btn error">Stinge</button></div>`;
+            const item = document.createElement('div');
+            item.className = 'popup-list-item';
+            item.dataset.action = 'open-device-menu';
+            item.dataset.cat = 'luminiRGB';
+            item.dataset.idx = idx;
+            item.innerHTML = `<div class="popup-list-left"><span class="popup-item-icon accent"><i class="ph-fill ph-lamp"></i></span><div><strong class="popup-item-title">${lampa.nume}</strong><span class="popup-item-desc">${lampa.camera} • ${lampa.valoare}%</span></div></div><button data-action="toggle-and-refresh-lights" data-cat="luminiRGB" data-idx="${idx}" class="popup-item-btn error">Stinge</button>`;
+            fragment.appendChild(item);
         }
     });
-    html += `</div>`;
-    if (!areLumini) html = `<div class="popup-empty-text">Toate luminile au fost stinse!</div>`;
-    continental.innerHTML = html;
+
+    if (!areLumini) {
+        continental.innerHTML = `<div class="popup-empty-text">Toate luminile au fost stinse!</div>`;
+    } else {
+        listContainer.appendChild(fragment);
+        continental.appendChild(listContainer);
+    }
+
     modal.classList.add('active');
 }
 
@@ -518,18 +682,35 @@ function deschidePopupAudioPornit() {
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
     if (!modal || !titlu || !continental) return;
+
     titlu.innerHTML = "<i class='ph-fill ph-speaker-high'></i> Sisteme Audio Active";
-    let html = `<div class="popup-list-container">`;
+    continental.innerHTML = ''; // Clear
+
+    const listContainer = document.createElement('div');
+    listContainer.className = 'popup-list-container';
+    const fragment = document.createDocumentFragment();
     let areAudio = false;
+
     (subDispozitive.audio || []).forEach((boxa, idx) => {
         if (boxa.stare === "Pornit") {
             areAudio = true;
-            html += `<div class="popup-list-item" data-action="open-device-menu" data-cat="audio" data-idx="${idx}"><div class="popup-list-left"><span class="popup-item-icon accent"><i class="ph-fill ph-speaker-high"></i></span><div><strong class="popup-item-title">${boxa.nume}</strong><span class="popup-item-desc">${boxa.camera} • Volum: ${boxa.valoare}%</span></div></div><button data-action="toggle-and-refresh-audio" data-cat="audio" data-idx="${idx}" class="popup-item-btn error">Oprește</button></div>`;
+            const item = document.createElement('div');
+            item.className = 'popup-list-item';
+            item.dataset.action = 'open-device-menu';
+            item.dataset.cat = 'audio';
+            item.dataset.idx = idx;
+            item.innerHTML = `<div class="popup-list-left"><span class="popup-item-icon accent"><i class="ph-fill ph-speaker-high"></i></span><div><strong class="popup-item-title">${boxa.nume}</strong><span class="popup-item-desc">${boxa.camera} • Volum: ${boxa.valoare}%</span></div></div><button data-action="toggle-and-refresh-audio" data-cat="audio" data-idx="${idx}" class="popup-item-btn error">Oprește</button>`;
+            fragment.appendChild(item);
         }
     });
-    html += `</div>`;
-    if (!areAudio) html = `<div class="popup-empty-text">Toate sistemele audio au fost oprite!</div>`;
-    continental.innerHTML = html;
+
+    if (!areAudio) {
+        continental.innerHTML = `<div class="popup-empty-text">Toate sistemele audio au fost oprite!</div>`;
+    } else {
+        listContainer.appendChild(fragment);
+        continental.appendChild(listContainer);
+    }
+
     modal.classList.add('active');
 }
 
@@ -564,27 +745,41 @@ function deschidePopupToateNotificarile() {
     titlu.innerHTML = "🔔 Toate Notificările Casei";
     const toateNotificarile = genereazaListaNotificari();
 
-    let html = `<div class="popup-list-container" style="max-height: 250px; padding-right: 5px; margin-bottom: 15px; text-align: left; gap: 8px;">`;
+    continental.innerHTML = ''; // Clear
+    const fragment = document.createDocumentFragment();
+
+    const listContainer = document.createElement('div');
+    listContainer.className = 'popup-list-container';
+    listContainer.style.cssText = "max-height: 250px; padding-right: 5px; margin-bottom: 15px; text-align: left; gap: 8px;";
 
     toateNotificarile.forEach(notif => {
+        const item = document.createElement('div');
+        item.className = 'notification-item card-style';
         if (notif.id === "notif_lumini") {
-            html += `<div class="notification-item card-style" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
+            item.dataset.action = "open-popup-lumini";
+            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
         } else if (notif.id === "notif_audio") {
-            html += `<div class="notification-item card-style" data-action="open-popup-audio"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
+            item.dataset.action = "open-popup-audio";
+            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
         } else if (notif.actiune) {
-            html += `<div class="notification-item card-style hover-accent" onclick="${notif.actiune}"><span>${notif.text}</span></div>`;
+            item.classList.add('hover-accent');
+            item.setAttribute('onclick', notif.actiune);
+            item.innerHTML = `<span>${notif.text}</span>`;
         } else {
-            html += `<div class="notification-item card-style"><span>${notif.text}</span></div>`;
+            item.innerHTML = `<span>${notif.text}</span>`;
         }
+        listContainer.appendChild(item);
     });
 
-    if (toateNotificarile.length === 0) {
-        html += `<div class="popup-empty-text">Nicio notificare activă.</div>`;
-    }
+    if (toateNotificarile.length === 0) listContainer.innerHTML = `<div class="popup-empty-text">Nicio notificare activă.</div>`;
+    
+    fragment.appendChild(listContainer);
+    const actionRow = document.createElement('div');
+    actionRow.className = 'popup-action-row';
+    actionRow.innerHTML = `<button data-action="clear-motion-history" class="btn-clear-history"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button>`;
+    fragment.appendChild(actionRow);
 
-    html += `</div><div class="popup-action-row"><button data-action="clear-motion-history" class="btn-clear-history"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button></div>`;
-
-    continental.innerHTML = html;
+    continental.appendChild(fragment);
     modal.classList.add('active');
 }
 
