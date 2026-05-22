@@ -16,9 +16,9 @@ function createWindow() {
         frame: false,
         titleBarStyle: 'hidden',
         titleBarOverlay: {
-            color: 'rgba(0,0,0,0)', 
-            symbolColor: '#8e8e93', 
-            height: 40 
+            color: 'rgba(0,0,0,0)',
+            symbolColor: '#8e8e93',
+            height: 40
         },
         icon: path.join(__dirname, 'assets/icon.ico'),
         backgroundColor: '#000000', // Previne 'white flash' la pornire, util pt teme întunecate

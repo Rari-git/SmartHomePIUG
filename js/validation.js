@@ -23,7 +23,7 @@ function proceseazăAcțiuneAlarmă(acțiune) {
     const input = document.getElementById('pinInput');
     const errorMsg = document.getElementById('pinError');
     const successMsg = document.getElementById('pinSuccess');
-    
+
     if (!input) return;
 
     errorMsg.style.display = 'none';
@@ -76,22 +76,22 @@ function actualizeazăEcranSecuritate() {
     if (alDezactivata) {
         statusText.innerText = "Dezactivată";
         statusText.style.color = "var(--error-color)";
-        if(iconText) iconText.innerText = "🔓";
-        if(detailsText) detailsText.innerText = "Atenție: Casa este vulnerabilă în acest moment.";
-        if(badge) badge.style.borderTop = "5px solid var(--error-color)";
+        if (iconText) iconText.innerText = "🔓";
+        if (detailsText) detailsText.innerText = "Atenție: Casa este vulnerabilă în acest moment.";
+        if (badge) badge.style.borderTop = "5px solid var(--error-color)";
     } else {
         statusText.innerText = "Armată & Sigură";
         statusText.style.color = "var(--success-color)";
-        if(iconText) iconText.innerText = "🛡️";
-        if(detailsText) detailsText.innerText = "Toți senzorii perimetrali sunt activi.";
-        if(badge) badge.style.borderTop = "5px solid var(--success-color)";
+        if (iconText) iconText.innerText = "🛡️";
+        if (detailsText) detailsText.innerText = "Toți senzorii perimetrali sunt activi.";
+        if (badge) badge.style.borderTop = "5px solid var(--success-color)";
     }
 }
 
 // --- SIMULARE INUNDAȚIE EFICIENTĂ ȘI SIGURĂ (Fără crash-uri în pagini secundare) ---
 function simuleazaInundatie(isManual = true) {
     localStorage.setItem('pericolInundatie', 'true');
-    document.body.classList.add('alarm-flash'); 
+    document.body.classList.add('alarm-flash');
 
     const stareElem = document.getElementById('stareInundatie');
     const cardElem = document.getElementById('card-inundatie');
@@ -125,7 +125,7 @@ function reseteazaInundatie() {
     const cardElem = document.getElementById('card-inundatie');
     const btnReset = document.getElementById('btn-reset-inundatie');
     const btnSim = document.getElementById('btn-sim-inundatie');
-    
+
     if (stareElem) {
         stareElem.innerText = "USCAT";
         stareElem.style.color = "var(--success-color)";
@@ -155,7 +155,7 @@ function simuleazaIncendiu(isManual = true) {
     const btnReset = document.getElementById('btn-reset-incendiu');
     const btnSim = document.getElementById('btn-sim-incendiu');
     const detaliiElem = document.getElementById('detaliiIncendiu');
-    
+
     if (stareElem) {
         stareElem.innerText = "PERICOL FUM!";
         stareElem.style.color = "#e74c3c";
@@ -188,7 +188,7 @@ function reseteazaIncendiu() {
     const btnReset = document.getElementById('btn-reset-incendiu');
     const btnSim = document.getElementById('btn-sim-incendiu');
     const detaliiElem = document.getElementById('detaliiIncendiu');
-    
+
     if (stareElem) {
         stareElem.innerText = "SIGUR";
         stareElem.style.color = "var(--success-color)";
@@ -216,9 +216,9 @@ function valideazaTemperatura() {
     const input = document.getElementById('tempInput').value;
     const errorMsg = document.getElementById('tempError');
     const successMsg = document.getElementById('tempSuccess');
-    
+
     if (!errorMsg || !successMsg) return;
-    
+
     errorMsg.style.display = 'none';
     successMsg.style.display = 'none';
 
@@ -228,10 +228,10 @@ function valideazaTemperatura() {
     } else {
         successMsg.innerText = `✅ Temperatura a fost setată la ${input}°C.`;
         successMsg.style.display = 'block';
-        
+
         const tempCur = document.getElementById('tempCurenta');
         if (tempCur) tempCur.innerText = input;
-        
+
         const widgetTemp = document.getElementById('widget-temp');
         if (widgetTemp) widgetTemp.innerText = input;
         // Setăm temperatura pentru TOATE camerele ca media să devină egală cu valoarea setată
@@ -255,11 +255,11 @@ function valideazaTemperaturaCameră(camera) {
     const inputId = `input-${camera}`;
     const displayId = `temp-${camera}`;
     const errorId = `error-${camera}`;
-    
+
     const inputVal = document.getElementById(inputId).value;
     const displayElem = document.getElementById(displayId);
     const errorElem = document.getElementById(errorId);
-    
+
     if (!errorElem || !displayElem) return;
     errorElem.style.display = 'none';
 
@@ -276,10 +276,10 @@ function valideazaTemperaturaCameră(camera) {
     } else {
         const tempVeche = displayElem.innerText;
         displayElem.innerText = temp;
-        
+
         localStorage.setItem(`temp-${camera}`, temp);
         if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
-        
+
         document.getElementById(inputId).value = "";
 
         if (typeof showToast === "function") {
@@ -296,17 +296,17 @@ function actualizeazaSenzori() {
     const displayElem = document.getElementById('umiditateCurenta');
     const stareElem = document.getElementById('stareUmiditate');
     if (!displayElem || !stareElem) return;
-    
+
     let valoareCurenta = parseInt(displayElem.innerText);
-    let variatie = Math.floor(Math.random() * 5) - 2; 
+    let variatie = Math.floor(Math.random() * 5) - 2;
     let nouaUmiditate = valoareCurenta + variatie;
-    
-    if(nouaUmiditate < 30) nouaUmiditate = 30;
-    if(nouaUmiditate > 70) nouaUmiditate = 70;
-    
+
+    if (nouaUmiditate < 30) nouaUmiditate = 30;
+    if (nouaUmiditate > 70) nouaUmiditate = 70;
+
     displayElem.innerText = nouaUmiditate + "%";
-    
-    if(nouaUmiditate >= 40 && nouaUmiditate <= 60) {
+
+    if (nouaUmiditate >= 40 && nouaUmiditate <= 60) {
         stareElem.innerText = "Optimă";
         stareElem.style.color = "var(--success-color)";
     } else {
@@ -326,16 +326,16 @@ function actualizeazaSenzorCO2() {
     const displayElem = document.getElementById('co2Curent');
     const stareElem = document.getElementById('stareCO2');
     if (!displayElem || !stareElem) return;
-    
+
     let valoareCurenta = parseInt(displayElem.innerText);
-    let variatie = Math.floor(Math.random() * 200) - 50; 
+    let variatie = Math.floor(Math.random() * 200) - 50;
     let nouaValoare = valoareCurenta + variatie;
-    
-    if(nouaValoare < 400) nouaValoare = 400; 
-    
+
+    if (nouaValoare < 400) nouaValoare = 400;
+
     displayElem.innerText = nouaValoare;
-    
-    if(nouaValoare < 800) {
+
+    if (nouaValoare < 800) {
         stareElem.innerText = "Excelentă";
         stareElem.style.color = "var(--success-color)";
     } else if (nouaValoare < 1200) {
@@ -358,15 +358,15 @@ function pornesteDezumidificator() {
     const displayElem = document.getElementById('umiditateCurenta');
     const stareElem = document.getElementById('stareUmiditate');
     if (!displayElem || !stareElem) return;
-    
+
     let valoareCurenta = parseInt(displayElem.innerText);
     let nouaUmiditate = valoareCurenta - 8;
-    
-    if(nouaUmiditate < 35) nouaUmiditate = 35; 
-    
+
+    if (nouaUmiditate < 35) nouaUmiditate = 35;
+
     displayElem.innerText = nouaUmiditate + "%";
-    
-    if(nouaUmiditate >= 40 && nouaUmiditate <= 60) {
+
+    if (nouaUmiditate >= 40 && nouaUmiditate <= 60) {
         stareElem.innerText = "Optimă";
         stareElem.style.color = "var(--success-color)";
     } else if (nouaUmiditate < 40) {
@@ -389,15 +389,15 @@ function deschideGeamurile() {
     const displayElem = document.getElementById('co2Curent');
     const stareElem = document.getElementById('stareCO2');
     if (!displayElem || !stareElem) return;
-    
+
     let valoareCurenta = parseInt(displayElem.innerText);
     let nouaValoare = valoareCurenta - 150;
-    
-    if(nouaValoare < 400) nouaValoare = 400; 
-    
+
+    if (nouaValoare < 400) nouaValoare = 400;
+
     displayElem.innerText = nouaValoare;
-    
-    if(nouaValoare < 800) {
+
+    if (nouaValoare < 800) {
         stareElem.innerText = "Excelentă";
         stareElem.style.color = "var(--success-color)";
     } else if (nouaValoare < 1200) {
@@ -420,7 +420,7 @@ function valideazaNume() {
     const input = document.getElementById('numeInput').value;
     const errorMsg = document.getElementById('numeError');
     const successMsg = document.getElementById('numeSuccess');
-    
+
     if (!errorMsg || !successMsg) return;
     errorMsg.style.display = 'none';
     successMsg.style.display = 'none';
@@ -433,9 +433,9 @@ function valideazaNume() {
     } else {
         successMsg.innerText = "✅ Numele locuinței a fost salvat!";
         successMsg.style.display = 'block';
-        
+
         localStorage.setItem('numeCasaSalvat', input.trim());
-        
+
         if (typeof showToast === "function") {
             showToast(`Locuința a fost redenumită în "${input.trim()}".`);
         }
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (salvata && displayElem) {
             displayElem.innerText = salvata;
         }
-        
+
         // Încărcare valori umiditate per cameră
         const umidSalvata = localStorage.getItem(`umid-${camera}`);
         const umidElem = document.getElementById(`umid-${camera}`);

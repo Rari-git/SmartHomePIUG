@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - My Home</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="js/components.js"></script>
 </head>
+
 <body>
     <smart-nav></smart-nav>
     <main>
@@ -15,23 +17,31 @@
             <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
             <h1><span id="nume-casa-global">My Home</span></h1>
         </div>
-        <p class="page-subtitle">Panoul tău central de control. Ai acces rapid la starea casei, favorite și notificări.</p>
+        <p class="page-subtitle">Panoul tău central de control. Ai acces rapid la starea casei, favorite și notificări.
+        </p>
 
         <div class="flex-row">
             <div class="widget-card" id="widget-vremea">
                 <div>
                     <h4 class="widget-title">Timișoara</h4>
                     <h2 class="widget-value" id="vremea-temp">--°C</h2>
-                    <div style="font-size: 0.85em; opacity: 0.8; margin-top: 3px;" id="vremea-detalii">Se încarcă...</div>
+                    <div style="font-size: 0.85em; opacity: 0.8; margin-top: 3px;" id="vremea-detalii">Se încarcă...
+                    </div>
                 </div>
                 <div class="widget-icon" id="vremea-icon">⏳</div>
             </div>
             <div class="widget-card">
-                <div><h4 class="widget-title">Securitate</h4><h2 class="widget-value text-success" id="global-securitate">Armată</h2></div>
+                <div>
+                    <h4 class="widget-title">Securitate</h4>
+                    <h2 class="widget-value text-success" id="global-securitate">Armată</h2>
+                </div>
                 <div class="widget-icon">🛡️</div>
             </div>
             <div class="widget-card">
-                <div><h4 class="widget-title">Consum Energetic</h4><h2 class="widget-value text-accent" id="global-consum">0.00 kW</h2></div>
+                <div>
+                    <h4 class="widget-title">Consum Energetic</h4>
+                    <h2 class="widget-value text-accent" id="global-consum">0.00 kW</h2>
+                </div>
                 <div class="widget-icon">⚡</div>
             </div>
         </div>
@@ -52,4 +62,5 @@
     <script type="module" src="js/main.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
+
 </html>

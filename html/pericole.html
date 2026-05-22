@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Pericole & Alerte</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/components.js"></script>
 </head>
+
 <body>
     <smart-nav></smart-nav>
     <main>
@@ -22,7 +24,8 @@
             <p id="status-inundatie" class="text-success" style="font-weight: bold; font-size: 1.1em;">Stare Normală</p>
             <div id="controls-inundatie" style="margin-top: 20px; display: flex; justify-content: center;">
                 <button type="button" class="btn-simulate" onclick="simuleazaInundatie()">Simulează Inundație</button>
-                <button type="button" class="btn-stop" onclick="reseteazaInundatie()" style="display: none;">Oprește Alarma și Robinetul</button>
+                <button type="button" class="btn-stop" onclick="reseteazaInundatie()" style="display: none;">Oprește
+                    Alarma și Robinetul</button>
             </div>
         </div>
 
@@ -32,7 +35,8 @@
             <p id="status-incendiu" class="text-success" style="font-weight: bold; font-size: 1.1em;">Stare Normală</p>
             <div id="controls-incendiu" style="margin-top: 20px; display: flex; justify-content: center;">
                 <button type="button" class="btn-simulate" onclick="simuleazaIncendiu()">Simulează Detecție Fum</button>
-                <button type="button" class="btn-stop" onclick="reseteazaIncendiu()" style="display: none;">Oprește Alarma și Gazul</button>
+                <button type="button" class="btn-stop" onclick="reseteazaIncendiu()" style="display: none;">Oprește
+                    Alarma și Gazul</button>
             </div>
         </div>
     </main>
@@ -63,4 +67,5 @@
         });
     </script>
 </body>
+
 </html>

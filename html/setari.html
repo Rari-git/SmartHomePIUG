@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Setări Generale</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/components.js"></script>
 </head>
+
 <body>
     <smart-nav></smart-nav>
     <main>
@@ -21,8 +23,10 @@
             <div class="form-row">
                 <label for="nume-casa-input">Numele Locuinței tale</label>
                 <div style="display: flex; gap: 10px; width: 100%;">
-                    <input type="text" id="nume-casa-input" class="form-input" placeholder="Ex: My Home, Apartament Smart">
-                    <button onclick="salveazaNumeCasa()" style="background: var(--accent-color); color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">Salvează</button>
+                    <input type="text" id="nume-casa-input" class="form-input"
+                        placeholder="Ex: My Home, Apartament Smart">
+                    <button onclick="salveazaNumeCasa()"
+                        style="background: var(--accent-color); color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">Salvează</button>
                 </div>
             </div>
         </div>
@@ -32,22 +36,28 @@
             <div style="display: flex; flex-direction: column; gap: 15px; margin: 15px 0;">
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-weight: 600; font-size: 0.9em;">Codul de Siguranță Actual</label>
-                    <input type="password" id="input-pin-vechi" class="form-input" placeholder="****" maxlength="4" style="text-align: center; letter-spacing: 4px;">
+                    <input type="password" id="input-pin-vechi" class="form-input" placeholder="****" maxlength="4"
+                        style="text-align: center; letter-spacing: 4px;">
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <label style="font-weight: 600; font-size: 0.9em;">Introduceți Codul Nou (4 cifre)</label>
-                    <input type="password" id="input-pin-nou" class="form-input" placeholder="****" maxlength="4" style="text-align: center; letter-spacing: 4px;">
+                    <input type="password" id="input-pin-nou" class="form-input" placeholder="****" maxlength="4"
+                        style="text-align: center; letter-spacing: 4px;">
                 </div>
             </div>
-            <button onclick="salveazaCodPinNou()" style="background: var(--text-color); color: var(--bg-primary); padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">💾 Actualizează Cod PIN</button>
+            <button onclick="salveazaCodPinNou()"
+                style="background: var(--text-color); color: var(--bg-primary); padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">💾
+                Actualizează Cod PIN</button>
         </div>
 
         <div class="settings-card">
             <h3>Preferințe Afișaj & Interfață</h3>
-            <div class="flex-between" style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div class="flex-between"
+                style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px;">
                 <div>
                     <h4 class="m-0" style="font-size: 1.1em;">Mod Întunecat (Dark Mode)</h4>
-                    <p class="text-muted m-0" style="margin-top: 4px; font-size: 0.85em;">Schimbă aspectul aplicației pentru utilizare pe timp de noapte.</p>
+                    <p class="text-muted m-0" style="margin-top: 4px; font-size: 0.85em;">Schimbă aspectul aplicației
+                        pentru utilizare pe timp de noapte.</p>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
@@ -58,17 +68,27 @@
             <div style="margin-bottom: 25px;">
                 <h4 class="m-0" style="font-size: 1.1em; margin-bottom: 15px;">Fundalul Aplicației</h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
-                    <div onclick="schimbaFundal(0)" class="bg-option" id="bg-opt-0" style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;"></div>
-                    <div onclick="schimbaFundal(1)" class="bg-option" id="bg-opt-1" style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;"></div>
-                    <div onclick="schimbaFundal(2)" class="bg-option" id="bg-opt-2" style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;"></div>
-                    <div onclick="schimbaFundal(3)" class="bg-option" id="bg-opt-3" style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;"></div>
+                    <div onclick="schimbaFundal(0)" class="bg-option" id="bg-opt-0"
+                        style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;">
+                    </div>
+                    <div onclick="schimbaFundal(1)" class="bg-option" id="bg-opt-1"
+                        style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;">
+                    </div>
+                    <div onclick="schimbaFundal(2)" class="bg-option" id="bg-opt-2"
+                        style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;">
+                    </div>
+                    <div onclick="schimbaFundal(3)" class="bg-option" id="bg-opt-3"
+                        style="height: 90px; border-radius: 12px; cursor: pointer; background: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=600&q=80') center/cover; border: 3px solid transparent; transition: 0.2s;">
+                    </div>
                 </div>
             </div>
 
-            <div class="flex-between" style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <div class="flex-between"
+                style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px;">
                 <div>
                     <h4 class="m-0" style="font-size: 1.1em;">Culoare Accent Automată</h4>
-                    <p class="text-muted m-0" style="margin-top: 4px; font-size: 0.85em;">Preluare dinamică a culorii din fundalul selectat (stil Windows).</p>
+                    <p class="text-muted m-0" style="margin-top: 4px; font-size: 0.85em;">Preluare dinamică a culorii
+                        din fundalul selectat (stil Windows).</p>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="auto-accent-toggle" onclick="toggleAutoAccent()">
@@ -79,15 +99,33 @@
             <div style="margin-top: 20px;" id="manual-accent-container">
                 <h4 class="m-0" style="font-size: 1.1em; margin-bottom: 10px;">Culoare Accent Manuală (Brand Color)</h4>
                 <div style="display: flex; gap: 15px; margin-top: 12px; flex-wrap: wrap;">
-                    <div onclick="schimbaCuloareAccent('#007aff')" style="width:35px; height:35px; border-radius:50%; background:#007aff; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#ff9500')" style="width:35px; height:35px; border-radius:50%; background:#ff9500; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#ff3b30')" style="width:35px; height:35px; border-radius:50%; background:#ff3b30; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#2ecc71')" style="width:35px; height:35px; border-radius:50%; background:#2ecc71; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#9b59b6')" style="width:35px; height:35px; border-radius:50%; background:#9b59b6; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#e74c3c')" style="width:35px; height:35px; border-radius:50%; background:#e74c3c; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#34495e')" style="width:35px; height:35px; border-radius:50%; background:#34495e; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#1abc9c')" style="width:35px; height:35px; border-radius:50%; background:#1abc9c; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
-                    <div onclick="schimbaCuloareAccent('#f1c40f')" style="width:35px; height:35px; border-radius:50%; background:#f1c40f; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);"></div>
+                    <div onclick="schimbaCuloareAccent('#007aff')"
+                        style="width:35px; height:35px; border-radius:50%; background:#007aff; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#ff9500')"
+                        style="width:35px; height:35px; border-radius:50%; background:#ff9500; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#ff3b30')"
+                        style="width:35px; height:35px; border-radius:50%; background:#ff3b30; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#2ecc71')"
+                        style="width:35px; height:35px; border-radius:50%; background:#2ecc71; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#9b59b6')"
+                        style="width:35px; height:35px; border-radius:50%; background:#9b59b6; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#e74c3c')"
+                        style="width:35px; height:35px; border-radius:50%; background:#e74c3c; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#34495e')"
+                        style="width:35px; height:35px; border-radius:50%; background:#34495e; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#1abc9c')"
+                        style="width:35px; height:35px; border-radius:50%; background:#1abc9c; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
+                    <div onclick="schimbaCuloareAccent('#f1c40f')"
+                        style="width:35px; height:35px; border-radius:50%; background:#f1c40f; cursor:pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,4 +180,5 @@
         window.actualizeazaUiSetariBackground = actualizeazaUiSetariBackground;
     </script>
 </body>
+
 </html>

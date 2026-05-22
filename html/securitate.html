@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Securitate</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/components.js"></script>
 </head>
+
 <body>
     <smart-nav></smart-nav>
     <main>
@@ -16,28 +18,38 @@
             <h1>Sistem de Securitate</h1>
         </div>
 
-        <div class="security-grid-container" style="display: grid; grid-template-columns: 1fr; max-width: 500px; margin: 0 auto;">
-            <div class="security-badge-card" style="backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 15px;">                <div>
+        <div class="security-grid-container"
+            style="display: grid; grid-template-columns: 1fr; max-width: 500px; margin: 0 auto;">
+            <div class="security-badge-card"
+                style="backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 20px; padding: 30px; box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 15px;">
+                <div>
                     <h3 class="m-0">Scut de Protecție Global</h3>
                     <div class="flex-row flex-center" style="margin: 20px 0; justify-content: flex-start;">
                         <span id="shield-icon-huge" style="font-size: 4em;">🛡️</span>
                         <div>
-                            <h4 class="text-muted m-0" style="text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Status Sistem</h4>
+                            <h4 class="text-muted m-0"
+                                style="text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Status
+                                Sistem</h4>
                             <h2 class="m-0" id="txt-status-alarma" style="margin-top: 5px;">Sistem Armat</h2>
                         </div>
                     </div>
                 </div>
                 <div class="flex-row" style="margin: 0; gap: 10px; display: flex; width: 100%;">
-                    <button id="btn-armare-total" class="btn-full" onclick="deschidePopupPin('armat')" style="background: var(--success-color); color: white; flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Armează</button>
-                    <button id="btn-dezarmare-total" class="btn-full" onclick="deschidePopupPin('dezarmat')" style="background: var(--error-color); color: white; flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Dezarmează</button>
+                    <button id="btn-armare-total" class="btn-full" onclick="deschidePopupPin('armat')"
+                        style="background: var(--success-color); color: white; flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Armează</button>
+                    <button id="btn-dezarmare-total" class="btn-full" onclick="deschidePopupPin('dezarmat')"
+                        style="background: var(--error-color); color: white; flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Dezarmează</button>
                 </div>
-                <button class="btn-full" onclick="executaSecurizareTotala()" style="background: var(--accent-color); color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 1em;">⚡ Securizare Rapidă Casă</button>
+                <button class="btn-full" onclick="executaSecurizareTotala()"
+                    style="background: var(--accent-color); color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 1em;">⚡
+                    Securizare Rapidă Casă</button>
             </div>
         </div>
 
         <h2 class="hk-section-title"> Echipamente de Supraveghere și Detecție</h2>
         <div class="info-banner">
-            <p class="page-subtitle" style="margin-bottom: 0;">Monitorizează camerele video live, senzorii de mișcare și statusul geamurilor/ușilor.</p>
+            <p class="page-subtitle" style="margin-bottom: 0;">Monitorizează camerele video live, senzorii de mișcare și
+                statusul geamurilor/ușilor.</p>
         </div>
         <div id="security-devices-container" class="hk-grid"></div>
     </main>
@@ -45,4 +57,5 @@
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/app.js"></script>
 </body>
+
 </html>

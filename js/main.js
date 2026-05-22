@@ -47,10 +47,10 @@ function isAutoAccentOn() {
 function schimbaFundal(index) {
     if (index < 0 || index >= BACKGROUNDS.length) return;
     localStorage.setItem('appBgIndex', index);
-    
+
     const bgConfig = BACKGROUNDS[index];
     document.documentElement.style.setProperty('--app-bg', bgConfig.url);
-    
+
     if (isAutoAccentOn()) {
         document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
     }
@@ -64,7 +64,7 @@ function schimbaFundal(index) {
 function toggleAutoAccent() {
     const isNowAuto = !isAutoAccentOn();
     localStorage.setItem('autoAccent', isNowAuto);
-    
+
     if (isNowAuto) {
         const bgIndex = getCurentBgIndex();
         document.documentElement.style.setProperty('--accent-color', BACKGROUNDS[bgIndex].dominantColor);
@@ -74,21 +74,21 @@ function toggleAutoAccent() {
         document.documentElement.style.setProperty('--accent-color', savedColor);
         showToast("Culoare accent: Manuală.");
     }
-    
+
     if (window.actualizeazaUiSetariBackground) {
         window.actualizeazaUiSetariBackground();
     }
 }
 
-export { 
-    toggleDarkMode, 
-    schimbaCuloareAccent, 
-    toggleHelp, 
-    toggleNav, 
-    schimbaFundal, 
-    toggleAutoAccent, 
-    getCurentBgIndex, 
-    isAutoAccentOn 
+export {
+    toggleDarkMode,
+    schimbaCuloareAccent,
+    toggleHelp,
+    toggleNav,
+    schimbaFundal,
+    toggleAutoAccent,
+    getCurentBgIndex,
+    isAutoAccentOn
 };
 
 window.toggleDarkMode = toggleDarkMode;
@@ -107,7 +107,7 @@ function toggleDarkMode() {
 function schimbaCuloareAccent(color) {
     document.documentElement.style.setProperty('--accent-color', color);
     localStorage.setItem('accentColor', color);
-    
+
     // Dezactivează automat auto-accent dacă utilizatorul alege manual o culoare
     if (isAutoAccentOn()) {
         localStorage.setItem('autoAccent', 'false');
@@ -117,7 +117,7 @@ function schimbaCuloareAccent(color) {
     }
 }
 
-document.addEventListener('keypress', function(e) {
+document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         const butoaneValidare = document.querySelectorAll('button[onclick^="valideaza"]');
         if (butoaneValidare.length > 0) {
@@ -144,7 +144,7 @@ function toggleNav() {
         backdrop.id = 'nav-backdrop';
         backdrop.className = 'nav-backdrop';
         document.body.appendChild(backdrop);
-        
+
         backdrop.onclick = () => {
             nav.classList.remove('active');
             backdrop.classList.remove('active');
@@ -152,7 +152,7 @@ function toggleNav() {
     }
 
     nav.classList.toggle('active');
-    
+
     if (nav.classList.contains('active')) {
         backdrop.classList.add('active');
     } else {

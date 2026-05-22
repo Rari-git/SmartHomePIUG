@@ -1,9 +1,9 @@
 import { defaultScenes, sabloaneRecomandate, defaultDispozitive } from './data.js';
-import { 
-    reincarcaInterfata, actualizeazaCardInDOM, sincronizeazaDOMcuMemoria, 
-    afiseazaNotificariHome, construiesteScenaHTML, construiesteCardHTML, 
-    deschideMeniuDispozitive, deschidePopupLuminiAprinse, deschidePopupAudioPornit, 
-    deschidePopupToateNotificarile, applyFadeOutAndClose, showToast 
+import {
+    reincarcaInterfata, actualizeazaCardInDOM, sincronizeazaDOMcuMemoria,
+    afiseazaNotificariHome, construiesteScenaHTML, construiesteCardHTML,
+    deschideMeniuDispozitive, deschidePopupLuminiAprinse, deschidePopupAudioPornit,
+    deschidePopupToateNotificarile, applyFadeOutAndClose, showToast
 } from './ui.js';
 
 export let intervalVacanta = null;
@@ -105,24 +105,24 @@ function initIntro() {
 
     const isHtmlFolder = window.location.pathname.includes('/html/');
     const basePath = isHtmlFolder ? '../assets' : 'assets';
-    
+
     // 2. Creăm elementul și îl stilizăm inițial pentru a fi invizibil/gata de animație
     const introDiv = document.createElement('div');
     introDiv.id = 'app-intro';
     // Adăugăm stiluri inline pentru a preveni "flicker-ul" până când CSS-ul este încărcat
-    introDiv.style.opacity = '1'; 
+    introDiv.style.opacity = '1';
     introDiv.innerHTML = `
         <img src="${basePath}/logo.svg" alt="OmniHome Logo" class="intro-logo">
         <div class="intro-text">OmniHome</div>
     `;
-    
+
     // 3. Blochează scroll-ul imediat
     document.documentElement.classList.add('hide-scrollbar');
     (document.body || document.documentElement).appendChild(introDiv);
 
     const playIntro = () => {
         introDiv.classList.add('start-anim');
-        
+
         // 4. Durata totală: 4s animația + 0.6s tranziția de fade-out
         setTimeout(() => {
             introDiv.classList.add('hidden');
@@ -132,16 +132,16 @@ function initIntro() {
                 introDiv.remove();
                 document.documentElement.classList.remove('hide-scrollbar');
             }, 600);
-        }, 2500); 
+        }, 2500);
     };
-    
+
     // 5. Declanșăm animația doar când totul e gata
     if (document.readyState === 'complete') {
         playIntro();
     } else {
         window.addEventListener('load', playIntro);
     }
-    
+
     sessionStorage.setItem('introAfisat', 'true');
 }
 
@@ -172,7 +172,7 @@ function salveazaStarea() {
     timeoutSalvareStare = setTimeout(() => {
         localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
         timeoutSalvareStare = null;
-    }, 500); 
+    }, 500);
 }
 
 function incarcaNumeCasa() {
@@ -279,60 +279,60 @@ function salveazaCodPinNou() {
 }
 
 function toggleFavorite(id, type, event) {
-    if(event) event.stopPropagation();
+    if (event) event.stopPropagation();
     let favs = JSON.parse(localStorage.getItem(type === 'scene' ? 'favScenes' : 'favAcc')) || [];
-    
+
     const isFav = favs.includes(id);
     if (isFav) {
         favs = favs.filter(item => item !== id);
     } else {
         favs.push(id);
     }
-    
+
     localStorage.setItem(type === 'scene' ? 'favScenes' : 'favAcc', JSON.stringify(favs));
 
-        // 1. Actualizăm vizual toate steluțele de pe ecran cu acest ID instantaneu
-        const starBtns = document.querySelectorAll(`[data-favid="${id}"]`);
-        starBtns.forEach(btn => {
-            if (isFav) btn.classList.remove('is-fav');
-            else btn.classList.add('is-fav');
-        });
+    // 1. Actualizăm vizual toate steluțele de pe ecran cu acest ID instantaneu
+    const starBtns = document.querySelectorAll(`[data-favid="${id}"]`);
+    starBtns.forEach(btn => {
+        if (isFav) btn.classList.remove('is-fav');
+        else btn.classList.add('is-fav');
+    });
 
-        // 2. 🚀 OPTIMIZARE DOM: Evităm innerHTML masiv pe ecranul Home
-        const containerId = type === 'scene' ? 'fav-scenes-container' : 'fav-accessories-container';
-        const container = document.getElementById(containerId);
-        
-        if (container) {
-            if (isFav) {
-                const card = container.querySelector(`.hk-card[data-id="${id}"]`);
-                if (card) card.remove();
-                if (container.children.length === 0) container.innerHTML = `<div class="popup-empty-text">Niciun ${type === 'scene' ? 'scenariu' : 'accesoriu'} favorit.</div>`;
+    // 2. 🚀 OPTIMIZARE DOM: Evităm innerHTML masiv pe ecranul Home
+    const containerId = type === 'scene' ? 'fav-scenes-container' : 'fav-accessories-container';
+    const container = document.getElementById(containerId);
+
+    if (container) {
+        if (isFav) {
+            const card = container.querySelector(`.hk-card[data-id="${id}"]`);
+            if (card) card.remove();
+            if (container.children.length === 0) container.innerHTML = `<div class="popup-empty-text">Niciun ${type === 'scene' ? 'scenariu' : 'accesoriu'} favorit.</div>`;
+        } else {
+            const emptyText = container.querySelector('.popup-empty-text');
+            if (emptyText) emptyText.remove();
+
+            let html = '';
+            if (type === 'scene') {
+                const scena = scenesDB.find(s => s.id === id);
+                if (scena) html = construiesteScenaHTML(scena, true);
             } else {
-                const emptyText = container.querySelector('.popup-empty-text');
-                if (emptyText) emptyText.remove();
-
-                let html = '';
-                if (type === 'scene') {
-                    const scena = scenesDB.find(s => s.id === id);
-                    if (scena) html = construiesteScenaHTML(scena, true);
-                } else {
-                    const [cat, idx] = id.split('_');
-                    if (subDispozitive[cat] && subDispozitive[cat][idx]) html = construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
-                }
-                container.insertAdjacentHTML('beforeend', html);
+                const [cat, idx] = id.split('_');
+                if (subDispozitive[cat] && subDispozitive[cat][idx]) html = construiesteCardHTML(subDispozitive[cat][idx], cat, idx, true);
             }
+            container.insertAdjacentHTML('beforeend', html);
         }
+    }
 }
 
 function toggleStareDispozitiv(cat, index, event) {
-    if(event) event.stopPropagation(); 
+    if (event) event.stopPropagation();
     localStorage.removeItem('activeScene');
-    
+
     if (typeof intervalVacanta !== 'undefined' && intervalVacanta) {
         clearInterval(intervalVacanta);
         intervalVacanta = null;
     }
-    
+
     const disp = subDispozitive[cat][index];
     const dictionarStari = {
         'incuietori': { 'Blocat': 'Deblocat', 'Deblocat': 'Blocat' },
@@ -349,33 +349,33 @@ function toggleStareDispozitiv(cat, index, event) {
         else if (cat === 'camereVideo') defaultState = 'Standby';
         else if (cat === 'senzoriMiscare') defaultState = 'Inactiv';
         else if (cat === 'aspirator') defaultState = 'La Bază';
-        
+
         disp.stare = dictionarStari[cat][disp.stare] || defaultState;
     } else if (cat === 'purificator') {
         disp.stare = disp.stare === "Oprit" ? "Auto" : (disp.stare === "Auto" ? "Boost" : "Oprit");
     } else {
         disp.stare = disp.stare === "Pornit" ? "Oprit" : "Pornit";
     }
-    
+
     if (cat === 'senzoriMiscare' && disp.stare === "Activ") {
         let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
-        logs.unshift({ camera: disp.camera, ora: new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'}) });
+        logs.unshift({ camera: disp.camera, ora: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }) });
         localStorage.setItem('motionLogs', JSON.stringify(logs.slice(0, 15)));
     }
-    
+
     if (typeof adaugaInLog === 'function') {
         adaugaInLog(`${disp.nume || 'Dispozitiv'} a fost comutat în starea [${disp.stare}]`);
     }
-    
+
     // Contorizare utilizare dispozitiv
     const deviceId = `${cat}_${index}`;
     let usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
     usage[deviceId] = (usage[deviceId] || 0) + 1;
     localStorage.setItem('deviceUsage', JSON.stringify(usage));
-    
+
     verificaReguliAutomatizare(cat, index, disp.stare);
     salveazaStarea();
-    
+
     // AICI INTERVINE MAGIA OPTIMIZĂRII
     if (typeof actualizeazaCardInDOM === 'function') {
         actualizeazaCardInDOM(cat, index);
@@ -386,7 +386,7 @@ function toggleStareDispozitiv(cat, index, event) {
 
 function verificaAutomatizariTimp() {
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    const timpAcum = new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'});
+    const timpAcum = new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' });
     let schimbare = false;
     rules.forEach(rule => {
         if (rule.active && rule.tipTrigger === 'timp' && rule.tOra === timpAcum) {
@@ -406,10 +406,10 @@ function verificaReguliAutomatizare(triggerCat, triggerIdx, newState) {
     let schimbare = false;
     rules.forEach(rule => {
         if (rule.active && rule.tipTrigger === 'disp' && rule.tCat === triggerCat && rule.tIdx === triggerIdx.toString() && rule.tState === newState) {
-    const actionDisp = subDispozitive[rule.aCat] && subDispozitive[rule.aCat][rule.aIdx];
+            const actionDisp = subDispozitive[rule.aCat] && subDispozitive[rule.aCat][rule.aIdx];
             if (actionDisp) {
-        actionDisp.stare = rule.aState;
-        rule.lastRun = `Azi la ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'})}`;
+                actionDisp.stare = rule.aState;
+                rule.lastRun = `Azi la ${new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}`;
                 schimbare = true;
             }
         }
@@ -448,7 +448,7 @@ function salveazaAutomatizare() {
 
 function adaugaSugestie(idSugestie) {
     const sug = sabloaneRecomandate.find(s => s.idSugestie === idSugestie);
-    if(!sug) return;
+    if (!sug) return;
     let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     let nouaRegula = { id: Date.now(), active: true, lastRun: "Niciodată", idSugestie: sug.idSugestie, tipTrigger: sug.tipTrigger, descriere: sug.descriere, aCat: sug.aCat, aIdx: sug.aIdx, aState: sug.aState };
     if (sug.tipTrigger === 'timp') nouaRegula.tOra = sug.tOra; else { nouaRegula.tCat = sug.tCat; nouaRegula.tIdx = sug.tIdx; nouaRegula.tState = sug.tState; }
@@ -466,10 +466,10 @@ function stergeAutomatizare(id) {
 function comutaAutomatizare(id) {
     let rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     const rule = rules.find(r => r.id === id);
-    if (rule) { 
-        rule.active = !rule.active; 
-        localStorage.setItem('userAutomations', JSON.stringify(rules)); 
-        
+    if (rule) {
+        rule.active = !rule.active;
+        localStorage.setItem('userAutomations', JSON.stringify(rules));
+
         // Modificăm punctual stilurile DOM-ului fără a redesena lista completă (evităm lag-ul)
         const checkbox = document.querySelector(`input[data-autoid="${id}"]`);
         if (checkbox) {
@@ -489,57 +489,57 @@ function comutaAutomatizare(id) {
 function ajusteazaDinPopup(camera, directie) {
     let val = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
     val = directie === 'plus' ? val + 1 : val - 1;
-    if(val < 15) val = 15; if(val > 30) val = 30;
+    if (val < 15) val = 15; if (val > 30) val = 30;
     localStorage.setItem(`temp-${camera}`, val);
     document.getElementById(`popup-temp-${camera}`).innerText = val;
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 }
 
-function stingeTotGlobal() { 
-    Object.keys(subDispozitive).forEach(cat => (subDispozitive[cat] || []).forEach(d => { 
+function stingeTotGlobal() {
+    Object.keys(subDispozitive).forEach(cat => (subDispozitive[cat] || []).forEach(d => {
         if (cat === 'incuietori') d.stare = "Blocat";
         else if (cat === 'jaluzele' || cat === 'senzoriContact') d.stare = "Închis";
         else if (cat === 'senzoriMiscare') d.stare = "Inactiv";
         else if (cat === 'camereVideo') d.stare = "Standby";
-        else d.stare = "Oprit"; 
-    })); 
+        else d.stare = "Oprit";
+    }));
     salveazaStarea();
 }
 
 function aplicaMod(mod) {
     if (intervalVacanta) { clearInterval(intervalVacanta); intervalVacanta = null; }
-    stingeTotGlobal(); 
+    stingeTotGlobal();
     if (mod === 'morning') {
         (subDispozitive.jaluzele || []).forEach(d => d.stare = "Deschis");
-        if(subDispozitive.electrocasnice && subDispozitive.electrocasnice[2]) subDispozitive.electrocasnice[2].stare = "Pornit";
+        if (subDispozitive.electrocasnice && subDispozitive.electrocasnice[2]) subDispozitive.electrocasnice[2].stare = "Pornit";
         (subDispozitive.audio || []).forEach(d => { d.stare = "Pornit"; d.valoare = 30; });
-        if(subDispozitive.purificator && subDispozitive.purificator[0]) subDispozitive.purificator[0].stare = "Auto";
+        if (subDispozitive.purificator && subDispozitive.purificator[0]) subDispozitive.purificator[0].stare = "Auto";
     } else if (mod === 'away') {
-        if(subDispozitive.aspirator && subDispozitive.aspirator[0]) subDispozitive.aspirator[0].stare = "Curăță";
+        if (subDispozitive.aspirator && subDispozitive.aspirator[0]) subDispozitive.aspirator[0].stare = "Curăță";
         (subDispozitive.camereVideo || []).forEach(d => d.stare = "LIVE");
-        localStorage.setItem('alarmaDezactivata', 'false'); 
+        localStorage.setItem('alarmaDezactivata', 'false');
     } else if (mod === 'home') {
-        localStorage.setItem('alarmaDezactivata', 'true'); 
-        if(subDispozitive.incuietori && subDispozitive.incuietori[0]) subDispozitive.incuietori[0].stare = "Deblocat";
-        if(subDispozitive.jaluzele && subDispozitive.jaluzele[1]) subDispozitive.jaluzele[1].stare = "Deschis";
-        if(subDispozitive.becuri && subDispozitive.becuri[1]) subDispozitive.becuri[1].stare = "Pornit"; 
+        localStorage.setItem('alarmaDezactivata', 'true');
+        if (subDispozitive.incuietori && subDispozitive.incuietori[0]) subDispozitive.incuietori[0].stare = "Deblocat";
+        if (subDispozitive.jaluzele && subDispozitive.jaluzele[1]) subDispozitive.jaluzele[1].stare = "Deschis";
+        if (subDispozitive.becuri && subDispozitive.becuri[1]) subDispozitive.becuri[1].stare = "Pornit";
     } else if (mod === 'movie') {
-        (subDispozitive.jaluzele || []).forEach(d => d.stare = "Închis"); 
-        if(subDispozitive.tv && subDispozitive.tv[1]) subDispozitive.tv[1].stare = "Pornit"; 
-        if(subDispozitive.audio && subDispozitive.audio[2]) { subDispozitive.audio[2].stare = "Pornit"; subDispozitive.audio[2].valoare = 50; }
-        if(subDispozitive.luminiRGB && subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#0a3d62"; }
-        (subDispozitive.becuri || []).forEach(d => d.stare = "Oprit"); 
+        (subDispozitive.jaluzele || []).forEach(d => d.stare = "Închis");
+        if (subDispozitive.tv && subDispozitive.tv[1]) subDispozitive.tv[1].stare = "Pornit";
+        if (subDispozitive.audio && subDispozitive.audio[2]) { subDispozitive.audio[2].stare = "Pornit"; subDispozitive.audio[2].valoare = 50; }
+        if (subDispozitive.luminiRGB && subDispozitive.luminiRGB[0]) { subDispozitive.luminiRGB[0].stare = "Pornit"; subDispozitive.luminiRGB[0].culoare = "#0a3d62"; }
+        (subDispozitive.becuri || []).forEach(d => d.stare = "Oprit");
     } else if (mod === 'vacation') {
-        localStorage.setItem('alarmaDezactivata', 'false'); 
+        localStorage.setItem('alarmaDezactivata', 'false');
         intervalVacanta = setInterval(() => {
             if (localStorage.getItem('activeScene') !== 's_vacation') { clearInterval(intervalVacanta); intervalVacanta = null; return; }
             const cats = ['becuri', 'luminiRGB', 'jaluzele'];
             const randomCat = cats[Math.floor(Math.random() * cats.length)];
             const elementeDisp = subDispozitive[randomCat] || [];
-            if (elementeDisp.length > 0) { 
+            if (elementeDisp.length > 0) {
                 const rIdx = Math.floor(Math.random() * elementeDisp.length);
                 const disp = elementeDisp[rIdx];
-                disp.stare = (randomCat === 'jaluzele') ? (disp.stare === "Închis" ? "Deschis" : "Închis") : (disp.stare === "Pornit" ? "Oprit" : "Pornit"); 
+                disp.stare = (randomCat === 'jaluzele') ? (disp.stare === "Închis" ? "Deschis" : "Închis") : (disp.stare === "Pornit" ? "Oprit" : "Pornit");
                 salveazaStarea(); if (typeof actualizeazaCardInDOM === 'function') actualizeazaCardInDOM(randomCat, rIdx); else reincarcaInterfata();
             }
         }, 4000);
@@ -550,10 +550,10 @@ function aplicaMod(mod) {
 function calculeazaConsumDispozitiv(disp, cat) {
     const activeStates = ['Pornit', 'Curăță', 'Auto', 'Boost', 'Deschis'];
     if (!activeStates.includes(disp.stare)) return 0;
-    
+
     if (disp.consum && typeof disp.consum === 'number' && cat !== 'prize') return disp.consum;
 
-    switch(cat) {
+    switch (cat) {
         case 'becuri': return 10;
         case 'luminiRGB': return 15;
         case 'tv': return 100;
@@ -605,18 +605,18 @@ function salveazaScenaCustomNoua() {
     const desc = document.getElementById('custom-scene-desc').value.trim();
     const actiuneMod = document.getElementById('custom-scene-template').value;
     if (!nume || !desc) { alert("Te rog completează numele și descrierea scenei!"); return; }
-    
+
     let list = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
     list.push({ id: 'cust_' + Date.now(), nume: `${emoji} ${nume}`, descriere: desc, action: actiuneMod });
     localStorage.setItem('smartHomeCustomScenes', JSON.stringify(list));
-    
+
     customScenesList = list; scenesDB = [...defaultScenes, ...customScenesList];
     inchidePopup(); reincarcaInterfata();
 }
 
 function stergeScenaCustom(idScena, event) {
-    if(event) event.stopPropagation(); 
-    if(confirm("Sigur vrei să ștergi această scenă personalizată?")) {
+    if (event) event.stopPropagation();
+    if (confirm("Sigur vrei să ștergi această scenă personalizată?")) {
         let list = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
         localStorage.setItem('smartHomeCustomScenes', JSON.stringify(list.filter(s => s.id !== idScena)));
         let favs = JSON.parse(localStorage.getItem('favScenes')) || [];
@@ -649,7 +649,7 @@ function adaugaInLog(mesaj) {
 // --- Calcul Medii pentru Climat (Temperatură & Umiditate) ---
 function actualizeazaMediiClimat() {
     const camere = ['living', 'dormitor', 'bucatarie', 'baie'];
-    
+
     // 1. Calcul Temperatură Medie
     let sumaTemp = 0;
     let countTemp = 0;
@@ -660,10 +660,10 @@ function actualizeazaMediiClimat() {
             countTemp++;
         }
     });
-    
+
     // Dacă nu avem nimic salvat per cameră, lăsăm o valoare implicită sau media existentă
     const mediaTemp = countTemp > 0 ? Math.round(sumaTemp / countTemp) : 22;
-    
+
     const tempCurenta = document.getElementById('tempCurenta');
     const widgetTemp = document.getElementById('widget-temp');
     const widgetMedieTemp = document.getElementById('medie-temp'); // ID pentru camere.html
@@ -704,19 +704,19 @@ async function fetchWeather() {
         // Coordonatele pentru Timișoara
         const lat = 45.7537;
         const lon = 21.2257;
-        
+
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code&timezone=auto`);
-        
+
         if (!response.ok) throw new Error("Eroare la preluarea datelor meteo");
-        
+
         const data = await response.json();
         const current = data.current;
-        
+
         const temp = Math.round(current.temperature_2m);
         const humidity = current.relative_humidity_2m;
         const precip = current.precipitation;
         const code = current.weather_code;
-        
+
         // Mapare simplă a codurilor WMO la emoji
         let icon = "☀️";
         if (code === 0) icon = "☀️"; // Senin
@@ -738,13 +738,13 @@ async function fetchWeather() {
 }
 
 // === ES6 MODULE EXPORTS ===
-export { 
-    initIntro, initFavorites, salveazaStarea, incarcaNumeCasa, deschidePopupPin, 
-    inchidePopupPin, apasatTastaPin, verificaCodPinIntrodus, salveazaCodPinNou, 
-    toggleFavorite, toggleStareDispozitiv, verificaAutomatizariTimp, 
-    verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie, 
-    stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal, 
-    aplicaMod, calculeazaConsumPriza, calculeazaConsumDispozitiv, executaScena, salveazaScenaCustomNoua, 
+export {
+    initIntro, initFavorites, salveazaStarea, incarcaNumeCasa, deschidePopupPin,
+    inchidePopupPin, apasatTastaPin, verificaCodPinIntrodus, salveazaCodPinNou,
+    toggleFavorite, toggleStareDispozitiv, verificaAutomatizariTimp,
+    verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie,
+    stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal,
+    aplicaMod, calculeazaConsumPriza, calculeazaConsumDispozitiv, executaScena, salveazaScenaCustomNoua,
     stergeScenaCustom, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
     fetchWeather
 };

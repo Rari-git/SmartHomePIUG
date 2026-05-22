@@ -4,10 +4,10 @@ class SmartNav extends HTMLElement {
         if (currentPage === '' || currentPage === '/') currentPage = 'index.html';
         const isActive = (page) => currentPage === page ? 'active' : '';
 
-        const intrUnSubfolder = window.location.pathname.includes('/pages/') || 
-                                window.location.pathname.includes('/html/') ||
-                                (!window.location.pathname.endsWith('index.html') && currentPage !== 'index.html');
-        
+        const intrUnSubfolder = window.location.pathname.includes('/pages/') ||
+            window.location.pathname.includes('/html/') ||
+            (!window.location.pathname.endsWith('index.html') && currentPage !== 'index.html');
+
         const caleHome = intrUnSubfolder ? '../index.html' : 'index.html';
         const prefixPagini = intrUnSubfolder ? '' : 'html/'; // Înlocuiește 'pages/' cu numele folderului tău dacă e diferit (ex: 'html/')
 

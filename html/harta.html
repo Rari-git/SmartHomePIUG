@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Hartă Casă</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/components.js"></script>
 </head>
+
 <body>
     <smart-nav></smart-nav>
     <main>
@@ -15,338 +17,381 @@
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
             <h1 style="margin: 0;">Planul Interactiv al Casei</h1>
         </div>
-        <p class="text-muted">Gestionare vizuală a dispozitivelor inteligente. Faceți click pe pictogramele din camere pentru control instant.</p>
+        <p class="text-muted">Gestionare vizuală a dispozitivelor inteligente. Faceți click pe pictogramele din camere
+            pentru control instant.</p>
 
         <div class="map-container">
 
-        <svg id="smartHomeMap" viewBox="120 -50 1620 1180" xmlns="http://www.w3.org/2000/svg">
+            <svg id="smartHomeMap" viewBox="120 -50 1620 1180" xmlns="http://www.w3.org/2000/svg">
 
-            <image href="../assets/Home.svg" x="0" y="0" width="1920" height="1080" />
+                <image href="../assets/Home.svg" x="0" y="0" width="1920" height="1080" />
 
-            <defs>
-                <filter id="glow">
-                    <feGaussianBlur stdDeviation="3.5" result="blur"/>
-                    <feMerge>
-                        <feMergeNode in="blur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
+                <defs>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="3.5" result="blur" />
+                        <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
 
-            <g class="svg-hotspot hotspot-light" transform="translate(830 350) scale(1.5)" data-action="open-device-menu" data-cat="becuri" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                <g class="svg-hotspot hotspot-light" transform="translate(830 350) scale(1.5)"
+                    data-action="open-device-menu" data-cat="becuri" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon"
+                            d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-window" transform="translate(788 100) scale(1.5)" data-action="open-device-menu" data-cat="jaluzele" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
-                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                <g class="svg-hotspot hotspot-window" transform="translate(788 100) scale(1.5)"
+                    data-action="open-device-menu" data-cat="jaluzele" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2" />
+                        <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-audio" transform="translate(730 350) scale(1.5)" data-action="open-device-menu" data-cat="audio" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
-                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                <g class="svg-hotspot hotspot-audio" transform="translate(730 350) scale(1.5)"
+                    data-action="open-device-menu" data-cat="audio" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <path class="hotspot-icon" d="M15 9a5 5 0 010 6" />
+                        <path class="hotspot-icon" d="M18 6a9 9 0 010 12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-tv" transform="translate(538 450) scale(1.5)" data-action="open-device-menu" data-cat="tv" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="2" y="4" width="20" height="14" rx="2"/>
-                    <line class="hotspot-icon" x1="8" y1="22" x2="16" y2="22"/>
+                <g class="svg-hotspot hotspot-tv" transform="translate(538 450) scale(1.5)"
+                    data-action="open-device-menu" data-cat="tv" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="2" y="4" width="20" height="14" rx="2" />
+                        <line class="hotspot-icon" x1="8" y1="22" x2="16" y2="22" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-power" transform="translate(1010 255) scale(1.2)" data-action="open-device-menu" data-cat="prize" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M7 7v10"/>
-                    <path class="hotspot-icon" d="M17 7v10"/>
-                    <path class="hotspot-icon" d="M6 14h12"/>
+                <g class="svg-hotspot hotspot-power" transform="translate(1010 255) scale(1.2)"
+                    data-action="open-device-menu" data-cat="prize" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M7 7v10" />
+                        <path class="hotspot-icon" d="M17 7v10" />
+                        <path class="hotspot-icon" d="M6 14h12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-climate" transform="translate(420 480) scale(1.4)" data-action="open-device-menu" data-cat="climatizare-dormitor" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M12 2v20"/>
-                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                <g class="svg-hotspot hotspot-climate" transform="translate(420 480) scale(1.4)"
+                    data-action="open-device-menu" data-cat="climatizare-dormitor" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M12 2v20" />
+                        <circle class="hotspot-icon" cx="12" cy="16" r="4" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-air" transform="translate(990 480) scale(1.4)" data-action="open-device-menu" data-cat="purificator" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M4 12h16"/>
-                    <path class="hotspot-icon" d="M6 8c2 2 2 6 0 8"/>
-                    <path class="hotspot-icon" d="M18 8c-2 2-2 6 0 8"/>
+                <g class="svg-hotspot hotspot-air" transform="translate(990 480) scale(1.4)"
+                    data-action="open-device-menu" data-cat="purificator" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M4 12h16" />
+                        <path class="hotspot-icon" d="M6 8c2 2 2 6 0 8" />
+                        <path class="hotspot-icon" d="M18 8c-2 2-2 6 0 8" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-sensor" transform="translate(788 10) scale(1.5)" data-action="open-device-menu" data-cat="senzoriContact" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
-                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                <g class="svg-hotspot hotspot-sensor" transform="translate(788 10) scale(1.5)"
+                    data-action="open-device-menu" data-cat="senzoriContact" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="6" height="16" />
+                        <rect class="hotspot-icon" x="14" y="4" width="6" height="16" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-light" transform="translate(790 720) scale(1.5)" data-action="open-device-menu" data-cat="becuri" data-idx="2">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                <g class="svg-hotspot hotspot-light" transform="translate(790 720) scale(1.5)"
+                    data-action="open-device-menu" data-cat="becuri" data-idx="2">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon"
+                            d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-audio" transform="translate(690 720) scale(1.5)" data-action="open-device-menu" data-cat="audio" data-idx="3">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
-                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                <g class="svg-hotspot hotspot-audio" transform="translate(690 720) scale(1.5)"
+                    data-action="open-device-menu" data-cat="audio" data-idx="3">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <path class="hotspot-icon" d="M15 9a5 5 0 010 6" />
+                        <path class="hotspot-icon" d="M18 6a9 9 0 010 12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-window" transform="translate(450 620) scale(1.5)" data-action="open-device-menu" data-cat="jaluzele" data-idx="3">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
-                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                <g class="svg-hotspot hotspot-window" transform="translate(450 620) scale(1.5)"
+                    data-action="open-device-menu" data-cat="jaluzele" data-idx="3">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2" />
+                        <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-sensor" transform="translate(360 620) scale(1.5)" data-action="open-device-menu" data-cat="senzoriContact" data-idx="4">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
-                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                <g class="svg-hotspot hotspot-sensor" transform="translate(360 620) scale(1.5)"
+                    data-action="open-device-menu" data-cat="senzoriContact" data-idx="4">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="6" height="16" />
+                        <rect class="hotspot-icon" x="14" y="4" width="6" height="16" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-appliance" transform="translate(915 779) scale(1.2)" data-action="open-device-menu" data-cat="electrocasnice" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2"/>
-                    <circle class="hotspot-icon" cx="12" cy="14" r="4"/>
-                    <line class="hotspot-icon" x1="8" y1="6" x2="12" y2="6"/>
+                <g class="svg-hotspot hotspot-appliance" transform="translate(915 779) scale(1.2)"
+                    data-action="open-device-menu" data-cat="electrocasnice" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2" />
+                        <circle class="hotspot-icon" cx="12" cy="14" r="4" />
+                        <line class="hotspot-icon" x1="8" y1="6" x2="12" y2="6" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-appliance" transform="translate(1000 779) scale(1.2)" data-action="open-device-menu" data-cat="electrocasnice" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2"/>
-                    <circle class="hotspot-icon" cx="12" cy="14" r="4"/>
-                    <line class="hotspot-icon" x1="8" y1="6" x2="12" y2="6"/>
+                <g class="svg-hotspot hotspot-appliance" transform="translate(1000 779) scale(1.2)"
+                    data-action="open-device-menu" data-cat="electrocasnice" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2" />
+                        <circle class="hotspot-icon" cx="12" cy="14" r="4" />
+                        <line class="hotspot-icon" x1="8" y1="6" x2="12" y2="6" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-power" transform="translate(735 820) scale(1.2)" data-action="open-device-menu" data-cat="prize" data-idx="2">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M7 7v10"/>
-                    <path class="hotspot-icon" d="M17 7v10"/>
-                    <path class="hotspot-icon" d="M6 14h12"/>
+                <g class="svg-hotspot hotspot-power" transform="translate(735 820) scale(1.2)"
+                    data-action="open-device-menu" data-cat="prize" data-idx="2">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M7 7v10" />
+                        <path class="hotspot-icon" d="M17 7v10" />
+                        <path class="hotspot-icon" d="M6 14h12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-climate" transform="translate(550 780) scale(1.4)" data-action="open-device-menu" data-cat="climatizare-baie" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M12 2v20"/>
-                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                <g class="svg-hotspot hotspot-climate" transform="translate(550 780) scale(1.4)"
+                    data-action="open-device-menu" data-cat="climatizare-baie" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M12 2v20" />
+                        <circle class="hotspot-icon" cx="12" cy="16" r="4" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-appliance" transform="translate(870 1010) scale(1.5)" data-action="open-device-menu" data-cat="electrocasnice" data-idx="2">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M18 8h1a4 4 0 0 1 0 8h-1"/>
-                    <path class="hotspot-icon" d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                <g class="svg-hotspot hotspot-appliance" transform="translate(870 1010) scale(1.5)"
+                    data-action="open-device-menu" data-cat="electrocasnice" data-idx="2">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                        <path class="hotspot-icon" d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-light" transform="translate(680 900) scale(1.5)" data-action="open-device-menu" data-cat="becuri" data-idx="3">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                <g class="svg-hotspot hotspot-light" transform="translate(680 900) scale(1.5)"
+                    data-action="open-device-menu" data-cat="becuri" data-idx="3">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon"
+                            d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-audio" transform="translate(580 900) scale(1.5)" data-action="open-device-menu" data-cat="audio" data-idx="4">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
-                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                <g class="svg-hotspot hotspot-audio" transform="translate(580 900) scale(1.5)"
+                    data-action="open-device-menu" data-cat="audio" data-idx="4">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <path class="hotspot-icon" d="M15 9a5 5 0 010 6" />
+                        <path class="hotspot-icon" d="M18 6a9 9 0 010 12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-power" transform="translate(950 1030) scale(1.2)" data-action="open-device-menu" data-cat="prize" data-idx="3">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M7 7v10"/>
-                    <path class="hotspot-icon" d="M17 7v10"/>
-                    <path class="hotspot-icon" d="M6 14h12"/>
+                <g class="svg-hotspot hotspot-power" transform="translate(950 1030) scale(1.2)"
+                    data-action="open-device-menu" data-cat="prize" data-idx="3">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M7 7v10" />
+                        <path class="hotspot-icon" d="M17 7v10" />
+                        <path class="hotspot-icon" d="M6 14h12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-climate" transform="translate(420 1010) scale(1.4)" data-action="open-device-menu" data-cat="climatizare-bucatarie" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M12 2v20"/>
-                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                <g class="svg-hotspot hotspot-climate" transform="translate(420 1010) scale(1.4)"
+                    data-action="open-device-menu" data-cat="climatizare-bucatarie" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M12 2v20" />
+                        <circle class="hotspot-icon" cx="12" cy="16" r="4" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-sensor" transform="translate(748 1070) scale(1.5)" data-action="open-device-menu" data-cat="senzoriContact" data-idx="3">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
-                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                <g class="svg-hotspot hotspot-sensor" transform="translate(748 1070) scale(1.5)"
+                    data-action="open-device-menu" data-cat="senzoriContact" data-idx="3">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="6" height="16" />
+                        <rect class="hotspot-icon" x="14" y="4" width="6" height="16" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-window" transform="translate(748 980) scale(1.5)" data-action="open-device-menu" data-cat="jaluzele" data-idx="4">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
-                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                <g class="svg-hotspot hotspot-window" transform="translate(748 980) scale(1.5)"
+                    data-action="open-device-menu" data-cat="jaluzele" data-idx="4">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2" />
+                        <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-light" transform="translate(1350 600) scale(1.5)" data-action="open-device-menu" data-cat="becuri" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>
+                <g class="svg-hotspot hotspot-light" transform="translate(1350 600) scale(1.5)"
+                    data-action="open-device-menu" data-cat="becuri" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon"
+                            d="M9 21h6v-1H9v1zm3-20C8.14 1 5 4.14 5 8c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-3.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-tv" transform="translate(1327 90) scale(1.5)" data-action="open-device-menu" data-cat="tv" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="2" y="4" width="20" height="14" rx="2"/>
-                    <line class="hotspot-icon" x1="8" y1="22" x2="16" y2="22"/>
+                <g class="svg-hotspot hotspot-tv" transform="translate(1327 90) scale(1.5)"
+                    data-action="open-device-menu" data-cat="tv" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="2" y="4" width="20" height="14" rx="2" />
+                        <line class="hotspot-icon" x1="8" y1="22" x2="16" y2="22" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-audio" transform="translate(1250 600) scale(1.5)" data-action="open-device-menu" data-cat="audio" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                    <path class="hotspot-icon" d="M15 9a5 5 0 010 6"/>
-                    <path class="hotspot-icon" d="M18 6a9 9 0 010 12"/>
+                <g class="svg-hotspot hotspot-audio" transform="translate(1250 600) scale(1.5)"
+                    data-action="open-device-menu" data-cat="audio" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <polygon class="hotspot-icon" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <path class="hotspot-icon" d="M15 9a5 5 0 010 6" />
+                        <path class="hotspot-icon" d="M18 6a9 9 0 010 12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-robot" transform="translate(1490 1000) scale(1.5)" data-action="open-device-menu" data-cat="aspirator" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <circle class="hotspot-icon" cx="12" cy="12" r="10"/>
-                    <circle class="hotspot-icon" cx="12" cy="12" r="4"/>
+                <g class="svg-hotspot hotspot-robot" transform="translate(1490 1000) scale(1.5)"
+                    data-action="open-device-menu" data-cat="aspirator" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <circle class="hotspot-icon" cx="12" cy="12" r="10" />
+                        <circle class="hotspot-icon" cx="12" cy="12" r="4" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-window" transform="translate(1465 412) scale(1.5)" data-action="open-device-menu" data-cat="jaluzele" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
-                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                <g class="svg-hotspot hotspot-window" transform="translate(1465 412) scale(1.5)"
+                    data-action="open-device-menu" data-cat="jaluzele" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2" />
+                        <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-window" transform="translate(1465 842) scale(1.5)" data-action="open-device-menu" data-cat="jaluzele" data-idx="2">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2"/>
-                    <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20"/>
+                <g class="svg-hotspot hotspot-window" transform="translate(1465 842) scale(1.5)"
+                    data-action="open-device-menu" data-cat="jaluzele" data-idx="2">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="16" height="16" rx="2" />
+                        <line class="hotspot-icon" x1="12" y1="4" x2="12" y2="20" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-audio" transform="translate(1400 150) scale(1.4)" data-action="open-device-menu" data-cat="audio" data-idx="2">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2"/>
-                    <circle class="hotspot-icon" cx="12" cy="14" r="4"/>
-                    <circle class="hotspot-icon" cx="12" cy="6" r="1"/>
+                <g class="svg-hotspot hotspot-audio" transform="translate(1400 150) scale(1.4)"
+                    data-action="open-device-menu" data-cat="audio" data-idx="2">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="2" width="16" height="20" rx="2" />
+                        <circle class="hotspot-icon" cx="12" cy="14" r="4" />
+                        <circle class="hotspot-icon" cx="12" cy="6" r="1" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-power" transform="translate(1090 830) scale(1.2)" data-action="open-device-menu" data-cat="prize" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M7 7v10"/>
-                    <path class="hotspot-icon" d="M17 7v10"/>
-                    <path class="hotspot-icon" d="M6 14h12"/>
+                <g class="svg-hotspot hotspot-power" transform="translate(1090 830) scale(1.2)"
+                    data-action="open-device-menu" data-cat="prize" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M7 7v10" />
+                        <path class="hotspot-icon" d="M17 7v10" />
+                        <path class="hotspot-icon" d="M6 14h12" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-climate" transform="translate(1120 500) scale(1.4)" data-action="open-device-menu" data-cat="climatizare-living" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M12 2v20"/>
-                    <circle class="hotspot-icon" cx="12" cy="16" r="4"/>
+                <g class="svg-hotspot hotspot-climate" transform="translate(1120 500) scale(1.4)"
+                    data-action="open-device-menu" data-cat="climatizare-living" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M12 2v20" />
+                        <circle class="hotspot-icon" cx="12" cy="16" r="4" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-air" transform="translate(1110 730) scale(1.4)" data-action="open-device-menu" data-cat="purificator" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M4 12h16"/>
-                    <path class="hotspot-icon" d="M6 8c2 2 2 6 0 8"/>
-                    <path class="hotspot-icon" d="M18 8c-2 2-2 6 0 8"/>
+                <g class="svg-hotspot hotspot-air" transform="translate(1110 730) scale(1.4)"
+                    data-action="open-device-menu" data-cat="purificator" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M4 12h16" />
+                        <path class="hotspot-icon" d="M6 8c2 2 2 6 0 8" />
+                        <path class="hotspot-icon" d="M18 8c-2 2-2 6 0 8" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-sensor" transform="translate(1556 412) scale(1.5)" data-action="open-device-menu" data-cat="senzoriContact" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
-                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                <g class="svg-hotspot hotspot-sensor" transform="translate(1556 412) scale(1.5)"
+                    data-action="open-device-menu" data-cat="senzoriContact" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="6" height="16" />
+                        <rect class="hotspot-icon" x="14" y="4" width="6" height="16" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-sensor" transform="translate(1556 842) scale(1.5)" data-action="open-device-menu" data-cat="senzoriContact" data-idx="2">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="4" y="4" width="6" height="16"/>
-                    <rect class="hotspot-icon" x="14" y="4" width="6" height="16"/>
+                <g class="svg-hotspot hotspot-sensor" transform="translate(1556 842) scale(1.5)"
+                    data-action="open-device-menu" data-cat="senzoriContact" data-idx="2">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="4" y="4" width="6" height="16" />
+                        <rect class="hotspot-icon" x="14" y="4" width="6" height="16" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-lock" transform="translate(357 893) scale(1.2)" data-action="open-device-menu" data-cat="incuietori" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <rect class="hotspot-icon" x="3" y="11" width="18" height="11" rx="2"/>
-                    <path class="hotspot-icon" d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                <g class="svg-hotspot hotspot-lock" transform="translate(357 893) scale(1.2)"
+                    data-action="open-device-menu" data-cat="incuietori" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <rect class="hotspot-icon" x="3" y="11" width="18" height="11" rx="2" />
+                        <path class="hotspot-icon" d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-camera" transform="translate(300 820) scale(1.4)" data-action="open-device-menu" data-cat="camereVideo" data-idx="0">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M23 7l-7 5 7 5V7z"/>
-                    <rect class="hotspot-icon" x="1" y="5" width="15" height="14" rx="2"/>
+                <g class="svg-hotspot hotspot-camera" transform="translate(300 820) scale(1.4)"
+                    data-action="open-device-menu" data-cat="camereVideo" data-idx="0">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M23 7l-7 5 7 5V7z" />
+                        <rect class="hotspot-icon" x="1" y="5" width="15" height="14" rx="2" />
+                    </g>
                 </g>
-            </g>
 
-            <g class="svg-hotspot hotspot-camera" transform="translate(260 320) scale(1.4)" data-action="open-device-menu" data-cat="camereVideo" data-idx="1">
-                <circle r="28" class="hotspot-bg"/>
-                <g transform="translate(-12 -12)">
-                    <path class="hotspot-icon" d="M23 7l-7 5 7 5V7z"/>
-                    <rect class="hotspot-icon" x="1" y="5" width="15" height="14" rx="2"/>
+                <g class="svg-hotspot hotspot-camera" transform="translate(260 320) scale(1.4)"
+                    data-action="open-device-menu" data-cat="camereVideo" data-idx="1">
+                    <circle r="28" class="hotspot-bg" />
+                    <g transform="translate(-12 -12)">
+                        <path class="hotspot-icon" d="M23 7l-7 5 7 5V7z" />
+                        <rect class="hotspot-icon" x="1" y="5" width="15" height="14" rx="2" />
+                    </g>
                 </g>
-            </g>
 
-        </svg>
+            </svg>
 
         </div>
     </main>
@@ -356,4 +401,5 @@
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/app.js"></script>
 </body>
+
 </html>

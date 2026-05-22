@@ -21,7 +21,7 @@ function applyFadeOutAndClose(modal) {
     const cleanup = () => {
         if (isCleanedUp) return;
         isCleanedUp = true;
-        
+
         modal.classList.remove('active');
         // Resetăm stilurile inline pentru a nu interfera cu animațiile de deschidere sau alte reguli CSS
         modal.style.transition = '';
@@ -38,13 +38,13 @@ function applyFadeOutAndClose(modal) {
 
 function reincarcaInterfata() {
     actualizeazaStatusGlobal();
-    if(document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
-    if(document.getElementById('all-scenes-container')) randareScene();
-    if(document.getElementById('all-accessories-container')) randareAccesorii();
-    if(document.getElementById('security-devices-container')) randareSecuritate();
-    if(document.getElementById('automations-list')) { randareAutomatizari(); randareSabloane(); }
-    if(document.getElementById('dashboard-grafic-content')) randareGraficDashboard();
-    if(document.getElementById('logs-container')) randareStatisticiLogs();
+    if (document.getElementById('fav-scenes-container')) { randareHome(); afiseazaNotificariHome(); }
+    if (document.getElementById('all-scenes-container')) randareScene();
+    if (document.getElementById('all-accessories-container')) randareAccesorii();
+    if (document.getElementById('security-devices-container')) randareSecuritate();
+    if (document.getElementById('automations-list')) { randareAutomatizari(); randareSabloane(); }
+    if (document.getElementById('dashboard-grafic-content')) randareGraficDashboard();
+    if (document.getElementById('logs-container')) randareStatisticiLogs();
 }
 
 function schimbaTipGraficDashboard(tip) {
@@ -58,7 +58,7 @@ function schimbaPerioadaDashboard(perioada) {
     dashPerioadaCurenta = perioada;
     ['1z', '7z', '30z', '6l', '1an'].forEach(p => {
         const btn = document.getElementById(`btn-dash-${p}`);
-        if(btn) btn.classList.toggle('active', p === perioada);
+        if (btn) btn.classList.toggle('active', p === perioada);
     });
     randareGraficDashboard();
 }
@@ -66,21 +66,21 @@ function schimbaPerioadaDashboard(perioada) {
 function randareGraficDashboard() {
     const container = document.getElementById('dashboard-grafic-content');
     if (!container) return;
-    
+
     let date = [];
     if (dashTipCurent === 'energie') {
         if (dashPerioadaCurenta === '1z') {
-            date = [{e: '00:00 - 06:00', v: 1.2}, {e: '06:00 - 12:00', v: 4.5}, {e: '12:00 - 18:00', v: 3.8}, {e: '18:00 - 00:00', v: 6.2}];
+            date = [{ e: '00:00 - 06:00', v: 1.2 }, { e: '06:00 - 12:00', v: 4.5 }, { e: '12:00 - 18:00', v: 3.8 }, { e: '18:00 - 00:00', v: 6.2 }];
         } else if (dashPerioadaCurenta === '7z') {
-            date = [{e: 'Luni', v: 14}, {e: 'Marți', v: 15}, {e: 'Miercuri', v: 13}, {e: 'Joi', v: 17}, {e: 'Vineri', v: 16}, {e: 'Sâmbătă', v: 22}, {e: 'Duminică', v: 20}];
+            date = [{ e: 'Luni', v: 14 }, { e: 'Marți', v: 15 }, { e: 'Miercuri', v: 13 }, { e: 'Joi', v: 17 }, { e: 'Vineri', v: 16 }, { e: 'Sâmbătă', v: 22 }, { e: 'Duminică', v: 20 }];
         } else if (dashPerioadaCurenta === '30z') {
-            date = [{e: 'Săpt. 1', v: 110}, {e: 'Săpt. 2', v: 125}, {e: 'Săpt. 3', v: 105}, {e: 'Săpt. 4', v: 140}];
+            date = [{ e: 'Săpt. 1', v: 110 }, { e: 'Săpt. 2', v: 125 }, { e: 'Săpt. 3', v: 105 }, { e: 'Săpt. 4', v: 140 }];
         } else if (dashPerioadaCurenta === '6l') {
-            date = [{e: 'Decembrie', v: 480}, {e: 'Ianuarie', v: 520}, {e: 'Februarie', v: 460}, {e: 'Martie', v: 390}, {e: 'Aprilie', v: 310}, {e: 'Mai', v: 240}];
+            date = [{ e: 'Decembrie', v: 480 }, { e: 'Ianuarie', v: 520 }, { e: 'Februarie', v: 460 }, { e: 'Martie', v: 390 }, { e: 'Aprilie', v: 310 }, { e: 'Mai', v: 240 }];
         } else if (dashPerioadaCurenta === '1an') {
-            date = [{e: 'Trim. 1', v: 1460}, {e: 'Trim. 2', v: 980}, {e: 'Trim. 3', v: 820}, {e: 'Trim. 4', v: 1240}];
+            date = [{ e: 'Trim. 1', v: 1460 }, { e: 'Trim. 2', v: 980 }, { e: 'Trim. 3', v: 820 }, { e: 'Trim. 4', v: 1240 }];
         }
-        
+
         let maxVal = Math.max(...date.map(d => d.v), 1);
         let html = '<div class="chart-container">';
         date.forEach(p => {
@@ -89,26 +89,26 @@ function randareGraficDashboard() {
         });
         html += '</div>';
         container.innerHTML = html;
-        
+
         setTimeout(() => {
             container.querySelectorAll('.anim-bar').forEach(bar => {
                 bar.style.width = bar.getAttribute('data-width');
             });
         }, 50);
-        
+
     } else {
         if (dashPerioadaCurenta === '1z') {
-            date = [{e: '00:00 - 06:00', t: 19, u: 50}, {e: '06:00 - 12:00', t: 22, u: 45}, {e: '12:00 - 18:00', t: 24, u: 40}, {e: '18:00 - 00:00', t: 21, u: 48}];
+            date = [{ e: '00:00 - 06:00', t: 19, u: 50 }, { e: '06:00 - 12:00', t: 22, u: 45 }, { e: '12:00 - 18:00', t: 24, u: 40 }, { e: '18:00 - 00:00', t: 21, u: 48 }];
         } else if (dashPerioadaCurenta === '7z') {
-            date = [{e: 'Luni', t: 21.5, u: 44}, {e: 'Marți', t: 22, u: 46}, {e: 'Miercuri', t: 20.8, u: 50}, {e: 'Joi', t: 23.4, u: 42}, {e: 'Vineri', t: 22, u: 45}, {e: 'Sâmbătă', t: 24.1, u: 40}, {e: 'Duminică', t: 22.6, u: 47}];
+            date = [{ e: 'Luni', t: 21.5, u: 44 }, { e: 'Marți', t: 22, u: 46 }, { e: 'Miercuri', t: 20.8, u: 50 }, { e: 'Joi', t: 23.4, u: 42 }, { e: 'Vineri', t: 22, u: 45 }, { e: 'Sâmbătă', t: 24.1, u: 40 }, { e: 'Duminică', t: 22.6, u: 47 }];
         } else if (dashPerioadaCurenta === '30z') {
-            date = [{e: 'Săpt. 1', t: 21.2, u: 45}, {e: 'Săpt. 2', t: 22.1, u: 44}, {e: 'Săpt. 3', t: 21.8, u: 48}, {e: 'Săpt. 4', t: 22.5, u: 42}];
+            date = [{ e: 'Săpt. 1', t: 21.2, u: 45 }, { e: 'Săpt. 2', t: 22.1, u: 44 }, { e: 'Săpt. 3', t: 21.8, u: 48 }, { e: 'Săpt. 4', t: 22.5, u: 42 }];
         } else if (dashPerioadaCurenta === '6l') {
-            date = [{e: 'Decembrie', t: 18.5, u: 55}, {e: 'Ianuarie', t: 19, u: 53}, {e: 'Februarie', t: 19.5, u: 50}, {e: 'Martie', t: 21.2, u: 46}, {e: 'Aprilie', t: 22.8, u: 44}, {e: 'Mai', t: 24.1, u: 42}];
+            date = [{ e: 'Decembrie', t: 18.5, u: 55 }, { e: 'Ianuarie', t: 19, u: 53 }, { e: 'Februarie', t: 19.5, u: 50 }, { e: 'Martie', t: 21.2, u: 46 }, { e: 'Aprilie', t: 22.8, u: 44 }, { e: 'Mai', t: 24.1, u: 42 }];
         } else if (dashPerioadaCurenta === '1an') {
-            date = [{e: 'Trim. 1', t: 19.1, u: 51}, {e: 'Trim. 2', t: 22.4, u: 44}, {e: 'Trim. 3', t: 25.2, u: 41}, {e: 'Trim. 4', t: 20.5, u: 49}];
+            date = [{ e: 'Trim. 1', t: 19.1, u: 51 }, { e: 'Trim. 2', t: 22.4, u: 44 }, { e: 'Trim. 3', t: 25.2, u: 41 }, { e: 'Trim. 4', t: 20.5, u: 49 }];
         }
-        
+
         let maxT = Math.max(...date.map(d => d.t), 1);
         let maxU = Math.max(...date.map(d => d.u), 1);
         let html = '<div class="chart-container-climate">';
@@ -137,7 +137,7 @@ function randareGraficDashboard() {
         });
         html += '</div>';
         container.innerHTML = html;
-        
+
         setTimeout(() => {
             container.querySelectorAll('.anim-bar').forEach(bar => {
                 bar.style.width = bar.getAttribute('data-width');
@@ -170,7 +170,7 @@ function randareHome() {
     const favScenes = JSON.parse(localStorage.getItem('favScenes')) || [];
 
     randareCeleMaiFolosite();
-    
+
     let accHtml = '';
     favAcc.forEach(idSalvat => {
         const [cat, idx] = idSalvat.split('_');
@@ -197,7 +197,7 @@ function randareHome() {
                     animation: 200,
                     delay: 150,
                     delayOnTouchOnly: true,
-                    ghostClass: 'is-active', 
+                    ghostClass: 'is-active',
                     onEnd: function () {
                         const nouaOrdine = Array.from(accContainer.children).map(card => card.getAttribute('data-id'));
                         localStorage.setItem('favAcc', JSON.stringify(nouaOrdine));
@@ -226,8 +226,8 @@ function randareAccesorii() {
     const camereMap = {};
     Object.keys(subDispozitive).forEach(cat => {
         (subDispozitive[cat] || []).forEach((disp, idx) => {
-            if(!camereMap[disp.camera]) camereMap[disp.camera] = [];
-            camereMap[disp.camera].push({disp, cat, idx});
+            if (!camereMap[disp.camera]) camereMap[disp.camera] = [];
+            camereMap[disp.camera].push({ disp, cat, idx });
         });
     });
     let html = '';
@@ -266,7 +266,7 @@ function randareSabloane() {
     const activeIds = rules.map(r => r.idSugestie).filter(id => id);
     let html = '';
     let counter = 0;
-    
+
     sabloaneRecomandate.forEach(sug => {
         if (!activeIds.includes(sug.idSugestie)) {
             html += `<div class="suggestion-card" style="border-top: 5px solid ${sug.culoare};"><div class="sug-icon">${sug.icon}</div><strong class="sug-name">${sug.nume}</strong><p class="sug-desc">${sug.descriereScurta}</p><button class="sug-btn" data-action="add-suggestion" data-sugid="${sug.idSugestie}">+ Adaugă Regula</button></div>`;
@@ -300,7 +300,7 @@ function randareStatisticiLogs() {
 }
 
 function construiesteCardHTML(disp, cat, idx, isFav) {
-    const isActive = ['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare);
+    const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost'].includes(disp.stare);
     const idUnic = `${cat}_${idx}`;
     // Adăugăm un delay progresiv (max 0.6s) pentru animația de tip cascadă
     const animDelay = Math.min(idx * 0.04, 0.6);
@@ -309,8 +309,8 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
 
 function construiesteScenaHTML(scena, isFav) {
     const isActive = localStorage.getItem('activeScene') === scena.id;
-    const esteCustom = !scena.id.startsWith('s_'); 
-    
+    const esteCustom = !scena.id.startsWith('s_');
+
     // Extragem un index din string-ul scenei pentru a genera progresia animației
     const animDelay = (scena.id.charCodeAt(scena.id.length - 1) % 10) * 0.04;
     return `<div class="hk-card ${isActive ? 'is-active' : ''}" data-id="${scena.id}" style="height: 90px; animation-delay: ${animDelay}s;" data-action="execute-scene" data-sceneid="${scena.id}"><div class="hk-controls">${esteCustom ? `<button class="hk-btn" data-action="delete-scene" data-sceneid="${scena.id}" style="color: var(--error-color); margin-right: 2px;"><i class="ph-bold ph-trash"></i></button>` : ''}<button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${scena.id}" data-favtype="scene"><i class="ph-fill ph-star"></i></button></div><div class="hk-name scene-name-title">${scena.nume}</div><div class="hk-state scene-desc-text">${scena.descriere}</div></div>`;
@@ -324,7 +324,7 @@ function afiseazaNotificariHome() {
         container.innerHTML = `<p style="margin:0; opacity:0.5; font-size:0.95em;">Toate sistemele sunt în standby.</p>`;
         return;
     }
-    
+
     let html = "";
     const limita = Math.min(toateNotificarile.length, 3);
     for (let i = 0; i < limita; i++) {
@@ -335,69 +335,69 @@ function afiseazaNotificariHome() {
         else html += `<div class="notification-item"><span>${notif.text}</span></div>`;
     }
     if (toateNotificarile.length > 3) html += `<button class="see-more-btn" data-action="open-popup-all-notifs">Vezi mai multe &gt;</button>`;
-    
+
     container.innerHTML = html;
 }
 
 function genereazaListaNotificari() {
     let notificari = [];
-    
+
     // Luminile
     const becuriAprinse = (subDispozitive.becuri || []).filter(d => d.stare === "Pornit");
     const rgbAprinse = (subDispozitive.luminiRGB || []).filter(d => d.stare === "Pornit");
     const totalLumini = becuriAprinse.length + rgbAprinse.length;
     if (totalLumini > 0) notificari.push({ id: "notif_lumini", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLumini} ${totalLumini === 1 ? 'lumină aprinsă' : 'lumini aprinse'}` });
-    
+
     // Audio
     const audioPornit = (subDispozitive.audio || []).filter(d => d.stare === "Pornit");
     if (audioPornit.length > 0) notificari.push({ id: "notif_audio", text: `<i class="ph-fill ph-speaker-high"></i> ${audioPornit.length} sisteme active` });
-    
+
     // Diverse dispozitive specifice (TV, Aspirator)
     const tvPornit = (subDispozitive.tv || []).filter(d => d.stare === "Pornit");
     if (tvPornit.length > 0) { const idx = subDispozitive.tv.findIndex(d => d === tvPornit[0]); notificari.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV pornit în ${tvPornit[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'tv', ${idx})` }); }
-    
+
     if (subDispozitive.aspirator && subDispozitive.aspirator[0] && subDispozitive.aspirator[0].stare === "Curăță") notificari.push({ id: "notif_aspirator", text: `<i class="ph-fill ph-robot"></i> Robotul curăță în ${subDispozitive.aspirator[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'aspirator', 0)` });
-    
+
     if (subDispozitive.purificator && subDispozitive.purificator[0] && subDispozitive.purificator[0].stare !== "Oprit") notificari.push({ id: "notif_purificator", text: `<i class="ph-fill ph-wind"></i> Purificator activ în ${subDispozitive.purificator[0].camera}`, actiune: `deschideMeniuDispozitive('none', 'purificator', 0)` });
 
     // Draperii/Jaluzele deschise
     (subDispozitive.jaluzele || []).forEach((d, idx) => {
-        if(d.stare === "Deschis") notificari.push({ id: `notif_jaluzele_${idx}`, text: `<i class="ph-fill ph-blinds"></i> ${d.nume} din ${d.camera} e deschisă`, actiune: `deschideMeniuDispozitive('none', 'jaluzele', ${idx})` });
+        if (d.stare === "Deschis") notificari.push({ id: `notif_jaluzele_${idx}`, text: `<i class="ph-fill ph-blinds"></i> ${d.nume} din ${d.camera} e deschisă`, actiune: `deschideMeniuDispozitive('none', 'jaluzele', ${idx})` });
     });
 
     // Electrocasnice
     (subDispozitive.electrocasnice || []).forEach((d, idx) => {
-        if(d.stare === "Pornit") notificari.push({ id: `notif_electrocasnic_${idx}`, text: `<i class="ph-fill ph-coffee"></i> ${d.nume} este pornit`, actiune: `deschideMeniuDispozitive('none', 'electrocasnice', ${idx})` });
+        if (d.stare === "Pornit") notificari.push({ id: `notif_electrocasnic_${idx}`, text: `<i class="ph-fill ph-coffee"></i> ${d.nume} este pornit`, actiune: `deschideMeniuDispozitive('none', 'electrocasnice', ${idx})` });
     });
 
     // Prize
     (subDispozitive.prize || []).forEach((d, idx) => {
-        if(d.stare === "Pornit") notificari.push({ id: `notif_priza_${idx}`, text: `<i class="ph-fill ph-plug"></i> ${d.nume} este sub tensiune`, actiune: `deschideMeniuDispozitive('none', 'prize', ${idx})` });
+        if (d.stare === "Pornit") notificari.push({ id: `notif_priza_${idx}`, text: `<i class="ph-fill ph-plug"></i> ${d.nume} este sub tensiune`, actiune: `deschideMeniuDispozitive('none', 'prize', ${idx})` });
     });
-    
+
     // Securitate și uși/ferestre
     if (subDispozitive.incuietori && subDispozitive.incuietori[0] && subDispozitive.incuietori[0].stare === "Deblocat") notificari.push({ id: "notif_usa", text: `<i class="ph-fill ph-lock-key"></i> Ușa de intrare este deblocată!`, actiune: `deschideMeniuDispozitive('none', 'incuietori', 0)` });
-    
-    if (subDispozitive.senzoriContact) subDispozitive.senzoriContact.forEach((d, idx) => { if(d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `🚪 Fereastră deschisă în ${d.camera}`, actiune: `deschideMeniuDispozitive('none', 'senzoriContact', ${idx})` }); });
-    
+
+    if (subDispozitive.senzoriContact) subDispozitive.senzoriContact.forEach((d, idx) => { if (d.stare === "Deschis") notificari.push({ id: `notif_fereastra_${idx}`, text: `🚪 Fereastră deschisă în ${d.camera}`, actiune: `deschideMeniuDispozitive('none', 'senzoriContact', ${idx})` }); });
+
     let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
     logs.forEach((log, idx) => { notificari.push({ id: `notif_motion_${idx}`, text: `<i class="ph-fill ph-person-simple-walk"></i> Mișcare în ${log.camera} [${log.ora}]` }); });
-    
+
     return notificari;
 }
 
 function actualizeazaStatusGlobal() {
     const sec = document.getElementById('global-securitate'); const con = document.getElementById('global-consum');
-    
+
     if (con) {
-        let consumTotal = 150; 
+        let consumTotal = 150;
         Object.keys(subDispozitive).forEach(cat => {
             if (cat === 'prize') return;
             (subDispozitive[cat] || []).forEach(disp => {
                 consumTotal += calculeazaConsumDispozitiv(disp, cat);
             });
         });
-        con.innerText = (consumTotal/1000).toFixed(2) + " kW";
+        con.innerText = (consumTotal / 1000).toFixed(2) + " kW";
     }
 
     if (sec) {
@@ -405,7 +405,7 @@ function actualizeazaStatusGlobal() {
         sec.innerText = esteDezarmat ? "Dezactivată" : "Armată";
 
         const txtSecuritateAlarma = document.getElementById('txt-status-alarma');
-        if(txtSecuritateAlarma) {
+        if (txtSecuritateAlarma) {
             txtSecuritateAlarma.innerText = esteDezarmat ? "Sistem Dezarmat" : "Sistem Armat";
             txtSecuritateAlarma.style.color = esteDezarmat ? "var(--error-color)" : "var(--success-color)";
         }
@@ -432,7 +432,7 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
     if (categorie === 'prize') {
         contentHtml = `<div class="popup-content-box"><div class="popup-subtitle">Consum Curent în ${disp.camera}</div><div class="popup-val-display">${calculeazaConsumPriza(disp)} W</div><div class="popup-details">Dispozitive: <strong>${disp.detalii}</strong></div><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'};">Alimentare Priză: ${disp.stare}</button></div>`;
     } else {
-        contentHtml = `<div class="popup-action-row"><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'};">Schimbă Stare (Curent: ${disp.stare})</button></div>`;
+        contentHtml = `<div class="popup-action-row"><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'};">Schimbă Stare (Curent: ${disp.stare})</button></div>`;
         if (categorie === 'camereVideo') contentHtml += `<div class="camera-feed-box">${disp.stare === 'LIVE' ? '<span class="camera-live-badge">🔴 LIVE REC</span><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80" class="camera-feed-img">' : '<span class="camera-offline">[ Camera Feed Offline ]</span>'}</div>`;
         if (['becuri', 'audio', 'jaluzele', 'luminiRGB'].includes(categorie)) {
             const isOff = disp.stare === 'Oprit' || disp.stare === 'Închis';
@@ -500,7 +500,7 @@ function deschidePopupCreareScena() {
     const modal = document.getElementById('popup-dispozitive');
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
-    if(!modal || !continental) return;
+    if (!modal || !continental) return;
     titlu.innerHTML = "🎭 Creare Scenă Nouă";
     continental.innerHTML = `<div class="form-row"><label>Numele Scenei:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="ex: Party Mode, Relaxare..."></div><div class="form-row"><label>Emoji sugestiv:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Distracție</option><option value="🍃">🍃 Relaxare / Fresh</option><option value="💻">💻 Birou / Work</option></select></div><div class="form-row"><label>Descriere scurtă:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="ex: Oprește toate electronicele din casă."></div><div class="form-row"><label>Șablon comportament:</label><select id="custom-scene-template" class="form-input"><option value="away">Mod Plecat (Închide tot + Alarme active)</option><option value="night">Mod Noapte (Ambient întunecat + uși încuiate)</option><option value="morning">Mod Dimineață (Deschide ferestre/jaluzele)</option></select></div><button onclick="salveazaScenaCustomNoua()" class="btn-full-success">💾 Creează Scena</button>`;
     modal.classList.add('active');
@@ -508,7 +508,7 @@ function deschidePopupCreareScena() {
 
 function deschideModalAutomatizare() {
     const modal = document.getElementById('popup-automatizare');
-    if(!modal) return;
+    if (!modal) return;
     const selectTrigger = document.getElementById('auto-trigger-dev');
     const selectAction = document.getElementById('auto-action-dev');
     let optionsHTML = '';
@@ -523,13 +523,13 @@ function deschidePopupToateNotificarile() {
     const titlu = document.getElementById('modal-titlu');
     const continental = document.getElementById('modal-continut');
     if (!modal || !titlu || !continental) return;
-    
+
     titlu.innerHTML = "🔔 Toate Notificările Casei";
     const toateNotificarile = genereazaListaNotificari();
-    
+
     let html = `<div class="popup-list-container" style="max-height: 250px; padding-right: 5px; margin-bottom: 15px; text-align: left; gap: 8px;">`;
-    
-    toateNotificarile.forEach(notif => { 
+
+    toateNotificarile.forEach(notif => {
         if (notif.id === "notif_lumini") {
             html += `<div class="notification-item card-style" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
         } else if (notif.id === "notif_audio") {
@@ -540,13 +540,13 @@ function deschidePopupToateNotificarile() {
             html += `<div class="notification-item card-style"><span>${notif.text}</span></div>`;
         }
     });
-    
+
     if (toateNotificarile.length === 0) {
         html += `<div class="popup-empty-text">Nicio notificare activă.</div>`;
     }
-    
+
     html += `</div><div class="popup-action-row"><button data-action="clear-motion-history" class="btn-clear-history"><i class="ph-bold ph-trash"></i> Șterge Istoric Mișcare</button></div>`;
-    
+
     continental.innerHTML = html;
     modal.classList.add('active');
 }
@@ -567,7 +567,7 @@ function inchidePopupAutomatizare() {
     applyFadeOutAndClose(modal);
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     const m1 = document.getElementById('popup-dispozitive');
     const m2 = document.getElementById('popup-automatizare');
     const m3 = document.getElementById('popup-istoric');
@@ -593,7 +593,7 @@ window.onclick = function(event) {
 }
 
 // Închidere rapidă a tuturor modalelor la apăsarea tastei Escape
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
         inchidePopup();
         inchidePopupAutomatizare();
@@ -628,14 +628,14 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
     if (!disp) return;
 
     // Verificăm dacă e considerat "activ" pentru a colora fundalul
-    const isActive = ['Pornit','Curăță','Deblocat','Activ','Deschis','LIVE','Auto','Boost'].includes(disp.stare);
-    
+    const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost'].includes(disp.stare);
+
     // 1. Caută TOATE cardurile cu acest ID pe ecran și modifică doar atributele lor
     const carduri = document.querySelectorAll(`.hk-card[data-id="${idUnic}"]`);
     carduri.forEach(card => {
         if (isActive) card.classList.add('is-active');
         else card.classList.remove('is-active');
-        
+
         // Modificăm strict textul stării (fără a recrea iconițele SVG)
         const stateEl = card.querySelector('.hk-state');
         if (stateEl) {
@@ -663,7 +663,7 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
             if (cat === 'prize') {
                 btn.innerText = `Alimentare Priză: ${disp.stare}`;
                 const wDisplay = popup.querySelector('.popup-val-display');
-                if(wDisplay) wDisplay.innerText = `${calculeazaConsumPriza(disp)} W`;
+                if (wDisplay) wDisplay.innerText = `${calculeazaConsumPriza(disp)} W`;
             } else {
                 btn.innerText = `Schimbă Stare (Curent: ${disp.stare})`;
                 // Actualizează instantaneu și interfața sliderelor (dacă există)
@@ -694,15 +694,15 @@ function showToast(mesaj, opts = {}) {
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.style.borderLeft = `4px solid ${opts.isError ? 'var(--error-color)' : 'var(--success-color)'}`;
-    
+
     const icon = opts.isError ? '<i class="ph-bold ph-warning-circle" style="color: var(--error-color); font-size: 1.2em;"></i>' : '<i class="ph-bold ph-check-circle" style="color: var(--success-color); font-size: 1.2em;"></i>';
-    
+
     let htmlContent = `${icon} <span>${mesaj}</span>`;
-    
+
     if (opts.cuUndo) {
         htmlContent += `<button class="undo-btn" style="background: rgba(255,255,255,0.2); color: inherit; border: none; padding: 4px 8px; border-radius: 4px; margin-left: 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;">Undo</button>`;
     }
-    
+
     toast.innerHTML = htmlContent;
     container.appendChild(toast);
 
@@ -729,7 +729,7 @@ function showToast(mesaj, opts = {}) {
 
 // Suport pentru compatibilitate cu apelurile vechi `showToast("mesaj", true)` sau `showToast("mesaj", isError, callback)`
 const originalShowToast = showToast;
-showToast = function(mesaj, arg2, arg3) {
+showToast = function (mesaj, arg2, arg3) {
     if (typeof arg2 === 'object' && arg2 !== null) {
         return originalShowToast(mesaj, arg2);
     }
@@ -808,10 +808,10 @@ function salveazaAccesoriuNou() {
     subDispozitive[categorie].push(noulAccesoriu);
     salveazaStarea();
     adaugaInLog(`Accesoriu nou adăugat: ${nume} (${camera})`);
-    
+
     inchideModalAdaugareAccesoriu();
     document.getElementById('new-acc-name').value = '';
-    
+
     showToast("Accesoriul a fost adăugat cu succes!");
     reincarcaInterfata();
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
     <meta charset="UTF-8">
     <title>SmartHome - Statistici & Istoric</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/components.js"></script>
 </head>
+
 <body>
     <smart-nav></smart-nav>
     <main>
@@ -15,19 +17,25 @@
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
             <h1>Statistici & Jurnal</h1>
         </div>
-        <p class="page-subtitle">Monitorizează consumul de energie, istoricul climei și vizualizează evenimentele din casă.</p>
+        <p class="page-subtitle">Monitorizează consumul de energie, istoricul climei și vizualizează evenimentele din
+            casă.</p>
 
-        <div class="stats-card" style="background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow-soft); margin-bottom: 25px;">
+        <div class="stats-card"
+            style="background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow-soft); margin-bottom: 25px;">
             <div class="flex-between mb-20" style="flex-wrap: wrap; gap: 15px;">
                 <div style="display: flex; gap: 8px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
-                    <button id="btn-tip-energie" class="filter-btn active" onclick="schimbaTipGraficDashboard('energie')">⚡ Energie</button>
-                    <button id="btn-tip-clima" class="filter-btn" onclick="schimbaTipGraficDashboard('clima')">🌡️ Climă</button>
+                    <button id="btn-tip-energie" class="filter-btn active"
+                        onclick="schimbaTipGraficDashboard('energie')">⚡ Energie</button>
+                    <button id="btn-tip-clima" class="filter-btn" onclick="schimbaTipGraficDashboard('clima')">🌡️
+                        Climă</button>
                 </div>
-                
+
                 <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
                     <button id="btn-dash-1z" class="filter-btn" onclick="schimbaPerioadaDashboard('1z')">1 Zi</button>
-                    <button id="btn-dash-7z" class="filter-btn active" onclick="schimbaPerioadaDashboard('7z')">7 Zile</button>
-                    <button id="btn-dash-30z" class="filter-btn" onclick="schimbaPerioadaDashboard('30z')">30 Zile</button>
+                    <button id="btn-dash-7z" class="filter-btn active" onclick="schimbaPerioadaDashboard('7z')">7
+                        Zile</button>
+                    <button id="btn-dash-30z" class="filter-btn" onclick="schimbaPerioadaDashboard('30z')">30
+                        Zile</button>
                     <button id="btn-dash-6l" class="filter-btn" onclick="schimbaPerioadaDashboard('6l')">6 Luni</button>
                     <button id="btn-dash-1an" class="filter-btn" onclick="schimbaPerioadaDashboard('1an')">1 An</button>
                 </div>
@@ -35,10 +43,13 @@
 
             <div id="dashboard-grafic-content" style="min-height: 240px; margin-top: 15px;"></div>
         </div>
-        
-        <div class="stats-card" style="background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow-soft);">
+
+        <div class="stats-card"
+            style="background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow-soft);">
             <h3 class="m-0 text-accent mb-20">📝 Jurnal de Securitate și Evenimente</h3>
-            <div id="logs-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>
+            <div id="logs-container"
+                style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
+            </div>
         </div>
     </main>
 
@@ -46,4 +57,5 @@
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/app.js"></script>
 </body>
+
 </html>
