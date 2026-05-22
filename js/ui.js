@@ -485,9 +485,11 @@ function afiseazaNotificariHome() {
         item.className = 'notification-item';
         if (notif.id === "notif_lumini") {
             item.dataset.action = "open-popup-lumini";
+            item.classList.add('hover-accent');
             item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
         } else if (notif.id === "notif_audio") {
             item.dataset.action = "open-popup-audio";
+            item.classList.add('hover-accent');
             item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
         } else if (notif.actiune) {
             item.classList.add('hover-accent');
@@ -758,9 +760,11 @@ function deschidePopupToateNotificarile() {
         item.className = 'notification-item card-style';
         if (notif.id === "notif_lumini") {
             item.dataset.action = "open-popup-lumini";
+            item.classList.add('hover-accent');
             item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
         } else if (notif.id === "notif_audio") {
             item.dataset.action = "open-popup-audio";
+            item.classList.add('hover-accent');
             item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span>`;
         } else if (notif.actiune) {
             item.classList.add('hover-accent');
