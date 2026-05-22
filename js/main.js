@@ -27,29 +27,29 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizeazaUiSetariBackground();
 });
 
-function getBasePath() {
-    // Detectăm dacă suntem într-un subfolder (cum e /html/) sau la rădăcină
-    const isSubfolder = window.location.pathname.includes('/html/') || window.location.pathname.includes('\\html\\');
-    return isSubfolder ? '../assets' : 'assets';
+function getAbsoluteAssetUrl(filename) {
+    const path = window.location.pathname;
+    const isSubfolder = path.includes('/html/') || path.includes('\\html\\');
+    const relativePath = isSubfolder ? `../assets/${filename}` : `assets/${filename}`;
+    
+    // Convertim calea într-un URL absolut. Acest pas este CRUCIAL pentru a forța browserul
+    // să randeze imaginea corect, eliminând conflictele cu directorul css/ unde se află style.css.
+    return new URL(relativePath, window.location.href).href;
 }
 
 function initBackgroundAndAccent() {
     const bgIndex = getCurentBgIndex();
-    const basePath = getBasePath();
     const bgConfig = BACKGROUNDS[bgIndex];
 
-    // Construim calea relativă corectă pentru CSS injectat în HTML
-    const relativePath = `${basePath}/${bgConfig.filename}`;
+    const absoluteUrl = getAbsoluteAssetUrl(bgConfig.filename);
 
-    const bgUrl = `url('${relativePath}')`;
+    const bgUrl = `url('${absoluteUrl}')`;
     document.documentElement.style.setProperty('--app-bg', bgUrl);
 
     if (isAutoAccentOn()) {
-        const cleanUrl = `${basePath}/${bgConfig.filename}`;
-        
         const img = new Image();
         img.crossOrigin = "Anonymous"; // Previne erorile de securitate CORS în Electron
-        img.src = cleanUrl;
+        img.src = absoluteUrl;
         
         img.onload = function() {
             try {
@@ -118,11 +118,10 @@ function schimbaFundal(index) {
     if (index < 0 || index >= BACKGROUNDS.length) return;
     localStorage.setItem('appBgIndex', index);
 
-    const basePath = getBasePath();
     const bgConfig = BACKGROUNDS[index];
-    const relativePath = `${basePath}/${bgConfig.filename}`;
+    const absoluteUrl = getAbsoluteAssetUrl(bgConfig.filename);
     
-    const bgUrl = `url('${relativePath}')`;
+    const bgUrl = `url('${absoluteUrl}')`;
     document.documentElement.style.setProperty('--app-bg', bgUrl);
 
     if (isAutoAccentOn()) {
