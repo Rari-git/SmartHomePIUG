@@ -293,8 +293,9 @@ input:checked + .slider:before { transform: translateX(20px); }
     background: var(--card-bg);
     border: 2px dashed var(--accent-color) !important;
     border-radius: var(--card-radius);
-    padding: 15px;
-    height: 90px;
+    padding: 10px;
+    height: 110px;
+    width: 110px;
     width: 100%;
     box-sizing: border-box;
     display: flex;
