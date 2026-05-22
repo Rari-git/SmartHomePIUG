@@ -125,7 +125,7 @@ function simuleazaInundatie(isManual = true) {
 
 function reseteazaInundatie() {
     localStorage.setItem('pericolInundatie', 'false');
-    
+
     // Eliminăm flash-ul doar dacă nu mai este și celălalt pericol activ
     if (localStorage.getItem('pericolIncendiu') !== 'true') {
         document.body.classList.remove('alarm-flash');

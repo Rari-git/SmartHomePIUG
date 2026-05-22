@@ -567,9 +567,9 @@ function ajusteazaDinPopup(camera, directie) {
     let valC = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
     let unit = getTempUnit();
     let valDisp = unit === 'F' ? Math.round(valC * 9 / 5 + 32) : Math.round(valC);
-    
+
     valDisp = directie === 'plus' ? valDisp + 1 : valDisp - 1;
-    
+
     if (unit === 'F') {
         if (valDisp < 59) valDisp = 59;
         if (valDisp > 86) valDisp = 86;
@@ -825,7 +825,7 @@ function actualizeazaMediiClimat() {
         if (isNaN(val)) {
             val = 22; // Valoarea implicită dacă nu a fost setată manual
         }
-        
+
         sumaTemp += val;
         countTemp++;
 
@@ -867,7 +867,7 @@ function actualizeazaMediiClimat() {
             sumaUmid += val;
             countUmid++;
         }
-        
+
         // Aici afișăm per cameră corect, cu % 
         const umidElem = document.getElementById(`umid-${camera}`);
         if (umidElem && !isNaN(val)) {
@@ -892,7 +892,7 @@ async function fetchWeather() {
     const detaliiEl = document.getElementById('vremea-detalii');
     const iconEl = document.getElementById('vremea-icon');
     if (!tempEl || !detaliiEl || !iconEl) return;
-    
+
     const cacheKey = 'weatherCacheData';
     const cacheTimeKey = 'weatherCacheTime';
     const cacheDuration = 30 * 60 * 1000; // 30 minute
@@ -914,12 +914,12 @@ async function fetchWeather() {
 
             if (!response.ok) throw new Error("Eroare la preluarea datelor meteo");
             data = await response.json();
-            
+
             // Salvăm datele noi și timestamp-ul curent în cache
             localStorage.setItem(cacheKey, JSON.stringify(data));
             localStorage.setItem(cacheTimeKey, now.toString());
         }
-        
+
         const current = data.current;
 
         const tempC = current.temperature_2m;
@@ -943,7 +943,7 @@ async function fetchWeather() {
         iconEl.innerText = icon;
     } catch (error) {
         console.error("Eroare API Vreme:", error);
-        
+
         // Fallback la cache-ul expirat în caz de eroare/lipsă rețea
         const cachedFallback = localStorage.getItem('weatherCacheData');
         if (cachedFallback) {

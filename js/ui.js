@@ -9,7 +9,7 @@ export let sortableInstante = { acc: null, scene: null };
 function formateazaTemperatura(valoareCelsius) {
     const unitate = localStorage.getItem('tempUnit') || 'C'; // presupunând că folosești 'C' și 'F'
     if (unitate === 'F') {
-        const fahrenheit = Math.round((valoareCelsius * 9/5) + 32);
+        const fahrenheit = Math.round((valoareCelsius * 9 / 5) + 32);
         return `${fahrenheit}°F`;
     }
     return `${valoareCelsius}°C`;
@@ -297,7 +297,7 @@ function randareAccesorii() {
 
         const grid = document.createElement('div');
         grid.className = 'hk-grid';
-        
+
         const gridFragment = document.createDocumentFragment();
         camereMap[camera].forEach(item => {
             const tempDiv = document.createElement('div');
@@ -318,7 +318,7 @@ function randareScene() {
 
     const favScenes = JSON.parse(localStorage.getItem('favScenes')) || [];
     const fragment = document.createDocumentFragment();
-    
+
     scenesDB.forEach(scena => {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = construiesteScenaHTML(scena, favScenes.includes(scena.id));
@@ -355,7 +355,7 @@ function randareSabloane() {
     if (!container) return;
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
     const activeIds = rules.map(r => r.idSugestie).filter(id => id);
-    
+
     container.innerHTML = ''; // Clear
     const fragment = document.createDocumentFragment();
     let counter = 0;
@@ -382,7 +382,7 @@ function randareAutomatizari() {
     const container = document.getElementById('automations-list');
     if (!container) return;
     const rules = JSON.parse(localStorage.getItem('userAutomations')) || [];
-    
+
     container.innerHTML = ''; // Clear
     const fragment = document.createDocumentFragment();
 
@@ -408,7 +408,7 @@ function randareStatisticiLogs() {
     const container = document.getElementById('logs-container');
     if (!container) return;
     const logs = JSON.parse(localStorage.getItem('smartHomeLogs')) || [];
-    
+
     container.innerHTML = ''; // Clear
 
     if (logs.length === 0) {
@@ -430,7 +430,7 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
     const isActive = ['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost', 'Pericol', 'FUM DETECTAT!', 'APĂ DETECTATĂ!'].includes(disp.stare);
     const idUnic = `${cat}_${idx}`;
     const animDelay = Math.min(idx * 0.04, 0.6);
-    
+
     // DETECTARE DINAMICĂ CLASĂ DE ALARMĂ PENTRU SENZORII DE RISC
     let clasaAlarma = '';
     if (disp.stare === 'Pericol' || disp.stare === 'FUM DETECTAT!') {
@@ -468,7 +468,7 @@ function afiseazaNotificariHome() {
     const container = document.getElementById('notifications-container');
     if (!container) return;
     const toateNotificarile = genereazaListaNotificari();
-    
+
     container.innerHTML = ''; // Clear
 
     if (toateNotificarile.length === 0) {
@@ -596,7 +596,7 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
         const camera = categorie.split('-')[1];
         titlu.innerHTML = `🌡️ Termostat ${camera.charAt(0).toUpperCase() + camera.slice(1)}`;
         let temp = localStorage.getItem(`temp-${camera}`) || "22";
-        
+
         // Folosim direct formateazaTemperatura care returnează și valoarea și simbolul 
         continental.innerHTML = `<div class="popup-content-box"><h3 class="popup-subtitle">Setare Temperatură</h3><div class="popup-val-display"><span id="popup-temp-${camera}">${formateazaTemperatura(parseFloat(temp))}</span></div><div class="popup-ctrl-row"><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="minus" class="popup-ctrl-btn">−</button><button data-action="adjust-temp-popup" data-camera="${camera}" data-dir="plus" class="popup-ctrl-btn">+</button></div></div>`;
         modal.classList.add('active'); return;
@@ -623,9 +623,9 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
                 </div>`;
         }
     }
-    
+
     contentHtml += `<div class="popup-action-row" style="margin-top: 15px;"><button class="sensor-action-btn" data-action="delete-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: var(--error-color);"><i class="ph-bold ph-trash"></i> Șterge Accesoriu</button></div>`;
-    
+
     continental.innerHTML = contentHtml;
     modal.classList.add('active');
 }
@@ -638,10 +638,10 @@ function deschidePopupLuminiAprinse() {
 
     titlu.innerHTML = "<i class='ph-fill ph-lightbulb'></i> Lumini Active în Casă";
     continental.innerHTML = ''; // Clear
-    
+
     const listContainer = document.createElement('div');
     listContainer.className = 'popup-list-container';
-    
+
     const fragment = document.createDocumentFragment();
     let areLumini = false;
 
@@ -777,7 +777,7 @@ function deschidePopupToateNotificarile() {
     });
 
     if (toateNotificarile.length === 0) listContainer.innerHTML = `<div class="popup-empty-text">Nicio notificare activă.</div>`;
-    
+
     fragment.appendChild(listContainer);
     const actionRow = document.createElement('div');
     actionRow.className = 'popup-action-row';
@@ -873,7 +873,7 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
 
         // Resetăm stările anterioare de alarmă
         card.classList.remove('alarm-fire', 'alarm-water');
-        
+
         // Aplicăm noul efect vizual în interiorul cardului
         if (disp.stare === 'Pericol' || disp.stare === 'FUM DETECTAT!') {
             card.classList.add('alarm-fire');

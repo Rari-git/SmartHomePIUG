@@ -32,7 +32,7 @@ function getAbsoluteAssetUrl(filename) {
     const isSubfolder = path.includes('/html/') || path.includes('\\html\\');
     const isDist = path.includes('/dist/') || path.includes('\\dist\\'); // Dacă rulăm din bundle-ul Vite
     const relativePath = (isSubfolder || isDist) ? `../assets/${filename}` : `assets/${filename}`;
-    
+
     // Convertim calea într-un URL absolut. Acest pas este CRUCIAL pentru a forța browserul
     // să randeze imaginea corect, eliminând conflictele cu directorul css/ unde se află style.css.
     return new URL(relativePath, window.location.href).href;
@@ -51,21 +51,21 @@ function initBackgroundAndAccent() {
         const img = new Image();
         img.crossOrigin = "Anonymous"; // Previne erorile de securitate CORS în Electron
         img.src = absoluteUrl;
-        
-        img.onload = function() {
+
+        img.onload = function () {
             try {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 canvas.width = 1;
                 canvas.height = 1;
-                
+
                 // Desenarea imaginii la scară 1x1 calculează automat media culorilor
                 ctx.drawImage(img, 0, 0, 1, 1);
                 const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                
+
                 // Convertim în format HEX
                 let hexColor = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-                
+
                 // OPTIMIZARE PENTRU LIZIBILITATE (Evităm culorile prea șterse sau prea închise)
                 // Dacă fundalul este prea întunecat sau spălat, aplicăm un factor de saturație/luminanță
                 const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
@@ -73,15 +73,15 @@ function initBackgroundAndAccent() {
                     // Dacă e prea închis (ex: fundal de noapte), forțăm o nuanță mai deschisă din același spectru
                     hexColor = `rgb(${Math.min(r + 60, 255)}, ${Math.min(g + 60, 255)}, ${Math.min(b + 60, 255)})`;
                 }
-                
+
                 document.documentElement.style.setProperty('--accent-color', hexColor);
             } catch (e) {
                 // Fallback în caz de eroare la canvas
                 document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
             }
         };
-        
-        img.onerror = function() {
+
+        img.onerror = function () {
             document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
         };
     } else {
@@ -99,7 +99,7 @@ function getCurentBgIndex() {
 function isAutoAccentOn() {
     const val = localStorage.getItem('autoAccentColor');
     // Dacă nu e setat deloc, implicit punem true (sau false, depinde cum doriți)
-    if (val === null) return true; 
+    if (val === null) return true;
     return val === 'true'; // Returnează true DOAR dacă este stringul 'true'
 }
 
@@ -121,7 +121,7 @@ function schimbaFundal(index) {
 
     const bgConfig = BACKGROUNDS[index];
     const absoluteUrl = getAbsoluteAssetUrl(bgConfig.filename);
-    
+
     const bgUrl = `url('${absoluteUrl}')`;
     document.documentElement.style.setProperty('--app-bg', bgUrl);
 
@@ -144,12 +144,12 @@ function setTempUnit(unit) {
     fetchWeather();
     // Actualizează starea vizuală a butoanelor în Setări
     actualizeazaButoaneUnitate();
-    
+
     // -- NOU: Forțează cardurile din pagină să preia noua conversie --
     if (typeof window.sincronizeazaDOMcuMemoria === 'function') {
         window.sincronizeazaDOMcuMemoria();
     }
-    
+
     showToast(`Unitatea a fost schimbată în °${unit}.`);
 }
 
@@ -194,7 +194,7 @@ function toggleDarkMode() {
 function toggleAutoAccent() {
     const curent = isAutoAccentOn();
     const nouaStare = !curent;
-    
+
     // Salvăm explicit ca text 'true' sau 'false'
     localStorage.setItem('autoAccentColor', nouaStare ? 'true' : 'false');
 
@@ -216,7 +216,7 @@ function toggleAutoAccent() {
 
 function actualizeazaUiSetariBackground() {
     const isAuto = isAutoAccentOn();
-    
+
     // Sincronizăm switch-ul din interfață
     const switchEl = document.getElementById('auto-accent-toggle');
     if (switchEl) switchEl.checked = isAuto;
