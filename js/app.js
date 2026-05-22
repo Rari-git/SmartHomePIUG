@@ -14,12 +14,59 @@ export let pinCurentIntrodus = "";
 export let modAlarmaActiune = "";
 export let timeoutSalvareStare = null;
 
+// === INDEXED DB HELPER PENTRU PERFORMANȚĂ ===
+const DB_NAME = 'SmartHomeDB';
+const STORE_NAME = 'stateStore';
+
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (event) => {
+            event.target.result.createObjectStore(STORE_NAME);
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function setItemDB(key, value) {
+    try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            store.put(value, key);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+        });
+    } catch (e) {
+        // Fallback transparent la localStorage dacă mediul blochează IndexedDB
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+}
+
+async function getItemDB(key) {
+    try {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readonly');
+            const store = tx.objectStore(STORE_NAME);
+            const request = store.get(key);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    } catch (e) {
+        const val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : null;
+    }
+}
+
 // Executăm intro-ul direct, fără să mai așteptăm încărcarea completă a paginii.
 // Astfel blocăm afișarea interfeței și scăpăm de acele frame-uri vizibile nedorite.
 initIntro();
 
-document.addEventListener('DOMContentLoaded', () => {
-    initFavorites();
+document.addEventListener('DOMContentLoaded', async () => {
+    await initFavorites();
     incarcaNumeCasa();
     reincarcaInterfata();
     fetchWeather();
@@ -103,7 +150,8 @@ window.addEventListener('beforeunload', () => {
     opresteIntervalVacanta();
     if (timeoutSalvareStare) {
         clearTimeout(timeoutSalvareStare);
-        localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+        // Salvare sincronă fallback doar pentru siguranță la închidere forțată (micro-stutter vizibil doar la exit)
+        localStorage.setItem('smartHomeData_fallback', JSON.stringify(subDispozitive));
     }
 });
 
@@ -156,18 +204,34 @@ function initIntro() {
     sessionStorage.setItem('introAfisat', 'true');
 }
 
-function initFavorites() {
+async function initFavorites() {
     try {
-        const saved = localStorage.getItem('smartHomeData');
-        subDispozitive = saved ? JSON.parse(saved) : null;
+        const fallback = localStorage.getItem('smartHomeData_fallback');
+        let saved = null;
+
+        if (fallback) {
+            saved = JSON.parse(fallback);
+            localStorage.removeItem('smartHomeData_fallback');
+            await setItemDB('smartHomeData', saved);
+        } else {
+            saved = await getItemDB('smartHomeData');
+            // Migrare automată de la vechiul format local la IndexedDB (fără a pierde datele anterioare)
+            if (!saved && localStorage.getItem('smartHomeData')) {
+                saved = JSON.parse(localStorage.getItem('smartHomeData'));
+                await setItemDB('smartHomeData', saved);
+            }
+        }
+
+        subDispozitive = saved ? saved : null;
+
         if (!subDispozitive || !subDispozitive.becuri || !localStorage.getItem('design_svg_assets_v6')) {
             subDispozitive = JSON.parse(JSON.stringify(defaultDispozitive));
-            localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+            await setItemDB('smartHomeData', subDispozitive);
             localStorage.setItem('design_svg_assets_v6', 'true');
         }
     } catch (e) {
         subDispozitive = JSON.parse(JSON.stringify(defaultDispozitive));
-        localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+        await setItemDB('smartHomeData', subDispozitive);
         localStorage.setItem('design_svg_assets_v6', 'true');
     }
     if (!localStorage.getItem('favAcc')) localStorage.setItem('favAcc', JSON.stringify(['becuri_1', 'tv_1', 'incuietori_0', 'camereVideo_0']));
@@ -178,10 +242,15 @@ function initFavorites() {
 
 function salveazaStarea() {
     // 🚀 Optimizare Performanță: Debounce
-    // Nu mai scriem pe disc la fiecare pixel de pe slider. Așteptăm 500ms de inactivitate.
+    // Utilizăm stocare asincronă via IndexedDB (fără JSON.stringify blocant), 
+    // iar "Structured Cloning" trimite obiectul nativ în background.
     if (timeoutSalvareStare) clearTimeout(timeoutSalvareStare);
-    timeoutSalvareStare = setTimeout(() => {
-        localStorage.setItem('smartHomeData', JSON.stringify(subDispozitive));
+    timeoutSalvareStare = setTimeout(async () => {
+        try {
+            await setItemDB('smartHomeData', subDispozitive);
+        } catch (e) {
+            console.error("Eroare la stocarea asincronă:", e);
+        }
         timeoutSalvareStare = null;
     }, 500);
 }
