@@ -606,7 +606,8 @@ function deschideMeniuDispozitive(cardId, categorie, elementIndex) {
         contentHtml = `<div class="popup-content-box"><div class="popup-subtitle">Consum Curent în ${disp.camera}</div><div class="popup-val-display">${calculeazaConsumPriza(disp)} W</div><div class="popup-details">Dispozitive: <strong>${disp.detalii}</strong></div><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${disp.stare === 'Pornit' ? 'var(--success-color)' : '#95a5a6'};">Alimentare Priză: ${disp.stare}</button></div>`;
     } else {
         contentHtml = `<div class="popup-action-row"><button class="sensor-action-btn" data-action="toggle-device-popup" data-cat="${categorie}" data-idx="${elementIndex}" style="background-color: ${['Pornit', 'Curăță', 'Deblocat', 'Activ', 'Deschis', 'LIVE', 'Auto', 'Boost'].includes(disp.stare) ? 'var(--success-color)' : '#95a5a6'};">Schimbă Stare (Curent: ${disp.stare})</button></div>`;
-        const basePath = window.location.pathname.includes('/html/') ? '../assets' : 'assets';
+        const path = window.location.pathname;
+        const basePath = (path.includes('/html/') || path.includes('/dist/') || path.includes('\\dist\\')) ? '../assets' : 'assets';
         if (categorie === 'camereVideo') contentHtml += `<div class="camera-feed-box">${disp.stare === 'LIVE' ? `<span class="camera-live-badge">🔴 LIVE REC</span><img src="${basePath}/camera-feed.jpg" class="camera-feed-img">` : '<span class="camera-offline">[ Camera Feed Offline ]</span>'}</div>`;
         if (['becuri', 'audio', 'jaluzele', 'luminiRGB'].includes(categorie)) {
             const isOff = disp.stare === 'Oprit' || disp.stare === 'Închis';

@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function getAbsoluteAssetUrl(filename) {
     const path = window.location.pathname;
     const isSubfolder = path.includes('/html/') || path.includes('\\html\\');
-    const relativePath = isSubfolder ? `../assets/${filename}` : `assets/${filename}`;
+    const isDist = path.includes('/dist/') || path.includes('\\dist\\'); // Dacă rulăm din bundle-ul Vite
+    const relativePath = (isSubfolder || isDist) ? `../assets/${filename}` : `assets/${filename}`;
     
     // Convertim calea într-un URL absolut. Acest pas este CRUCIAL pentru a forța browserul
     // să randeze imaginea corect, eliminând conflictele cu directorul css/ unde se află style.css.

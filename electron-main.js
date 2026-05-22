@@ -44,7 +44,13 @@ function createWindow() {
         //mainWindow.focus();
     });
 
-    mainWindow.loadFile('index.html');
+    if (app.isPackaged) {
+        // În producția finală (ASAR), încărcăm interfața minificată din folderul dist/
+        mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+    } else {
+        // În dezvoltare (npm start), rulăm fișierul original brut
+        mainWindow.loadFile('index.html');
+    }
 }
 
 app.whenReady().then(() => {
