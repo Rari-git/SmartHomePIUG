@@ -1188,6 +1188,7 @@ body.alarm-flash {
 .toast-container {
     position: fixed;
     top: 25px;
+    top: 60px;
     right: 25px;
     z-index: 9999;
     display: flex;
