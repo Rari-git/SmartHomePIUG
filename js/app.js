@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFavorites();
     incarcaNumeCasa();
     reincarcaInterfata();
+    fetchWeather();
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();
 
     // 🚀 SISTEM GLOBAL: EVENT DELEGATION
@@ -675,6 +676,50 @@ function actualizeazaMediiClimat() {
     if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid;
 }
 
+// --- Integrare API Vreme Timișoara ---
+async function fetchWeather() {
+    const tempEl = document.getElementById('vremea-temp');
+    const detaliiEl = document.getElementById('vremea-detalii');
+    const iconEl = document.getElementById('vremea-icon');
+    if (!tempEl || !detaliiEl || !iconEl) return;
+
+    try {
+        // Coordonatele pentru Timișoara
+        const lat = 45.7537;
+        const lon = 21.2257;
+        
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code&timezone=auto`);
+        
+        if (!response.ok) throw new Error("Eroare la preluarea datelor meteo");
+        
+        const data = await response.json();
+        const current = data.current;
+        
+        const temp = Math.round(current.temperature_2m);
+        const humidity = current.relative_humidity_2m;
+        const precip = current.precipitation;
+        const code = current.weather_code;
+        
+        // Mapare simplă a codurilor WMO la emoji
+        let icon = "☀️";
+        if (code === 0) icon = "☀️"; // Senin
+        else if (code >= 1 && code <= 3) icon = "⛅"; // Partial noros
+        else if (code >= 45 && code <= 48) icon = "🌫️"; // Ceata
+        else if (code >= 51 && code <= 67) icon = "🌧️"; // Ploaie ușoară / burniță
+        else if (code >= 71 && code <= 77) icon = "❄️"; // Ninsoare ușoară
+        else if (code >= 80 && code <= 82) icon = "🌧️"; // Ploaie
+        else if (code >= 85 && code <= 86) icon = "❄️"; // Ninsoare
+        else if (code >= 95) icon = "⛈️"; // Furtună
+
+        tempEl.innerText = `${temp}°C`;
+        detaliiEl.innerText = `Precip: ${precip}mm | Umid: ${humidity}%`;
+        iconEl.innerText = icon;
+    } catch (error) {
+        console.error("Eroare API Vreme:", error);
+        detaliiEl.innerText = "Eroare la încărcare";
+    }
+}
+
 // === ES6 MODULE EXPORTS ===
 export { 
     initIntro, initFavorites, salveazaStarea, incarcaNumeCasa, deschidePopupPin, 
@@ -683,7 +728,8 @@ export {
     verificaReguliAutomatizare, salveazaAutomatizare, adaugaSugestie, 
     stergeAutomatizare, comutaAutomatizare, ajusteazaDinPopup, stingeTotGlobal, 
     aplicaMod, calculeazaConsumPriza, executaScena, salveazaScenaCustomNoua, 
-    stergeScenaCustom, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat 
+    stergeScenaCustom, executaSecurizareTotala, adaugaInLog, actualizeazaMediiClimat,
+    fetchWeather
 };
 
 // === EXPUNERI GLOBALE PENTRU INLINE HTML (ONCLICK) ===
@@ -700,3 +746,4 @@ window.actualizeazaMediiClimat = actualizeazaMediiClimat;
 window.adaugaInLog = adaugaInLog;
 window.deschidePopupPin = deschidePopupPin;
 window.executaScena = executaScena;
+window.fetchWeather = fetchWeather;

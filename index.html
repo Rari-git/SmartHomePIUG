@@ -18,9 +18,13 @@
         <p class="page-subtitle">Panoul tău central de control. Ai acces rapid la starea casei, favorite și notificări.</p>
 
         <div class="flex-row">
-            <div class="widget-card">
-                <div><h4 class="widget-title">Vremea Acum</h4><h2 class="widget-value">28°C</h2></div>
-                <div class="widget-icon">☀️</div>
+            <div class="widget-card" id="widget-vremea">
+                <div>
+                    <h4 class="widget-title">Timișoara</h4>
+                    <h2 class="widget-value" id="vremea-temp">--°C</h2>
+                    <div style="font-size: 0.85em; opacity: 0.8; margin-top: 3px;" id="vremea-detalii">Se încarcă...</div>
+                </div>
+                <div class="widget-icon" id="vremea-icon">⏳</div>
             </div>
             <div class="widget-card">
                 <div><h4 class="widget-title">Securitate</h4><h2 class="widget-value text-success" id="global-securitate">Armată</h2></div>
