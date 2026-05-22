@@ -115,7 +115,8 @@
                     <span class="climate-unit" style="font-size: 0.9em; opacity: 0.7;">ppm</span>
                 </div>
                 <div class="climate-status m-0" style="font-size: 0.8em; font-weight: 700; margin-top: 2px;">Stare:
-                    <span id="stareCO2" class="text-success">Excelentă</span></div>
+                    <span id="stareCO2" class="text-success">Excelentă</span>
+                </div>
             </div>
 
             <button onclick="deschideGeamurile()" class="hvac-btn"
@@ -150,7 +151,7 @@
                     elTemp.innerText = convertTemp(tempC); // Afișăm valoarea convertită pentru ecran
                     actualizeazaCuloriTermostat(camera, tempC); // Judecăm culorile tot în Celsius
                 }
-                
+
                 let elUmid = document.getElementById(`umid-${camera}`);
                 if (elUmid) {
                     elUmid.innerText = umid;
@@ -168,10 +169,10 @@
                 // AICI ERA PROBLEMA! Acum citim din memorie (unde stocăm mereu în Celsius)
                 let valC = parseFloat(localStorage.getItem(`temp-${camera}`)) || 22;
                 let unit = getTempUnit();
-                
+
                 // Convertim în valoarea care trebuie afișată (ca să putem aduna "1 grad F" logic pe ecran)
-                let valDisp = unit === 'F' ? Math.round((valC * 9/5) + 32) : Math.round(valC);
-                
+                let valDisp = unit === 'F' ? Math.round((valC * 9 / 5) + 32) : Math.round(valC);
+
                 // Aplicăm click-ul butonului pe valoarea afișată
                 valDisp = directie === 'plus' ? valDisp + 1 : valDisp - 1;
 
@@ -180,7 +181,7 @@
                     if (valDisp < 59) valDisp = 59; // Limita de jos (aprox 15°C)
                     if (valDisp > 86) valDisp = 86; // Limita de sus (aprox 30°C)
                     // Transformăm înapoi în Celsius pentru a salva corect în localStorage
-                    valC = (valDisp - 32) * 5/9;
+                    valC = (valDisp - 32) * 5 / 9;
                 } else {
                     if (valDisp < 15) valDisp = 15;
                     if (valDisp > 30) valDisp = 30;
@@ -196,15 +197,15 @@
                 let valUmid = parseFloat(localStorage.getItem(`umid-${camera}`)) || 45;
                 let increment = 5;
                 valUmid = directie === 'plus' ? valUmid + increment : valUmid - increment;
-                
+
                 if (valUmid < 30) valUmid = 30;
                 if (valUmid > 70) valUmid = 70;
-                
+
                 localStorage.setItem(`umid-${camera}`, valUmid);
                 displayElem.innerText = valUmid;
                 actualizeazaCuloriUmiditate(camera, valUmid);
             }
-            
+
             calculeazaMedii();
         }
 
@@ -233,7 +234,7 @@
             camere.forEach(camera => {
                 let tempC = parseFloat(localStorage.getItem(`temp-${camera}`));
                 if (!isNaN(tempC)) { sumaTempC += tempC; countTemp++; }
-                
+
                 let umid = parseFloat(localStorage.getItem(`umid-${camera}`));
                 if (!isNaN(umid)) { sumaUmid += umid; countUmid++; }
             });
@@ -242,26 +243,26 @@
                 let mediaC = sumaTempC / countTemp;
                 let unit = getTempUnit();
                 // Calculează media: rotunjită pentru Fahrenheit, cu o zecimală pentru Celsius
-                let afisajMedia = unit === 'F' ? Math.round((mediaC * 9/5) + 32) : mediaC.toFixed(1);
-                
+                let afisajMedia = unit === 'F' ? Math.round((mediaC * 9 / 5) + 32) : mediaC.toFixed(1);
+
                 let widgetTemp = document.getElementById('widget-temp');
                 if (widgetTemp) {
                     widgetTemp.innerText = afisajMedia;
-                    
+
                     // --- CORECTURĂ PENTRU SCHIMBAREA SEMNULUI °C -> °F ---
                     let urmatorulElement = widgetTemp.nextElementSibling;
-                    
+
                     // Cazul 1: Simbolul are deja un <span> sau un element separat
                     if (urmatorulElement && urmatorulElement.innerText.includes('°')) {
                         urmatorulElement.innerText = `°${unit}`;
-                    } 
+                    }
                     // Cazul 2: Simbolul "°C" este lipit de număr direct în HTML
                     else if (widgetTemp.parentElement && widgetTemp.parentElement.innerHTML.includes('°')) {
                         widgetTemp.parentElement.innerHTML = `<span id="widget-temp">${afisajMedia}</span><span class="climate-unit" style="font-size:0.6em; color:var(--accent-color); margin-left:2px;">°${unit}</span>`;
                     }
                 }
             }
-            
+
             if (countUmid > 0) {
                 let widgetUmid = document.getElementById('widget-umiditate');
                 if (widgetUmid) {
