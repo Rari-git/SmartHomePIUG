@@ -772,8 +772,13 @@ function actualizeazaMediiClimat() {
     if (widgetMedieTemp) widgetMedieTemp.innerText = displayVal;
 
     document.querySelectorAll('.climate-unit').forEach(el => {
-        if (el.innerText.includes('°')) el.innerText = `°${unit}`;
-        el.innerText = `°${unit}`;
+        // Protecție: dacă unitatea e afișată lângă un dezumidificator/umiditate
+        const prev = el.previousElementSibling;
+        if (prev && prev.id && (prev.id.includes('umid') || prev.id.includes('dezumid'))) {
+            el.innerText = '%';
+        } else {
+            el.innerText = `°${unit}`;
+        }
     });
 
     // 2. Calcul Umiditate Medie (dacă se folosesc dezumidificatoare per cameră)
@@ -785,6 +790,12 @@ function actualizeazaMediiClimat() {
             sumaUmid += val;
             countUmid++;
         }
+        
+        // Aici afișăm per cameră corect, cu % 
+        const umidElem = document.getElementById(`umid-${camera}`);
+        if (umidElem && !isNaN(val)) {
+            umidElem.innerText = val + "%";
+        }
     });
 
     // Setăm media, iar dacă nu există date, folosim 50% implicit
@@ -793,9 +804,9 @@ function actualizeazaMediiClimat() {
     const umidCurenta = document.getElementById('umiditateCurenta');
     const widgetMedieUmid = document.getElementById('medie-umid'); // ID pentru camere.html
 
-    if (widgetUmiditate) widgetUmiditate.innerText = mediaUmid;
+    if (widgetUmiditate) widgetUmiditate.innerText = mediaUmid + "%";
     if (umidCurenta) umidCurenta.innerText = mediaUmid + "%";
-    if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid;
+    if (widgetMedieUmid) widgetMedieUmid.innerText = mediaUmid + "%";
 }
 
 // --- Integrare API Vreme Timișoara ---

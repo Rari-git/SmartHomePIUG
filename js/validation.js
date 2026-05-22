@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const umidSalvata = localStorage.getItem(`umid-${camera}`);
         const umidElem = document.getElementById(`umid-${camera}`);
         if (umidSalvata && umidElem) {
-            umidElem.innerText = umidSalvata;
+            umidElem.innerText = umidSalvata + "%";
         }
     });
     if (typeof actualizeazaMediiClimat === 'function') actualizeazaMediiClimat();

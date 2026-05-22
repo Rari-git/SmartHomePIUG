@@ -325,8 +325,14 @@ function construiesteCardHTML(disp, cat, idx, isFav) {
     // --- AICI ESTE NOUA LOGICĂ DE TEMPERATURĂ ---
     let afisareStare = disp.stare;
     // Verificăm dacă dispozitivul ține de climă și dacă starea conține un număr
-    if (cat && (cat.toLowerCase().includes('clima') || cat.toLowerCase().includes('termostat') || cat.toLowerCase().includes('senzor')) && !isNaN(parseFloat(disp.stare))) {
-        afisareStare = formateazaTemperatura(parseFloat(disp.stare));
+    if (cat && (cat.toLowerCase().includes('clima') || cat.toLowerCase().includes('termostat') || cat.toLowerCase().includes('senzor') || cat.toLowerCase().includes('dezumid')) && !isNaN(parseFloat(disp.stare))) {
+        const numeJos = (disp.nume || "").toLowerCase();
+        const catJos = cat.toLowerCase();
+        if (numeJos.includes('dezumid') || numeJos.includes('umid') || catJos.includes('dezumid') || catJos.includes('umid')) {
+            afisareStare = `${disp.stare}%`;
+        } else {
+            afisareStare = formateazaTemperatura(parseFloat(disp.stare));
+        }
     }
 
     return `<div class="hk-card ${isActive ? 'is-active' : ''} ${clasaAlarma}" data-id="${idUnic}" style="animation-delay: ${animDelay}s;" data-action="toggle-device" data-cat="${cat}" data-idx="${idx}"><div class="hk-controls"><button class="hk-btn hk-star ${isFav ? 'is-fav' : ''}" data-action="toggle-favorite" data-favid="${idUnic}" data-favtype="acc"><i class="ph-fill ph-star"></i></button><button class="hk-btn" data-action="open-device-menu" data-cat="${cat}" data-idx="${idx}"><i class="ph-bold ph-gear"></i></button></div><div class="hk-icon">${disp.icon}</div><div><div class="hk-name">${disp.nume}</div><div class="hk-state">${afisareStare} ${disp.camera ? `• ${disp.camera}` : ''}</div></div></div>`;
@@ -678,8 +684,14 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
         if (stateEl) {
             let afisareStare = disp.stare;
             // APLICĂM CONVERSIA LA UPDATE-UL DOM-ULUI
-            if (cat && (cat.toLowerCase().includes('clima') || cat.toLowerCase().includes('termostat') || cat.toLowerCase().includes('senzor')) && !isNaN(parseFloat(disp.stare))) {
-                afisareStare = formateazaTemperatura(parseFloat(disp.stare));
+            if (cat && (cat.toLowerCase().includes('clima') || cat.toLowerCase().includes('termostat') || cat.toLowerCase().includes('senzor') || cat.toLowerCase().includes('dezumid')) && !isNaN(parseFloat(disp.stare))) {
+                const numeJos = (disp.nume || "").toLowerCase();
+                const catJos = cat.toLowerCase();
+                if (numeJos.includes('dezumid') || numeJos.includes('umid') || catJos.includes('dezumid') || catJos.includes('umid')) {
+                    afisareStare = `${disp.stare}%`;
+                } else {
+                    afisareStare = formateazaTemperatura(parseFloat(disp.stare));
+                }
             }
             stateEl.innerText = `${afisareStare} ${disp.camera ? `• ${disp.camera}` : ''}`;
         }
