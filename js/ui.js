@@ -678,6 +678,75 @@ function showToast(mesaj, isError = false, callback = null) {
     }, 3500);
 }
 
+function deschideModalAdaugareAccesoriu() {
+    const modal = document.getElementById('popup-adaugare-accesoriu');
+    if (modal) modal.classList.add('active');
+}
+
+function inchideModalAdaugareAccesoriu() {
+    const modal = document.getElementById('popup-adaugare-accesoriu');
+    if (modal) applyFadeOutAndClose(modal);
+}
+
+function salveazaAccesoriuNou() {
+    const nume = document.getElementById('new-acc-name').value.trim();
+    const categorie = document.getElementById('new-acc-category').value;
+    const camera = document.getElementById('new-acc-room').value;
+
+    if (!nume) {
+        showToast("Te rugăm să introduci un nume pentru accesoriu!", true);
+        return;
+    }
+
+    if (!subDispozitive[categorie]) {
+        subDispozitive[categorie] = [];
+    }
+
+    // Stabilire proprietăți implicite în funcție de categorie
+    let iconDefault = '<i class="ph-fill ph-check-circle"></i>';
+    let stareDefault = 'Oprit';
+    let valoareDefault = 0;
+
+    switch (categorie) {
+        case 'becuri': iconDefault = '<i class="ph-fill ph-lightbulb"></i>'; valoareDefault = 100; break;
+        case 'luminiRGB': iconDefault = '<i class="ph-fill ph-lamp"></i>'; valoareDefault = 100; break;
+        case 'prize': iconDefault = '<i class="ph-fill ph-plug"></i>'; stareDefault = 'Pornit'; break;
+        case 'electrocasnice': iconDefault = '<i class="ph-fill ph-coffee"></i>'; break;
+        case 'audio': iconDefault = '<i class="ph-fill ph-speaker-high"></i>'; valoareDefault = 30; break;
+        case 'tv': iconDefault = '<i class="ph-fill ph-television"></i>'; break;
+        case 'senzoriContact': iconDefault = '<i class="ph-fill ph-door"></i>'; stareDefault = 'Închis'; break;
+        case 'senzoriMiscare': iconDefault = '<i class="ph-fill ph-person-simple-walk"></i>'; stareDefault = 'Inactiv'; break;
+        case 'jaluzele': iconDefault = '<i class="ph-fill ph-blinds"></i>'; stareDefault = 'Închis'; valoareDefault = 0; break;
+    }
+
+    const noulAccesoriu = {
+        nume: nume,
+        stare: stareDefault,
+        camera: camera,
+        icon: iconDefault
+    };
+
+    if (['becuri', 'luminiRGB', 'audio', 'jaluzele'].includes(categorie)) {
+        noulAccesoriu.valoare = valoareDefault;
+    }
+    if (categorie === 'luminiRGB') {
+        noulAccesoriu.culoare = '#ffffff';
+    }
+    if (categorie === 'prize') {
+        noulAccesoriu.consum = 0;
+    }
+
+    subDispozitive[categorie].push(noulAccesoriu);
+    salveazaStarea();
+    adaugaInLog(`Accesoriu nou adăugat: ${nume} (${camera})`);
+    
+    inchideModalAdaugareAccesoriu();
+    document.getElementById('new-acc-name').value = '';
+    
+    showToast("Accesoriul a fost adăugat cu succes!");
+    reincarcaInterfata();
+}
+
 // === ES6 MODULE EXPORTS ===
 export {
     applyFadeOutAndClose, reincarcaInterfata, schimbaTipGraficDashboard, schimbaPerioadaDashboard,
@@ -687,7 +756,7 @@ export {
     deschideMeniuDispozitive, deschidePopupLuminiAprinse, deschidePopupAudioPornit,
     deschidePopupCreareScena, deschideModalAutomatizare, deschidePopupToateNotificarile,
     inchidePopup, inchidePopupIstoric, inchidePopupAutomatizare, sincronizeazaDOMcuMemoria,
-    actualizeazaCardInDOM, showToast
+    actualizeazaCardInDOM, showToast, deschideModalAdaugareAccesoriu, inchideModalAdaugareAccesoriu, salveazaAccesoriuNou
 };
 
 // === EXPUNERI GLOBALE PENTRU INLINE HTML (ONCLICK) ===
@@ -713,3 +782,6 @@ window.randareSecuritate = randareSecuritate;
 window.randareSabloane = randareSabloane;
 window.randareAutomatizari = randareAutomatizari;
 window.applyFadeOutAndClose = applyFadeOutAndClose;
+window.deschideModalAdaugareAccesoriu = deschideModalAdaugareAccesoriu;
+window.inchideModalAdaugareAccesoriu = inchideModalAdaugareAccesoriu;
+window.salveazaAccesoriuNou = salveazaAccesoriuNou;
