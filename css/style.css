@@ -23,15 +23,17 @@ body.dark-mode {
 
 html {
     /* Mutăm fundalul aici pentru a permite body-ului să aibă padding transparent */
-    background: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
+    --app-bg: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80');
+    background: var(--app-bg) no-repeat center center fixed;
     background-size: cover;
     height: 100%;
     overflow-y: auto; /* Activează scrollbar-ul principal pe întreaga pagină */
     overflow-x: hidden; /* Previne scrollbar-ul orizontal */
+    transition: background 0.5s ease;
 }
 
 html.dark-mode {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80') no-repeat center center fixed;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), var(--app-bg) no-repeat center center fixed;
     background-size: cover;
 }
 
