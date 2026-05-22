@@ -31,6 +31,8 @@ html {
     /* Activează scrollbar-ul principal pe întreaga pagină */
     overflow-x: hidden;
     /* Previne scrollbar-ul orizontal */
+    overflow: hidden;
+    /* Mutăm scroll-ul pe body pentru a preveni bug-ul scrollbar-ului negru din Electron */
     transition: background 0.5s ease;
 }
 
@@ -82,8 +84,13 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-color);
     overflow-y: overlay;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     transition: color 0.3s ease;
     -webkit-font-smoothing: antialiased;
+    -webkit-app-region: no-drag;
+    /* Oprim drag-ul pe body pentru a debloca bara de scroll */
     user-select: none;
     -webkit-app-region: drag;
     /* Permite tragerea ferestrei din orice zonă goală a body-ului */
@@ -144,6 +151,13 @@ p,
     align-items: center;
     gap: 20px;
     margin-bottom: 5px;
+    -webkit-app-region: drag;
+    /* Permitem mutarea ferestrei trăgând de header-ul paginii */
+}
+
+.menu-toggle-btn {
+    -webkit-app-region: no-drag;
+    /* Butonul de meniu trebuie să rămână interactiv */
 }
 
 .page-header h1 {
