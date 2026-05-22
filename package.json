@@ -5,7 +5,7 @@
   "main": "electron-main.js",
   "scripts": {
     "start": "electron .",
-    "package-win": "electron-packager . SmartHomeApp --platform=win32 --arch=x64 --out=dist/ --overwrite"
+    "package-win": "electron-packager . SmartHomeApp --platform=win32 --arch=x64 --out=dist/ --overwrite --asar"
   },
   "keywords": [],
   "author": "",

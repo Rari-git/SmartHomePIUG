@@ -1,3 +1,5 @@
+import { showToast } from './ui.js';
+
 const BACKGROUNDS = [
     { url: "url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#007aff" },
     { url: "url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=2560&q=80')", dominantColor: "#ff9500" },
@@ -81,7 +83,6 @@ function toggleAutoAccent() {
 export { 
     toggleDarkMode, 
     schimbaCuloareAccent, 
-    showToast, 
     toggleHelp, 
     toggleNav, 
     schimbaFundal, 
@@ -114,47 +115,6 @@ function schimbaCuloareAccent(color) {
             window.actualizeazaUiSetariBackground();
         }
     }
-}
-
-function showToast(mesaj, cuUndo = false, actiuneUndo = null) {
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    
-    let htmlContent = `✨ <span>${mesaj}</span>`;
-    if (cuUndo) {
-        htmlContent += `<button class="undo-btn" style="background: rgba(255,255,255,0.2); color: inherit; border: none; padding: 4px 8px; border-radius: 4px; margin-left: 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;">Undo</button>`;
-    }
-
-    toast.innerHTML = htmlContent;
-    container.appendChild(toast);
-
-    if (cuUndo && actiuneUndo) {
-        toast.querySelector('.undo-btn').addEventListener('click', () => {
-            actiuneUndo();
-            toast.remove();
-            showToast('Acțiunea a fost anulată.', false);
-        });
-    }
-
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 50);
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        toast.style.transform = 'translateY(-20px)';
-        toast.style.opacity = '0';
-        setTimeout(() => {
-            toast.remove();
-        }, 400);
-    }, 4000);
 }
 
 document.addEventListener('keypress', function(e) {

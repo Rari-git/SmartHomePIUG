@@ -320,20 +320,23 @@ function afiseazaNotificariHome() {
     const container = document.getElementById('notifications-container');
     if (!container) return;
     const toateNotificarile = genereazaListaNotificari();
-    container.innerHTML = "";
     if (toateNotificarile.length === 0) {
         container.innerHTML = `<p style="margin:0; opacity:0.5; font-size:0.95em;">Toate sistemele sunt în standby.</p>`;
         return;
     }
+    
+    let html = "";
     const limita = Math.min(toateNotificarile.length, 3);
     for (let i = 0; i < limita; i++) {
         const notif = toateNotificarile[i];
-        if (notif.id === "notif_lumini") container.innerHTML += `<div class="notification-item" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
-        else if (notif.id === "notif_audio") container.innerHTML += `<div class="notification-item" data-action="open-popup-audio"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
-        else if (notif.actiune) container.innerHTML += `<div class="notification-item hover-accent" onclick="${notif.actiune}"><span>${notif.text}</span></div>`;
-        else container.innerHTML += `<div class="notification-item"><span>${notif.text}</span></div>`;
+        if (notif.id === "notif_lumini") html += `<div class="notification-item" data-action="open-popup-lumini"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
+        else if (notif.id === "notif_audio") html += `<div class="notification-item" data-action="open-popup-audio"><span>${notif.text} <span class="notif-hint">(Apasă pt detalii)</span></span></div>`;
+        else if (notif.actiune) html += `<div class="notification-item hover-accent" onclick="${notif.actiune}"><span>${notif.text}</span></div>`;
+        else html += `<div class="notification-item"><span>${notif.text}</span></div>`;
     }
-    if (toateNotificarile.length > 3) container.innerHTML += `<button class="see-more-btn" data-action="open-popup-all-notifs">Vezi mai multe &gt;</button>`;
+    if (toateNotificarile.length > 3) html += `<button class="see-more-btn" data-action="open-popup-all-notifs">Vezi mai multe &gt;</button>`;
+    
+    container.innerHTML = html;
 }
 
 function genereazaListaNotificari() {
@@ -678,7 +681,8 @@ function actualizeazaCardInDOM(cat, index, skipGlobal = false) {
 }
 
 // --- Sistem Global de Notificari (Toasts) ---
-function showToast(mesaj, isError = false, callback = null) {
+function showToast(mesaj, opts = {}) {
+    // opts: { isError: false, cuUndo: false, actiuneUndo: null, callback: null }
     let container = document.getElementById('toast-container');
     if (!container) {
         container = document.createElement('div');
@@ -689,12 +693,27 @@ function showToast(mesaj, isError = false, callback = null) {
 
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
-    toast.style.borderLeft = `4px solid ${isError ? 'var(--error-color)' : 'var(--success-color)'}`;
+    toast.style.borderLeft = `4px solid ${opts.isError ? 'var(--error-color)' : 'var(--success-color)'}`;
     
-    const icon = isError ? '<i class="ph-bold ph-warning-circle" style="color: var(--error-color); font-size: 1.2em;"></i>' : '<i class="ph-bold ph-check-circle" style="color: var(--success-color); font-size: 1.2em;"></i>';
-    toast.innerHTML = `${icon} <span>${mesaj}</span>`;
+    const icon = opts.isError ? '<i class="ph-bold ph-warning-circle" style="color: var(--error-color); font-size: 1.2em;"></i>' : '<i class="ph-bold ph-check-circle" style="color: var(--success-color); font-size: 1.2em;"></i>';
     
+    let htmlContent = `${icon} <span>${mesaj}</span>`;
+    
+    if (opts.cuUndo) {
+        htmlContent += `<button class="undo-btn" style="background: rgba(255,255,255,0.2); color: inherit; border: none; padding: 4px 8px; border-radius: 4px; margin-left: 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;">Undo</button>`;
+    }
+    
+    toast.innerHTML = htmlContent;
     container.appendChild(toast);
+
+    if (opts.cuUndo && opts.actiuneUndo) {
+        toast.querySelector('.undo-btn').addEventListener('click', () => {
+            opts.actiuneUndo();
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+            showToast('Acțiunea a fost anulată.', { isError: false });
+        });
+    }
 
     // Declanșăm animația de slide-in
     requestAnimationFrame(() => toast.classList.add('show'));
@@ -703,10 +722,30 @@ function showToast(mesaj, isError = false, callback = null) {
         toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
             toast.remove();
-            if (callback) callback();
+            if (opts.callback) opts.callback();
         });
     }, 3500);
 }
+
+// Suport pentru compatibilitate cu apelurile vechi `showToast("mesaj", true)` sau `showToast("mesaj", isError, callback)`
+const originalShowToast = showToast;
+showToast = function(mesaj, arg2, arg3) {
+    if (typeof arg2 === 'object' && arg2 !== null) {
+        return originalShowToast(mesaj, arg2);
+    }
+    // Suport backwards compatibility
+    let opts = {};
+    if (typeof arg2 === 'boolean') {
+        // În vechiul ui.js arg2 era isError. În vechiul main.js arg2 era cuUndo.
+        // Pentru că ui.js e mai folosit, presupunem isError default dacă nu e clar. 
+        // Dar cel mai bine mapăm pe formatul vechi din ui.js dacă e boolean.
+        opts.isError = arg2;
+    }
+    if (typeof arg3 === 'function') {
+        opts.callback = arg3;
+    }
+    return originalShowToast(mesaj, opts);
+};
 
 function deschideModalAdaugareAccesoriu() {
     const modal = document.getElementById('popup-adaugare-accesoriu');
