@@ -125,9 +125,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.addEventListener('change', (e) => {
         if (e.target.matches('[data-action="device-slider-input"]')) {
-            if (subDispozitive[e.target.dataset.cat] && subDispozitive[e.target.dataset.cat][e.target.dataset.idx]) {
-                subDispozitive[e.target.dataset.cat][e.target.dataset.idx].valoare = e.target.value;
+            const cat = e.target.dataset.cat;
+            const idx = parseInt(e.target.dataset.idx);
+
+            if (subDispozitive[cat] && subDispozitive[cat][idx]) {
+                subDispozitive[cat][idx].valoare = parseInt(e.target.value);
                 salveazaStarea();
+
+                if (cat === 'becuri' && subDispozitive[cat][idx].stare === 'Pornit') {
+                    const pwmVal = Math.round((subDispozitive[cat][idx].valoare / 100) * 255);
+                    if (window.api && window.api.sendSerial) {
+                        window.api.sendSerial(`DIM_${idx}_${pwmVal}`);
+                    }
+                }
             }
         } else if (e.target.matches('[data-action="toggle-automation"]')) {
             comutaAutomatizare(parseInt(e.target.dataset.autoid));
@@ -434,6 +444,13 @@ function toggleStareDispozitiv(cat, index, event) {
         disp.stare = disp.stare === "Pornit" ? "Oprit" : "Pornit";
     }
 
+    if (cat === 'becuri') {
+        const pwmVal = disp.stare === 'Pornit' ? Math.round((disp.valoare / 100) * 255) : 0;
+        if (window.api && window.api.sendSerial) {
+            window.api.sendSerial(`DIM_${index}_${pwmVal}`);
+        }
+    }
+
     if (cat === 'senzoriMiscare' && disp.stare === "Activ") {
         let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
         logs.unshift({ camera: disp.camera, ora: new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }) });
@@ -444,7 +461,6 @@ function toggleStareDispozitiv(cat, index, event) {
         adaugaInLog(`${disp.nume || 'Dispozitiv'} a fost comutat în starea [${disp.stare}]`);
     }
 
-    // Contorizare utilizare dispozitiv
     const deviceId = `${cat}_${index}`;
     let usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
     usage[deviceId] = (usage[deviceId] || 0) + 1;
@@ -453,7 +469,6 @@ function toggleStareDispozitiv(cat, index, event) {
     verificaReguliAutomatizare(cat, index, disp.stare);
     salveazaStarea();
 
-    // AICI INTERVINE MAGIA OPTIMIZĂRII
     if (typeof actualizeazaCardInDOM === 'function') {
         actualizeazaCardInDOM(cat, index);
     } else {
