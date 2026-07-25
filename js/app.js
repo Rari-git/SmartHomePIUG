@@ -134,8 +134,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (cat === 'becuri' && subDispozitive[cat][idx].stare === 'Pornit') {
                     const pwmVal = Math.round((subDispozitive[cat][idx].valoare / 100) * 255);
-                    if (window.api && window.api.sendSerial) {
-                        window.api.sendSerial(`DIM_${idx}_${pwmVal}`);
+                    if (window.api && window.api.sendBecuri) {
+                        window.api.sendBecuri(`DIM_${idx}_${pwmVal}`);
+                    }
+                }
+                if (cat === 'audio' && subDispozitive[cat][idx].stare === 'Pornit') {
+                    const volumPwm = Math.round((subDispozitive[cat][idx].valoare / 100) * 255);
+                    if (window.api && window.api.sendBoxe) {
+                        window.api.sendBoxe(`AUDIO_${idx}_${volumPwm}`);
                     }
                 }
             }
@@ -446,8 +452,15 @@ function toggleStareDispozitiv(cat, index, event) {
 
     if (cat === 'becuri') {
         const pwmVal = disp.stare === 'Pornit' ? Math.round((disp.valoare / 100) * 255) : 0;
-        if (window.api && window.api.sendSerial) {
-            window.api.sendSerial(`DIM_${index}_${pwmVal}`);
+        if (window.api && window.api.sendBecuri) {
+            window.api.sendBecuri(`DIM_${index}_${pwmVal}`);
+        }
+    }
+
+    if (cat === 'audio') {
+        const volumPwm = disp.stare === 'Pornit' ? Math.round((disp.valoare / 100) * 255) : 0;
+        if (window.api && window.api.sendBoxe) {
+            window.api.sendBoxe(`AUDIO_${index}_${volumPwm}`);
         }
     }
 

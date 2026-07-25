@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-    sendSerial: (comanda) => ipcRenderer.send('send-serial', comanda)
+    sendBecuri: (comanda) => ipcRenderer.send('send-serial-becuri', comanda),
+    sendBoxe: (comanda) => ipcRenderer.send('send-serial-boxe', comanda)
 });
