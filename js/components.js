@@ -4,64 +4,65 @@ class SmartNav extends HTMLElement {
         if (currentPage === '' || currentPage === '/') currentPage = 'index.html';
         const isActive = (page) => currentPage === page ? 'active' : '';
 
-        const intrUnSubfolder = window.location.pathname.includes('/pages/') ||
+        const inSubfolder = window.location.pathname.includes('/pages/') ||
             window.location.pathname.includes('/html/') ||
             (!window.location.pathname.endsWith('index.html') && currentPage !== 'index.html');
 
-        const caleHome = intrUnSubfolder ? '../index.html' : 'index.html';
-        const prefixPagini = intrUnSubfolder ? '' : 'html/'; // Înlocuiește 'pages/' cu numele folderului tău dacă e diferit (ex: 'html/')
+        const homePath = inSubfolder ? '../index.html' : 'index.html';
+        const pagePrefix = inSubfolder ? '' : 'html/';
 
         this.innerHTML = `
             <nav>
-                <h2>SmartHome</h2>
-                <a href="${caleHome}" class="${isActive('index.html')}">🏠 Home</a>
-                <a href="${prefixPagini}scenes.html" class="${isActive('scenes.html')}">🎭 Scenes</a>
-                <a href="${prefixPagini}accessories.html" class="${isActive('accessories.html')}">🛋️ Accessories</a>
-                <a href="${prefixPagini}automations.html" class="${isActive('automations.html')}">🤖 Automations</a>
-                <a href="${prefixPagini}statistics.html" class="${isActive('statistics.html')}">📈 Statistics</a>
-                <a href="${prefixPagini}rooms.html" class="${isActive('rooms.html')}">🌡️ Rooms</a>
-                <a href="${prefixPagini}map.html" class="${isActive('map.html')}">🗺️ Map</a>
-                <a href="${prefixPagini}security.html" class="${isActive('security.html')}">🛡️ Security</a>
-                <a href="${prefixPagini}hazards.html" class="${isActive('hazards.html')}">🚨 Hazards</a>
-                <a href="${prefixPagini}settings.html" class="${isActive('settings.html')}">⚙️ Settings</a>
+                <h2>Lumen</h2>
+                <a href="${homePath}" class="${isActive('index.html')}">🏠 Home</a>
+                <a href="${pagePrefix}scenes.html" class="${isActive('scenes.html')}">🎭 Scenes</a>
+                <a href="${pagePrefix}accessories.html" class="${isActive('accessories.html')}">🛋️ Accessories</a>
+                <a href="${pagePrefix}automations.html" class="${isActive('automations.html')}">🤖 Automations</a>
+                <a href="${pagePrefix}statistics.html" class="${isActive('statistics.html')}">📈 Statistics</a>
+                <a href="${pagePrefix}rooms.html" class="${isActive('rooms.html')}">🌡️ Rooms</a>
+                <a href="${pagePrefix}map.html" class="${isActive('map.html')}">🗺️ Map</a>
+                <a href="${pagePrefix}security.html" class="${isActive('security.html')}">🛡️ Security</a>
+                <a href="${pagePrefix}hazards.html" class="${isActive('hazards.html')}">🚨 Hazards</a>
+                <a href="${pagePrefix}settings.html" class="${isActive('settings.html')}">⚙️ Settings</a>
             </nav>
         `;
     }
 }
 customElements.define('smart-nav', SmartNav);
+
 class SmartModal extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
-            <div id="popup-dispozitive" class="modal">
+            <div id="popup-device" class="modal">
                 <div class="modal-content">
-                    <span class="close-btn" onclick="inchidePopup()">&times;</span>
+                    <span class="close-btn" onclick="closePopup()">&times;</span>
                     <div style="display: flex; align-items: center; gap: 15px; margin-top: 0; margin-bottom: 20px;">
-                        <h2 id="modal-titlu" style="margin: 0; color: var(--accent-color);"></h2>
-                        <span id="modal-star" class="modal-star-icon" title="Adaugă la Acces Rapid"></span>
+                        <h2 id="modal-title" style="margin: 0; color: var(--accent-color);"></h2>
+                        <span id="modal-star" class="modal-star-icon" title="Add to Quick Access"></span>
                     </div>
-                    <div id="modal-continut"></div>
+                    <div id="modal-content"></div>
                 </div>
             </div>
 
-            <div id="popup-pin-alarma" class="modal">
+            <div id="popup-pin-alarm" class="modal">
                 <div class="modal-content" style="max-width: 320px; text-align: center;">
-                    <span class="close-btn" onclick="inchidePopupPin()">&times;</span>
-                    <h3 id="pin-modal-titlu" style="margin-top: 0;">Introduceți Cod PIN</h3>
+                    <span class="close-btn" onclick="closePinPopup()">&times;</span>
+                    <h3 id="pin-modal-title" style="margin-top: 0;">Enter PIN Code</h3>
                     <div id="pin-display" style="font-size: 2.2em; letter-spacing: 12px; margin: 20px 0; min-height: 1.2em; font-weight: bold; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 12px;"></div>
-                    <div id="pin-error-msg" style="color: var(--error-color); font-size: 0.9em; margin-bottom: 15px; display: none; font-weight: bold;">❌ PIN Incorect!</div>
+                    <div id="pin-error-msg" style="color: var(--error-color); font-size: 0.9em; margin-bottom: 15px; display: none; font-weight: bold;">❌ Incorrect PIN!</div>
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('1')">1</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('2')">2</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('3')">3</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('4')">4</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('5')">5</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('6')">6</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('7')">7</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('8')">8</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('9')">9</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.1em; border-radius:50%; background: rgba(231, 76, 60, 0.15); color: var(--error-color);" onclick="apasatTastaPin('C')">C</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="apasatTastaPin('0')">0</button>
-                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.1em; border-radius:50%; background: rgba(0, 122, 255, 0.15); color: var(--accent-color);" onclick="apasatTastaPin('⌫')">⌫</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('1')">1</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('2')">2</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('3')">3</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('4')">4</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('5')">5</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('6')">6</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('7')">7</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('8')">8</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('9')">9</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.1em; border-radius:50%; background: rgba(231, 76, 60, 0.15); color: var(--error-color);" onclick="pressPinKey('C')">C</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.4em; border-radius:50%;" onclick="pressPinKey('0')">0</button>
+                        <button class="ctrl-btn" style="width:100%; height:55px; font-size:1.1em; border-radius:50%; background: rgba(0, 122, 255, 0.15); color: var(--accent-color);" onclick="pressPinKey('⌫')">⌫</button>
                     </div>
                 </div>
             </div>

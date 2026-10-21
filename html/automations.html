@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Automatizări</title>
+    <title>Lumen - Automations</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -15,79 +15,79 @@
     <main>
         <div class="page-header">
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-            <h1>Reguli de Automatizare</h1>
+            <h1>Automation Rules</h1>
         </div>
 
-        <p class="page-subtitle">Gestionează comportamentul automat al casei prin reguli bazate pe timp sau acțiuni ale
-            dispozitivelor.</p>
+        <p class="page-subtitle">Manage the automatic behavior of your home through rules based on time or device
+            actions.</p>
 
-        <h2 class="hk-section-title">💡 Șabloane Recomandate</h2>
+        <h2 class="hk-section-title">💡 Recommended Templates</h2>
         <div style="position: relative; display: flex; align-items: center; margin-bottom: 30px;">
             <button onclick="scrollCarousel(-1)"
                 style="position: absolute; left: -15px; z-index: 10; background: var(--card-bg); border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold;">‹</button>
-            <div id="sabloane-carousel"
+            <div id="templates-carousel"
                 style="display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; padding: 10px 5px; width: 100%; scrollbar-width: none; -ms-overflow-style: none;">
             </div>
             <button onclick="scrollCarousel(1)"
                 style="position: absolute; right: -15px; z-index: 10; background: var(--card-bg); border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold;">›</button>
         </div>
 
-        <h2 class="hk-section-title">🤖 Automatizările Tale</h2>
+        <h2 class="hk-section-title">🤖 Your Automations</h2>
         <div id="automations-list" class="hk-grid-wide"></div>
     </main>
 
-    <div id="popup-automatizare" class="modal">
+    <div id="popup-automation" class="modal">
         <div class="modal-content" style="max-width: 450px;">
-            <span class="close-btn" onclick="inchidePopupAutomatizare()">&times;</span>
-            <h2 style="margin-top: 0; margin-bottom: 25px; color: var(--accent-color);">🤖 Regulă Nouă</h2>
+            <span class="close-btn" onclick="closeAutomationPopup()">&times;</span>
+            <h2 style="margin-top: 0; margin-bottom: 25px; color: var(--accent-color);">🤖 New Rule</h2>
 
             <div
                 style="display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
-                <button id="tab-disp" onclick="schimbaTabTrigger('disp')" class="filter-btn active"
-                    style="flex: 1; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600;">Dispozitiv</button>
-                <button id="tab-timp" onclick="schimbaTabTrigger('timp')" class="filter-btn"
-                    style="flex: 1; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600;">Timp
-                    / Oră</button>
+                <button id="tab-dev" onclick="switchTriggerTab('dev')" class="filter-btn active"
+                    style="flex: 1; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600;">Device</button>
+                <button id="tab-time" onclick="switchTriggerTab('time')" class="filter-btn"
+                    style="flex: 1; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600;">Time
+                    / Hour</button>
             </div>
 
-            <div id="trigger-disp-container" style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Dacă acest dispozitiv:</label>
+            <div id="trigger-dev-container" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">If this device:</label>
                 <select id="auto-trigger-dev" class="form-input"
                     style="margin-bottom: 12px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;"></select>
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Trece în starea:</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Changes to state:</label>
                 <select id="auto-trigger-state" class="form-input"
                     style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;">
-                    <option value="Pornit">Pornit / Deschis / LIVE</option>
-                    <option value="Oprit">Oprit / Închis / Standby</option>
-                    <option value="Activ">Mișcare Detectată (Activ)</option>
-                    <option value="Inactiv">Liniște (Inactiv)</option>
+                    <option value="On">On / Open / LIVE</option>
+                    <option value="Off">Off / Closed / Standby</option>
+                    <option value="Active">Motion Detected (Active)</option>
+                    <option value="Inactive">Quiet (Inactive)</option>
                 </select>
             </div>
 
-            <div id="trigger-timp-container" style="margin-bottom: 20px; display: none;">
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">La ora exactă:</label>
-                <input type="time" id="auto-trigger-timp" class="form-input" value="08:00"
+            <div id="trigger-time-container" style="margin-bottom: 20px; display: none;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">At the exact time:</label>
+                <input type="time" id="auto-trigger-time" class="form-input" value="08:00"
                     style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;">
             </div>
 
             <div style="margin-bottom: 25px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Atunci execută acțiunea pe:</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Then execute action on:</label>
                 <select id="auto-action-dev" class="form-input"
                     style="margin-bottom: 12px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;"></select>
-                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Setează starea:</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Set state:</label>
                 <select id="auto-action-state" class="form-input"
                     style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: var(--bg-primary); color: inherit;">
-                    <option value="Pornit">Pornit</option>
-                    <option value="Oprit">Oprit</option>
-                    <option value="Deschis">Deschis</option>
-                    <option value="Închis">Închis</option>
-                    <option value="Blocat">Blocat / Armat</option>
+                    <option value="On">On</option>
+                    <option value="Off">Off</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Locked">Locked / Armed</option>
                 </select>
             </div>
 
-            <button onclick="salveazaAutomatizare()"
+            <button onclick="saveAutomation()"
                 style="width: 100%; padding: 15px; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">💾
-                Salvează Regula</button>
+                Save Rule</button>
         </div>
     </div>
 
@@ -95,19 +95,18 @@
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/app.js"></script>
     <script type="module">
-        // Definim variabila de stare pe window pentru a fi accesibilă în app.js
-        window.modTriggerCurent = 'disp';
+        window.currentTriggerMode = 'dev';
 
-        window.schimbaTabTrigger = function (mod) {
-            window.modTriggerCurent = mod;
-            document.getElementById('tab-disp').classList.toggle('active', mod === 'disp');
-            document.getElementById('tab-timp').classList.toggle('active', mod === 'timp');
-            document.getElementById('trigger-disp-container').style.display = mod === 'disp' ? 'block' : 'none';
-            document.getElementById('trigger-timp-container').style.display = mod === 'timp' ? 'block' : 'none';
+        window.switchTriggerTab = function (mode) {
+            window.currentTriggerMode = mode;
+            document.getElementById('tab-dev').classList.toggle('active', mode === 'dev');
+            document.getElementById('tab-time').classList.toggle('active', mode === 'time');
+            document.getElementById('trigger-dev-container').style.display = mode === 'dev' ? 'block' : 'none';
+            document.getElementById('trigger-time-container').style.display = mode === 'time' ? 'block' : 'none';
         };
 
         window.scrollCarousel = function (dir) {
-            const container = document.getElementById('sabloane-carousel');
+            const container = document.getElementById('templates-carousel');
             if (container) container.scrollBy({ left: dir * 280, behavior: 'smooth' });
         };
     </script>

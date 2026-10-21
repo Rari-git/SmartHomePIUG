@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Accesorii</title>
+    <title>Lumen - Accessories</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -15,59 +15,58 @@
     <main>
         <div class="page-header">
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-            <h1>Toate Accesoriile</h1>
+            <h1>All Accessories</h1>
         </div>
-        <p>Apasă pe un obiect pentru a-l opri/porni. Apasă steluța (★) pentru a-l fixa pe pagina Home. Apasă (⚙️) pentru
-            volum/intensitate/stergere din sistem.</p>
+        <p>Click on an item to turn it off/on. Click the star (★) to pin it to the Home page. Click (⚙️) for
+            volume/intensity/system removal.</p>
         <div id="all-accessories-container"></div>
 
-        <h2 class="hk-section-title" style="margin-top: 30px;">Adaugare accesoriu nou</h2>
+        <h2 class="hk-section-title" style="margin-top: 30px;">Add New Accessory</h2>
         <div class="hk-grid">
-            <div class="hk-card card-add-new" onclick="deschideModalAdaugareAccesoriu()">
+            <div class="hk-card card-add-new" onclick="openAddAccessoryModal()">
                 <div class="plus-icon"><i class="ph-bold ph-plus"></i></div>
-                <div class="add-title">Adaugă Accesoriu</div>
-                <div class="add-desc">Adaugă un dispozitiv nou</div>
+                <div class="add-title">Add Accessory</div>
+                <div class="add-desc">Add a new device</div>
             </div>
         </div>
     </main>
 
-    <!-- Modal Adaugare Accesoriu -->
-    <div id="popup-adaugare-accesoriu" class="modal">
+    <div id="popup-add-accessory" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="inchideModalAdaugareAccesoriu()">&times;</span>
-            <h2 style="margin-top: 0; color: var(--accent-color);"><i class="ph-bold ph-plus-circle"></i> Adăugare
-                Accesoriu Nou</h2>
+            <span class="close-btn" onclick="closeAddAccessoryModal()">&times;</span>
+            <h2 style="margin-top: 0; color: var(--accent-color);"><i class="ph-bold ph-plus-circle"></i> Add New
+                Accessory</h2>
             <div class="form-row">
-                <label>Nume Accesoriu:</label>
-                <input type="text" id="new-acc-name" class="form-input" placeholder="ex: Lampă Birou">
+                <label>Accessory Name:</label>
+                <input type="text" id="new-acc-name" class="form-input" placeholder="e.g.: Desk Lamp">
             </div>
             <div class="form-row">
-                <label>Categorie (Tip Dispozitiv):</label>
+                <label>Category (Device Type):</label>
                 <select id="new-acc-category" class="form-input">
-                    <option value="becuri">Becuri</option>
-                    <option value="luminiRGB">Lumini RGB</option>
-                    <option value="prize">Prize Inteligente</option>
-                    <option value="electrocasnice">Electrocasnice</option>
-                    <option value="audio">Sisteme Audio</option>
+                    <option value="bulbs">Bulbs</option>
+                    <option value="rgbLights">RGB Lights</option>
+                    <option value="plugs">Smart Plugs</option>
+                    <option value="appliances">Appliances</option>
+                    <option value="audio">Audio Systems</option>
                     <option value="tv">TV</option>
-                    <option value="senzoriContact">Senzori Contact (Uși/Ferestre)</option>
-                    <option value="senzoriMiscare">Senzori Mișcare</option>
-                    <option value="jaluzele">Jaluzele / Draperii</option>
+                    <option value="contactSensors">Contact Sensors (Doors/Windows)</option>
+                    <option value="motionSensors">Motion Sensors</option>
+                    <option value="blinds">Blinds / Curtains</option>
                 </select>
             </div>
             <div class="form-row">
-                <label>Cameră:</label>
+                <label>Room:</label>
                 <select id="new-acc-room" class="form-input">
-                    <option value="Living">Living</option>
-                    <option value="Dormitor">Dormitor</option>
-                    <option value="Bucătărie">Bucătărie</option>
-                    <option value="Baie">Baie</option>
-                    <option value="Hol">Hol</option>
-                    <option value="Exterior">Exterior</option>
+                    <option value="Living">Living Room</option>
+                    <option value="Bedroom">Bedroom</option>
+                    <option value="Kitchen">Kitchen</option>
+                    <option value="Bathroom">Bathroom</option>
+                    <option value="Hallway">Hallway</option>
+                    <option value="Outdoor">Outdoor</option>
                 </select>
             </div>
-            <button onclick="salveazaAccesoriuNou()" class="btn-full-success" style="margin-top: 15px;">💾 Salvează
-                Accesoriul</button>
+            <button onclick="saveNewAccessory()" class="btn-full-success" style="margin-top: 15px;">💾 Save
+                Accessory</button>
         </div>
     </div>
 

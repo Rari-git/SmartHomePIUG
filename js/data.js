@@ -1,41 +1,92 @@
-export const iconDraperie = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="currentColor" class="hk-svg-icon"><rect x="0" y="5" width="100" height="18" rx="4" /><rect x="4" y="38" width="92" height="12" rx="3" /><rect x="4" y="68" width="92" height="12" rx="3" /><rect x="4" y="98" width="92" height="12" rx="3" /></svg>`;
-export const iconFereastra = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon"><rect x="12" y="12" width="76" height="96" rx="6" /><line x1="50" y1="12" x2="50" y2="108" /><line x1="12" y1="60" x2="88" y2="60" /></svg>`;
+export const curtainIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="currentColor" class="hk-svg-icon"><rect x="0" y="5" width="100" height="18" rx="4" /><rect x="4" y="38" width="92" height="12" rx="3" /><rect x="4" y="68" width="92" height="12" rx="3" /><rect x="4" y="98" width="92" height="12" rx="3" /></svg>`;
+export const windowIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" class="hk-svg-icon"><rect x="12" y="12" width="76" height="96" rx="6" /><line x1="50" y1="12" x2="50" y2="108" /><line x1="12" y1="60" x2="88" y2="60" /></svg>`;
 
 export const defaultScenes = [
-    { id: 's_morning', nume: "🌅 Good Morning", descriere: "Deschide jaluzelele, pornește cafeaua.", action: "morning" },
-    { id: 's_night', nume: "🌙 Good Night", descriere: "Oprește luminile, armează ușile.", action: "night" },
-    { id: 's_away', nume: "👋 Leaving Home", descriere: "Oprește tot, robotul începe curățenia.", action: "away" },
-    { id: 's_home', nume: "🏠 I'm Home", descriere: "Dezactivează alarma, deschide jaluzelele.", action: "home" },
-    { id: 's_movie', nume: "🎬 Movie Time", descriere: "Draperii închise, TV pornit, ambient albastru.", action: "movie" },
-    { id: 's_focus', nume: "📖 Focus / Citit", descriere: "Lumină birou, purificator pornit.", action: "focus" },
-    { id: 's_dinner', nume: "🍽️ Dinner Time", descriere: "Lumini calde în living și bucătărie.", action: "dinner" },
-    { id: 's_vacation', nume: "🧳 Vacation Mode", descriere: "Simulare prezență și securitate.", action: "vacation" }
+    { id: 's_morning', name: "🌅 Good Morning", desc: "Open blinds, start coffee.", action: "morning" },
+    { id: 's_night', name: "🌙 Good Night", desc: "Turn off lights, arm doors.", action: "night" },
+    { id: 's_away', name: "👋 Leaving Home", desc: "Turn everything off, robot starts cleaning.", action: "away" },
+    { id: 's_home', name: "🏠 I'm Home", desc: "Deactivate alarm, open blinds.", action: "home" },
+    { id: 's_movie', name: "🎬 Movie Time", desc: "Blinds closed, TV on, blue ambient.", action: "movie" },
+    { id: 's_focus', name: "📖 Focus / Reading", desc: "Desk light, purifier on.", action: "focus" },
+    { id: 's_dinner', name: "🍽️ Dinner Time", desc: "Warm lights in living room and kitchen.", action: "dinner" },
+    { id: 's_vacation', name: "🧳 Vacation Mode", desc: "Presence simulation and security.", action: "vacation" }
 ];
 
-export const sabloaneRecomandate = [
-    { idSugestie: 'sug_1', icon: '<i class="ph-bold ph-clock"></i>', nume: 'Rutina de Dimineață', descriereScurta: 'Deschide jaluzelele în living zilnic la ora 07:00.', culoare: '#f1c40f', tipTrigger: 'timp', tOra: '07:00', aCat: 'jaluzele', aIdx: '1', aState: 'Deschis', descriere: '⏰ Zilnic la 07:00 ➔ Draperie Living se Deschide' },
-    { idSugestie: 'sug_2', icon: iconFereastra, nume: 'Eco-Baie', descriereScurta: 'Oprește uscătorul dacă se deschide fereastra la baie.', culoare: '#e74c3c', tipTrigger: 'disp', tCat: 'senzoriContact', tIdx: '4', tState: 'Deschis', aCat: 'electrocasnice', aIdx: '1', aState: 'Oprit', descriere: 'DACĂ Fereastră Baie este Deschisă ➔ Uscătorul se Oprește' },
-    { idSugestie: 'sug_3', icon: '<i class="ph-bold ph-person-simple-walk"></i>', nume: 'Securitate Hol', descriereScurta: 'Aprinde becul din living la detectarea mișcării pe hol.', culoare: '#2ecc71', tipTrigger: 'disp', tCat: 'senzoriMiscare', tIdx: '1', tState: 'Activ', aCat: 'becuri', aIdx: '1', aState: 'Pornit', descriere: 'DACĂ Senzor Mișcare Hol este Activ ➔ Bec Living devine Pornit' },
-    { idSugestie: 'sug_4', icon: '<i class="ph-bold ph-moon"></i>', nume: 'Stingere Noaptea', descriereScurta: 'Stinge becul din living zilnic la ora 23:30.', culoare: '#34495e', tipTrigger: 'timp', tOra: '23:30', aCat: 'becuri', aIdx: '1', aState: 'Oprit', descriere: '⏰ Zilnic la 23:30 ➔ Bec Living devine Oprit' },
-    { idSugestie: 'sug_5', icon: '<i class="ph-bold ph-lock-key"></i>', nume: 'Încuiere Automată', descriereScurta: 'Blochează ușa principală la ora 22:00 în fiecare seară.', culoare: '#e67e22', tipTrigger: 'timp', tOra: '22:00', aCat: 'incuietori', aIdx: '0', aState: 'Blocat', descriere: '⏰ Zilnic la 22:00 ➔ Încuietoare Ușă devine Blocat' },
-    { idSugestie: 'sug_6', icon: '<i class="ph-bold ph-television"></i>', nume: 'Cinema Rapid', descriereScurta: 'Aprinde banda LED ambientală când Smart TV-ul este pornit.', culoare: '#9b59b6', tipTrigger: 'disp', tCat: 'tv', tIdx: '1', tState: 'Pornit', aCat: 'luminiRGB', aIdx: '0', aState: 'Pornit', descriere: 'DACĂ Smart TV OLED 8K este Pornit ➔ Bandă LED TV devine Pornit' },
-    { idSugestie: 'sug_7', icon: iconFereastra, nume: 'Oprire Aer Fereastră', descriereScurta: 'Oprește purificatorul dacă fereastra din dormitor este deschisă.', culoare: '#1abc9c', tipTrigger: 'disp', tCat: 'senzoriContact', tIdx: '0', tState: 'Deschis', aCat: 'purificator', aIdx: '0', aState: 'Oprit', descriere: 'DACĂ Fereastră Dormitor este Deschisă ➔ Purificatorul se Oprește' },
-    { idSugestie: 'sug_8', icon: '<i class="ph-bold ph-coffee"></i>', nume: 'Cafea Dimineața', descriereScurta: 'Pornește espressorul din bucătărie în fiecare zi la 07:15.', culoare: '#d35400', tipTrigger: 'timp', tOra: '07:15', aCat: 'electrocasnice', aIdx: '2', aState: 'Pornit', descriere: '⏰ Zilnic la 07:15 ➔ Espressor Cafea devine Pornit' },
-    { idSugestie: 'sug_9', icon: iconDraperie, nume: 'Intimitate Seara', descriereScurta: 'Închide automat draperiile din dormitor la ora 20:00.', culoare: '#3498db', tipTrigger: 'timp', tOra: '20:00', aCat: 'jaluzele', aIdx: '0', aState: 'Închis', descriere: '⏰ Zilnic la 20:00 ➔ Draperie Dormitor se Închide' }
+export const recommendedTemplates = [
+    { idSuggestion: 'sug_1', icon: '<i class="ph-bold ph-clock"></i>', name: 'Morning Routine', shortDesc: 'Open living room blinds daily at 07:00.', color: '#f1c40f', triggerType: 'time', tTime: '07:00', aCat: 'blinds', aIdx: '1', aState: 'Open', desc: '⏰ Daily at 07:00 ➔ Living Room Blinds Open' },
+    { idSuggestion: 'sug_2', icon: windowIcon, name: 'Eco-Bathroom', shortDesc: 'Stop dryer if bathroom window opens.', color: '#e74c3c', triggerType: 'dev', tCat: 'contactSensors', tIdx: '4', tState: 'Open', aCat: 'appliances', aIdx: '1', aState: 'Off', desc: 'IF Bathroom Window is Open ➔ Dryer stops' },
+    { idSuggestion: 'sug_3', icon: '<i class="ph-bold ph-person-simple-walk"></i>', name: 'Hallway Security', shortDesc: 'Turn on living room bulb when motion is detected in hallway.', color: '#2ecc71', triggerType: 'dev', tCat: 'motionSensors', tIdx: '1', tState: 'Active', aCat: 'bulbs', aIdx: '1', aState: 'On', desc: 'IF Hallway Motion Sensor is Active ➔ Living Room Bulb becomes On' },
+    { idSuggestion: 'sug_4', icon: '<i class="ph-bold ph-moon"></i>', name: 'Night Off', shortDesc: 'Turn off living room bulb daily at 23:30.', color: '#34495e', triggerType: 'time', tTime: '23:30', aCat: 'bulbs', aIdx: '1', aState: 'Off', desc: '⏰ Daily at 23:30 ➔ Living Room Bulb becomes Off' },
+    { idSuggestion: 'sug_5', icon: '<i class="ph-bold ph-lock-key"></i>', name: 'Auto Lock', shortDesc: 'Lock main door at 22:00 every evening.', color: '#e67e22', triggerType: 'time', tTime: '22:00', aCat: 'locks', aIdx: '0', aState: 'Locked', desc: '⏰ Daily at 22:00 ➔ Door Lock becomes Locked' },
+    { idSuggestion: 'sug_6', icon: '<i class="ph-bold ph-television"></i>', name: 'Quick Cinema', shortDesc: 'Turn on ambient LED strip when Smart TV is on.', color: '#9b59b6', triggerType: 'dev', tCat: 'tv', tIdx: '1', tState: 'On', aCat: 'rgbLights', aIdx: '0', aState: 'On', desc: 'IF Smart TV OLED 8K is On ➔ TV LED Strip becomes On' },
+    { idSuggestion: 'sug_7', icon: windowIcon, name: 'Stop Air on Window', shortDesc: 'Stop purifier if bedroom window is open.', color: '#1abc9c', triggerType: 'dev', tCat: 'contactSensors', tIdx: '0', tState: 'Open', aCat: 'purifier', aIdx: '0', aState: 'Off', desc: 'IF Bedroom Window is Open ➔ Purifier stops' },
+    { idSuggestion: 'sug_8', icon: '<i class="ph-bold ph-coffee"></i>', name: 'Morning Coffee', shortDesc: 'Turn on kitchen espresso maker daily at 07:15.', color: '#d35400', triggerType: 'time', tTime: '07:15', aCat: 'appliances', aIdx: '2', aState: 'On', desc: '⏰ Daily at 07:15 ➔ Espresso Maker becomes On' },
+    { idSuggestion: 'sug_9', icon: curtainIcon, name: 'Evening Privacy', shortDesc: 'Auto close bedroom blinds at 20:00.', color: '#3498db', triggerType: 'time', tTime: '20:00', aCat: 'blinds', aIdx: '0', aState: 'Closed', desc: '⏰ Daily at 20:00 ➔ Bedroom Blinds Close' }
 ];
 
-export const defaultDispozitive = {
-    becuri: [{ nume: "Bec Dormitor", stare: "Pornit", valoare: 75, camera: "Dormitor", icon: '<i class="ph-fill ph-lightbulb"></i>' }, { nume: "Bec Living", stare: "Oprit", valoare: 50, camera: "Living", icon: '<i class="ph-fill ph-lightbulb"></i>' }, { nume: "Bec Baie", stare: "Oprit", valoare: 50, camera: "Baie", icon: '<i class="ph-fill ph-lightbulb"></i>' }, { nume: "Bec Bucătărie", stare: "Oprit", valoare: 100, camera: "Bucătărie", icon: '<i class="ph-fill ph-lightbulb"></i>' }],
-    luminiRGB: [{ nume: "Bandă LED TV", stare: "Oprit", valoare: 100, culoare: "#3498db", camera: "Living", icon: '<i class="ph-fill ph-lamp"></i>' }, { nume: "Lampă Birou", stare: "Oprit", valoare: 80, culoare: "#f1c40f", camera: "Dormitor", icon: '<i class="ph-fill ph-lamp"></i>' }],
-    jaluzele: [{ nume: "Draperie", stare: "Închis", valoare: 0, camera: "Dormitor", icon: iconDraperie }, { nume: "Draperie 1 Living", stare: "Deschis", valoare: 100, camera: "Living", icon: iconDraperie }, { nume: "Draperie 2 Living", stare: "Deschis", valoare: 100, camera: "Living", icon: iconDraperie }, { nume: "Draperie Baie", stare: "Închis", valoare: 0, camera: "Baie", icon: iconDraperie }, { nume: "Draperie Bucătărie", stare: "Închis", valoare: 0, camera: "Bucătărie", icon: iconDraperie }],
-    audio: [{ nume: "Boxă Dormitor", stare: "Oprit", valoare: 40, camera: "Dormitor", icon: '<i class="ph-fill ph-speaker-high"></i>' }, { nume: "Boxă Living", stare: "Oprit", valoare: 30, camera: "Living", icon: '<i class="ph-fill ph-speaker-high"></i>' }, { nume: "Sistem Audio Dolby Atmos 7.1", stare: "Oprit", valoare: 50, camera: "Living", icon: '<i class="ph-fill ph-speaker-high"></i>' }, { nume: "Boxă Baie", stare: "Oprit", valoare: 30, camera: "Baie", icon: '<i class="ph-fill ph-speaker-high"></i>' }, { nume: "Boxă Bucătărie", stare: "Oprit", valoare: 20, camera: "Bucătărie", icon: '<i class="ph-fill ph-speaker-high"></i>' }],
-    tv: [{ nume: "TV Dormitor", stare: "Oprit", camera: "Dormitor", icon: '<i class="ph-fill ph-television"></i>' }, { nume: "Smart TV OLED 8K", stare: "Oprit", camera: "Living", icon: '<i class="ph-fill ph-television"></i>' }],
-    aspirator: [{ nume: "Robot Curățenie", stare: "La Bază", baterie: 100, camera: "Living", icon: '<i class="ph-fill ph-robot"></i>' }],
-    purificator: [{ nume: "Purificator Aer", stare: "Auto", camera: "Dormitor", icon: '<i class="ph-fill ph-wind"></i>' }, { nume: "Purificator Aer", stare: "Oprit", camera: "Living", icon: '<i class="ph-fill ph-wind"></i>' }],
-    electrocasnice: [{ nume: "Mașină de Spălat", stare: "Oprit", camera: "Baie", icon: '<i class="ph-fill ph-washing-machine"></i>' }, { nume: "Uscător", stare: "Oprit", camera: "Baie", icon: '<i class="ph-fill ph-wind"></i>' }, { nume: "Espressor Cafea", stare: "Oprit", camera: "Bucătărie", icon: '<i class="ph-fill ph-coffee"></i>' }],
-    prize: [{ nume: "Priză Dormitor", stare: "Pornit", consum: 120, detalii: "TV, Laptop, Purificator", camera: "Dormitor", icon: '<i class="ph-fill ph-plug"></i>' }, { nume: "Priză Living", stare: "Pornit", consum: 480, detalii: "Sistem Audio, TV, Robot Curățenie, Purificator", camera: "Living", icon: '<i class="ph-fill ph-plug"></i>' }, { nume: "Priză Baie", stare: "Pornit", consum: 0, detalii: "Mașină de Spălat, Uscător", camera: "Baie", icon: '<i class="ph-fill ph-plug"></i>' }, { nume: "Priză Bucătărie", stare: "Pornit", consum: 150, detalii: "Espressor, Frigider", camera: "Bucătărie", icon: '<i class="ph-fill ph-plug"></i>' }],
-    senzoriContact: [{ nume: "Fereastră Dormitor", stare: "Închis", camera: "Dormitor", icon: iconFereastra }, { nume: "Fereastră 1 Living", stare: "Închis", camera: "Living", icon: iconFereastra }, { nume: "Fereastră 2 Living", stare: "Închis", camera: "Living", icon: iconFereastra }, { nume: "Fereastră Bucătărie", stare: "Închis", camera: "Bucătărie", icon: iconFereastra }, { nume: "Fereastră Baie", stare: "Închis", camera: "Baie", icon: iconFereastra }],
-    senzoriMiscare: [{ nume: "Senzor Mișcare Living", stare: "Inactiv", camera: "Living", icon: '<i class="ph-fill ph-person-simple-walk"></i>' }, { nume: "Senzor Mișcare Hol", stare: "Inactiv", camera: "Hol", icon: '<i class="ph-fill ph-person-simple-walk"></i>' }],
-    camereVideo: [{ nume: "Interfon Video", stare: "Standby", camera: "Ușă Principală", icon: '<i class="ph-fill ph-video-camera"></i>' }, { nume: "Cameră Curte", stare: "Standby", camera: "Exterior", icon: '<i class="ph-fill ph-video-camera"></i>' }],
-    incuietori: [{ nume: "Încuietoare Ușă", stare: "Blocat", camera: "Hol", icon: '<i class="ph-fill ph-lock-key"></i>' }]
+export const defaultDevices = {
+    bulbs: [
+        { name: "Bedroom Bulb", state: "On", value: 75, room: "Bedroom", icon: '<i class="ph-fill ph-lightbulb"></i>' },
+        { name: "Living Room Bulb", state: "Off", value: 50, room: "Living", icon: '<i class="ph-fill ph-lightbulb"></i>' },
+        { name: "Bathroom Bulb", state: "Off", value: 50, room: "Bathroom", icon: '<i class="ph-fill ph-lightbulb"></i>' },
+        { name: "Kitchen Bulb", state: "Off", value: 100, room: "Kitchen", icon: '<i class="ph-fill ph-lightbulb"></i>' }
+    ],
+    rgbLights: [
+        { name: "TV LED Strip", state: "Off", value: 100, color: "#3498db", room: "Living", icon: '<i class="ph-fill ph-lamp"></i>' },
+        { name: "Desk Lamp", state: "Off", value: 80, color: "#f1c40f", room: "Bedroom", icon: '<i class="ph-fill ph-lamp"></i>' }
+    ],
+    blinds: [
+        { name: "Bedroom Blinds", state: "Closed", value: 0, room: "Bedroom", icon: curtainIcon },
+        { name: "Living Room Blinds 1", state: "Open", value: 100, room: "Living", icon: curtainIcon },
+        { name: "Living Room Blinds 2", state: "Open", value: 100, room: "Living", icon: curtainIcon },
+        { name: "Bathroom Blinds", state: "Closed", value: 0, room: "Bathroom", icon: curtainIcon },
+        { name: "Kitchen Blinds", state: "Closed", value: 0, room: "Kitchen", icon: curtainIcon }
+    ],
+    audio: [
+        { name: "Bedroom Speaker", state: "Off", value: 40, room: "Bedroom", icon: '<i class="ph-fill ph-speaker-high"></i>' },
+        { name: "Living Room Speaker", state: "Off", value: 30, room: "Living", icon: '<i class="ph-fill ph-speaker-high"></i>' },
+        { name: "Dolby Atmos 7.1 Audio System", state: "Off", value: 50, room: "Living", icon: '<i class="ph-fill ph-speaker-high"></i>' },
+        { name: "Bathroom Speaker", state: "Off", value: 30, room: "Bathroom", icon: '<i class="ph-fill ph-speaker-high"></i>' },
+        { name: "Kitchen Speaker", state: "Off", value: 20, room: "Kitchen", icon: '<i class="ph-fill ph-speaker-high"></i>' }
+    ],
+    tv: [
+        { name: "Bedroom TV", state: "Off", room: "Bedroom", icon: '<i class="ph-fill ph-television"></i>' },
+        { name: "Smart TV OLED 8K", state: "Off", room: "Living", icon: '<i class="ph-fill ph-television"></i>' }
+    ],
+    vacuum: [
+        { name: "Cleaning Robot", state: "Docked", battery: 100, room: "Living", icon: '<i class="ph-fill ph-robot"></i>' }
+    ],
+    purifier: [
+        { name: "Air Purifier", state: "Auto", room: "Bedroom", icon: '<i class="ph-fill ph-wind"></i>' },
+        { name: "Air Purifier", state: "Off", room: "Living", icon: '<i class="ph-fill ph-wind"></i>' }
+    ],
+    appliances: [
+        { name: "Washing Machine", state: "Off", room: "Bathroom", icon: '<i class="ph-fill ph-washing-machine"></i>' },
+        { name: "Dryer", state: "Off", room: "Bathroom", icon: '<i class="ph-fill ph-wind"></i>' },
+        { name: "Espresso Maker", state: "Off", room: "Kitchen", icon: '<i class="ph-fill ph-coffee"></i>' }
+    ],
+    plugs: [
+        { name: "Bedroom Plug", state: "On", consumption: 120, details: "TV, Laptop, Purifier", room: "Bedroom", icon: '<i class="ph-fill ph-plug"></i>' },
+        { name: "Living Room Plug", state: "On", consumption: 480, details: "Audio System, TV, Cleaning Robot, Purifier", room: "Living", icon: '<i class="ph-fill ph-plug"></i>' },
+        { name: "Bathroom Plug", state: "On", consumption: 0, details: "Washing Machine, Dryer", room: "Bathroom", icon: '<i class="ph-fill ph-plug"></i>' },
+        { name: "Kitchen Plug", state: "On", consumption: 150, details: "Espresso Maker, Fridge", room: "Kitchen", icon: '<i class="ph-fill ph-plug"></i>' }
+    ],
+    contactSensors: [
+        { name: "Bedroom Window", state: "Closed", room: "Bedroom", icon: windowIcon },
+        { name: "Living Room Window 1", state: "Closed", room: "Living", icon: windowIcon },
+        { name: "Living Room Window 2", state: "Closed", room: "Living", icon: windowIcon },
+        { name: "Kitchen Window", state: "Closed", room: "Kitchen", icon: windowIcon },
+        { name: "Bathroom Window", state: "Closed", room: "Bathroom", icon: windowIcon }
+    ],
+    motionSensors: [
+        { name: "Living Room Motion Sensor", state: "Inactive", room: "Living", icon: '<i class="ph-fill ph-person-simple-walk"></i>' },
+        { name: "Hallway Motion Sensor", state: "Inactive", room: "Hallway", icon: '<i class="ph-fill ph-person-simple-walk"></i>' }
+    ],
+    videoCameras: [
+        { name: "Video Intercom", state: "Standby", room: "Main Door", icon: '<i class="ph-fill ph-video-camera"></i>' },
+        { name: "Yard Camera", state: "Standby", room: "Outdoor", icon: '<i class="ph-fill ph-video-camera"></i>' }
+    ],
+    locks: [
+        { name: "Door Lock", state: "Locked", room: "Hallway", icon: '<i class="ph-fill ph-lock-key"></i>' }
+    ]
 };

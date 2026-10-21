@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - My Home</title>
+    <title>Lumen - My Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -14,10 +14,10 @@
     <smart-nav></smart-nav>
     <main>
         <div class="page-header">
-            <button class="menu-toggle-btn" onclick="toggleNav()" title="Deschide Meniul">☰</button>
+            <button class="menu-toggle-btn" onclick="toggleNav()" title="Open Menu">☰</button>
             <h1><span id="nume-casa-global">My Home</span></h1>
         </div>
-        <p class="page-subtitle">Panoul tău central de control. Ai acces rapid la starea casei, favorite și notificări.
+        <p class="page-subtitle">Your central control panel. Quick access to home status, favorites, and notifications.
         </p>
 
         <div class="flex-row">
@@ -25,21 +25,20 @@
                 <div>
                     <h4 class="widget-title">Timișoara</h4>
                     <h2 class="widget-value" id="vremea-temp">--°C</h2>
-                    <div style="font-size: 0.85em; opacity: 0.8; margin-top: 3px;" id="vremea-detalii">Se încarcă...
-                    </div>
+                    <div style="font-size: 0.85em; opacity: 0.8; margin-top: 3px;" id="vremea-detalii">Loading...</div>
                 </div>
                 <div class="widget-icon" id="vremea-icon">⏳</div>
             </div>
             <div class="widget-card">
                 <div>
-                    <h4 class="widget-title">Securitate</h4>
-                    <h2 class="widget-value text-success" id="global-securitate">Armată</h2>
+                    <h4 class="widget-title">Security</h4>
+                    <h2 class="widget-value text-success" id="global-securitate">Armed</h2>
                 </div>
                 <div class="widget-icon">🛡️</div>
             </div>
             <div class="widget-card">
                 <div>
-                    <h4 class="widget-title">Consum Energetic</h4>
+                    <h4 class="widget-title">Energy Consumption</h4>
                     <h2 class="widget-value text-accent" id="global-consum">0.00 kW</h2>
                 </div>
                 <div class="widget-icon">⚡</div>
@@ -48,13 +47,13 @@
 
         <div class="notification-container" id="notifications-container"></div>
 
-        <h2 class="hk-section-title">Cele mai folosite</h2>
+        <h2 class="hk-section-title">Most Used</h2>
         <div class="hk-grid" id="most-used-accessories-container"></div>
 
-        <h2 class="hk-section-title">Scene Favorite</h2>
+        <h2 class="hk-section-title">Favorite Scenes</h2>
         <div class="hk-grid-wide" id="fav-scenes-container"></div>
 
-        <h2 class="hk-section-title">Accesorii Favorite</h2>
+        <h2 class="hk-section-title">Favorite Accessories</h2>
         <div class="hk-grid" id="fav-accessories-container"></div>
     </main>
     <smart-modal></smart-modal>

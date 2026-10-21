@@ -1,14 +1,13 @@
 import { showToast } from './ui.js';
-import { actualizeazaMediiClimat, fetchWeather, getTempUnit } from './app.js';
+import { updateClimateAverages, fetchWeather, getTempUnit } from './app.js';
 
 const BACKGROUNDS = [
-    { filename: "bg-blue.jpg", dominantColor: "#007aff" }, // Albastru Ocean / Sky
-    { filename: "bg-orange.jpg", dominantColor: "#ff9500" }, // Portocaliu / Gradient Warm
-    { filename: "bg-green.jpg", dominantColor: "#34c759" }, // Verde Natural (Calibrat la nuanța iOS/HomeKit)
-    { filename: "bg-purple.jpg", dominantColor: "#af52de" }  // Mov / Purple Vibrant (Corectat din #9b59b6 în nuanța exactă)
+    { filename: "bg-blue.jpg", dominantColor: "#007aff" },
+    { filename: "bg-orange.jpg", dominantColor: "#ff9500" },
+    { filename: "bg-green.jpg", dominantColor: "#34c759" },
+    { filename: "bg-purple.jpg", dominantColor: "#af52de" }
 ];
 
-// Inițializare imediată a temei și fundalului pentru a preveni flash-ul negru (înainte de DOMContentLoaded)
 if (localStorage.getItem('darkMode') === 'true') {
     document.body.classList.add('dark-mode');
     document.documentElement.classList.add('dark-mode');
@@ -16,7 +15,7 @@ if (localStorage.getItem('darkMode') === 'true') {
 initBackgroundAndAccent();
 
 document.addEventListener('DOMContentLoaded', () => {
-    actualizeazaButoaneUnitate();
+    updateUnitButtons();
 
     if (!document.querySelector('meta[name="view-transition"]')) {
         const metaVT = document.createElement('meta');
@@ -24,22 +23,20 @@ document.addEventListener('DOMContentLoaded', () => {
         metaVT.content = 'same-origin';
         document.head.appendChild(metaVT);
     }
-    actualizeazaUiSetariBackground();
+    updateUiBackgroundSettings();
 });
 
 function getAbsoluteAssetUrl(filename) {
     const path = window.location.pathname;
     const isSubfolder = path.includes('/html/') || path.includes('\\html\\');
-    const isDist = path.includes('/dist/') || path.includes('\\dist\\'); // Dacă rulăm din bundle-ul Vite
+    const isDist = path.includes('/dist/') || path.includes('\\dist\\');
     const relativePath = (isSubfolder || isDist) ? `../assets/${filename}` : `assets/${filename}`;
 
-    // Convertim calea într-un URL absolut. Acest pas este CRUCIAL pentru a forța browserul
-    // să randeze imaginea corect, eliminând conflictele cu directorul css/ unde se află style.css.
     return new URL(relativePath, window.location.href).href;
 }
 
 function initBackgroundAndAccent() {
-    const bgIndex = getCurentBgIndex();
+    const bgIndex = getCurrentBgIndex();
     const bgConfig = BACKGROUNDS[bgIndex];
 
     const absoluteUrl = getAbsoluteAssetUrl(bgConfig.filename);
@@ -49,7 +46,7 @@ function initBackgroundAndAccent() {
 
     if (isAutoAccentOn()) {
         const img = new Image();
-        img.crossOrigin = "Anonymous"; // Previne erorile de securitate CORS în Electron
+        img.crossOrigin = "Anonymous";
         img.src = absoluteUrl;
 
         img.onload = function () {
@@ -59,24 +56,18 @@ function initBackgroundAndAccent() {
                 canvas.width = 1;
                 canvas.height = 1;
 
-                // Desenarea imaginii la scară 1x1 calculează automat media culorilor
                 ctx.drawImage(img, 0, 0, 1, 1);
                 const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
 
-                // Convertim în format HEX
                 let hexColor = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 
-                // OPTIMIZARE PENTRU LIZIBILITATE (Evităm culorile prea șterse sau prea închise)
-                // Dacă fundalul este prea întunecat sau spălat, aplicăm un factor de saturație/luminanță
                 const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
                 if (hsp < 60) {
-                    // Dacă e prea închis (ex: fundal de noapte), forțăm o nuanță mai deschisă din același spectru
                     hexColor = `rgb(${Math.min(r + 60, 255)}, ${Math.min(g + 60, 255)}, ${Math.min(b + 60, 255)})`;
                 }
 
                 document.documentElement.style.setProperty('--accent-color', hexColor);
             } catch (e) {
-                // Fallback în caz de eroare la canvas
                 document.documentElement.style.setProperty('--accent-color', bgConfig.dominantColor);
             }
         };
@@ -92,30 +83,27 @@ function initBackgroundAndAccent() {
     }
 }
 
-function getCurentBgIndex() {
+function getCurrentBgIndex() {
     return parseInt(localStorage.getItem('appBgIndex')) || 0;
 }
 
 function isAutoAccentOn() {
     const val = localStorage.getItem('autoAccentColor');
-    // Dacă nu e setat deloc, implicit punem true (sau false, depinde cum doriți)
     if (val === null) return true;
-    return val === 'true'; // Returnează true DOAR dacă este stringul 'true'
+    return val === 'true';
 }
 
-function seteazaCuloareAccentManual(color) {
+function setManualAccentColor(color) {
     if (isAutoAccentOn()) {
-        // Dacă isAutoAccentOn() este pe bune activ (true), blocăm schimbarea
-        showToast("Dezactivează 'Detecție Automată' pentru a alege o culoare manual.", { isError: true });
+        showToast("Disable 'Auto Detection' to choose a color manually.", { isError: true });
         return;
     }
-    // Dacă este OFF (false), aplicăm culoarea fără probleme
     document.documentElement.style.setProperty('--accent-color', color);
     localStorage.setItem('accentColor', color);
-    showToast("Culoarea de accent a fost salvată.");
+    showToast("Accent color saved.");
 }
 
-function schimbaFundal(index) {
+function changeBackground(index) {
     if (index < 0 || index >= BACKGROUNDS.length) return;
     localStorage.setItem('appBgIndex', index);
 
@@ -126,34 +114,29 @@ function schimbaFundal(index) {
     document.documentElement.style.setProperty('--app-bg', bgUrl);
 
     if (isAutoAccentOn()) {
-        // Apelăm re-inițializarea pentru a declanșa recalcularea dinamică a culorii
         initBackgroundAndAccent();
     }
 
-    if (window.actualizeazaUiSetariBackground) {
-        window.actualizeazaUiSetariBackground();
+    if (window.updateUiBackgroundSettings) {
+        window.updateUiBackgroundSettings();
     }
-    showToast("Fundalul a fost actualizat.");
+    showToast("Background updated.");
 }
 
 function setTempUnit(unit) {
     localStorage.setItem('tempUnit', unit);
-    // Recalculează mediile și actualizează toate elementele DOM de temperatură
-    actualizeazaMediiClimat();
-    // Actualizează widget-ul meteo
+    updateClimateAverages();
     fetchWeather();
-    // Actualizează starea vizuală a butoanelor în Setări
-    actualizeazaButoaneUnitate();
+    updateUnitButtons();
 
-    // -- NOU: Forțează cardurile din pagină să preia noua conversie --
-    if (typeof window.sincronizeazaDOMcuMemoria === 'function') {
-        window.sincronizeazaDOMcuMemoria();
+    if (typeof window.syncDOMWithMemory === 'function') {
+        window.syncDOMWithMemory();
     }
 
-    showToast(`Unitatea a fost schimbată în °${unit}.`);
+    showToast(`Unit changed to °${unit}.`);
 }
 
-function actualizeazaButoaneUnitate() {
+function updateUnitButtons() {
     const unit = getTempUnit();
     const btnC = document.getElementById('btn-unit-c');
     const btnF = document.getElementById('btn-unit-f');
@@ -164,26 +147,26 @@ function actualizeazaButoaneUnitate() {
 export {
     showToast,
     toggleDarkMode,
-    schimbaCuloareAccent,
-    seteazaCuloareAccentManual,
+    changeAccentColor,
+    setManualAccentColor,
     toggleHelp,
     toggleNav,
-    schimbaFundal,
+    changeBackground,
     toggleAutoAccent,
     setTempUnit,
-    getCurentBgIndex,
+    getCurrentBgIndex,
     isAutoAccentOn,
-    actualizeazaUiSetariBackground
+    updateUiBackgroundSettings
 };
 
 window.toggleDarkMode = toggleDarkMode;
-window.schimbaCuloareAccent = schimbaCuloareAccent;
+window.changeAccentColor = changeAccentColor;
 window.toggleHelp = toggleHelp;
 window.toggleNav = toggleNav;
-window.schimbaFundal = schimbaFundal;
+window.changeBackground = changeBackground;
 window.toggleAutoAccent = toggleAutoAccent;
 window.setTempUnit = setTempUnit;
-window.actualizeazaUiSetariBackground = actualizeazaUiSetariBackground;
+window.updateUiBackgroundSettings = updateUiBackgroundSettings;
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
@@ -192,45 +175,37 @@ function toggleDarkMode() {
 }
 
 function toggleAutoAccent() {
-    const curent = isAutoAccentOn();
-    const nouaStare = !curent;
+    const current = isAutoAccentOn();
+    const newState = !current;
 
-    // Salvăm explicit ca text 'true' sau 'false'
-    localStorage.setItem('autoAccentColor', nouaStare ? 'true' : 'false');
+    localStorage.setItem('autoAccentColor', newState ? 'true' : 'false');
 
-    // CORECTURĂ: Verificăm direct nouaStare în care a trecut aplicația
-    if (nouaStare === true) {
-        // Dacă s-a activat (nouaStare este true)
+    if (newState === true) {
         initBackgroundAndAccent();
-        showToast("Detecția automată a culorii a fost activată.");
+        showToast("Auto color detection enabled.");
     } else {
-        // Dacă s-a dezactivat (nouaStare este false)
         const savedColor = localStorage.getItem('accentColor') || '#007aff';
         document.documentElement.style.setProperty('--accent-color', savedColor);
-        showToast("Detecția automată dezactivată. Acum poți alege o culoare manual.");
+        showToast("Auto detection disabled. You can now choose a color manually.");
     }
 
-    // Actualizăm și starea vizuală a switch-ului și a zonelor blocate din setări
-    actualizeazaUiSetariBackground();
+    updateUiBackgroundSettings();
 }
 
-function actualizeazaUiSetariBackground() {
+function updateUiBackgroundSettings() {
     const isAuto = isAutoAccentOn();
 
-    // Sincronizăm switch-ul din interfață
     const switchEl = document.getElementById('auto-accent-toggle');
     if (switchEl) switchEl.checked = isAuto;
 
-    // Blocăm/Deblocăm vizual zona de culori manuale
     const manualZone = document.getElementById('manual-accent-container');
     if (manualZone) {
         manualZone.classList.toggle('disabled-zone', isAuto);
     }
 
-    // Actualizăm highlight-ul fundalului selectat (vizibil în pagina de setări)
-    const curentBgIndex = getCurentBgIndex();
+    const currentBgIndex = getCurrentBgIndex();
     document.querySelectorAll('.bg-option').forEach((el, index) => {
-        if (index === curentBgIndex) {
+        if (index === currentBgIndex) {
             el.style.borderColor = 'var(--accent-color)';
             el.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
         } else {
@@ -240,9 +215,9 @@ function actualizeazaUiSetariBackground() {
     });
 }
 
-function schimbaCuloareAccent(color) {
+function changeAccentColor(color) {
     if (isAutoAccentOn()) {
-        showToast("Dezactivează 'Detecție Automată' pentru a alege o culoare manual.", { isError: true });
+        showToast("Disable 'Auto Detection' to choose a color manually.", { isError: true });
         return;
     }
     document.documentElement.style.setProperty('--accent-color', color);
@@ -251,9 +226,9 @@ function schimbaCuloareAccent(color) {
 
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-        const butoaneValidare = document.querySelectorAll('button[onclick^="valideaza"]');
-        if (butoaneValidare.length > 0) {
-            butoaneValidare[0].click();
+        const validationButtons = document.querySelectorAll('button[onclick^="validate"]');
+        if (validationButtons.length > 0) {
+            validationButtons[0].click();
         }
     }
 });
@@ -271,10 +246,9 @@ function toggleNav() {
     const nav = document.querySelector('nav');
     let backdrop = document.getElementById('nav-backdrop');
 
-    // Modificăm automat titlul meniului în OmniHome
     if (nav) {
-        const titluNav = nav.querySelector('h2');
-        if (titluNav) titluNav.innerText = "OmniHome";
+        const navTitle = nav.querySelector('h2');
+        if (navTitle) navTitle.innerText = "Lumen";
     }
 
     if (!backdrop) {

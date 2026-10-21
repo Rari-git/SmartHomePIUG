@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Statistici & Istoric</title>
+    <title>Lumen - Statistics & History</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -15,38 +15,36 @@
     <main>
         <div class="page-header">
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-            <h1>Statistici & Jurnal</h1>
+            <h1>Statistics & Log</h1>
         </div>
-        <p class="page-subtitle">Monitorizează consumul de energie, istoricul climei și vizualizează evenimentele din
-            casă.</p>
+        <p class="page-subtitle">Monitor energy consumption, climate history, and view home events.</p>
 
         <div class="stats-card"
             style="background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow-soft); margin-bottom: 25px;">
             <div class="flex-between mb-20" style="flex-wrap: wrap; gap: 15px;">
                 <div style="display: flex; gap: 8px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
-                    <button id="btn-tip-energie" class="filter-btn active"
-                        onclick="schimbaTipGraficDashboard('energie')">⚡ Energie</button>
-                    <button id="btn-tip-clima" class="filter-btn" onclick="schimbaTipGraficDashboard('clima')">🌡️
-                        Climă</button>
+                    <button id="btn-type-energy" class="filter-btn active"
+                        onclick="switchDashboardChartType('energy')">⚡ Energy</button>
+                    <button id="btn-type-climate" class="filter-btn" onclick="switchDashboardChartType('climate')">🌡️
+                        Climate</button>
                 </div>
 
                 <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.04); padding: 4px; border-radius: 8px;">
-                    <button id="btn-dash-1z" class="filter-btn" onclick="schimbaPerioadaDashboard('1z')">1 Zi</button>
-                    <button id="btn-dash-7z" class="filter-btn active" onclick="schimbaPerioadaDashboard('7z')">7
-                        Zile</button>
-                    <button id="btn-dash-30z" class="filter-btn" onclick="schimbaPerioadaDashboard('30z')">30
-                        Zile</button>
-                    <button id="btn-dash-6l" class="filter-btn" onclick="schimbaPerioadaDashboard('6l')">6 Luni</button>
-                    <button id="btn-dash-1an" class="filter-btn" onclick="schimbaPerioadaDashboard('1an')">1 An</button>
+                    <button id="btn-dash-1d" class="filter-btn" onclick="switchDashboardPeriod('1d')">1 Day</button>
+                    <button id="btn-dash-7d" class="filter-btn active" onclick="switchDashboardPeriod('7d')">7
+                        Days</button>
+                    <button id="btn-dash-30d" class="filter-btn" onclick="switchDashboardPeriod('30d')">30 Days</button>
+                    <button id="btn-dash-6m" class="filter-btn" onclick="switchDashboardPeriod('6m')">6 Months</button>
+                    <button id="btn-dash-1y" class="filter-btn" onclick="switchDashboardPeriod('1y')">1 Year</button>
                 </div>
             </div>
 
-            <div id="dashboard-grafic-content" style="min-height: 240px; margin-top: 15px;"></div>
+            <div id="dashboard-chart-content" style="min-height: 240px; margin-top: 15px;"></div>
         </div>
 
         <div class="stats-card"
             style="background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow-soft);">
-            <h3 class="m-0 text-accent mb-20">📝 Jurnal de Securitate și Evenimente</h3>
+            <h3 class="m-0 text-accent mb-20">📝 Security and Events Log</h3>
             <div id="logs-container"
                 style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
             </div>

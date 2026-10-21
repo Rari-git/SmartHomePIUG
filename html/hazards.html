@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>SmartHome - Pericole & Alerte</title>
+    <title>Lumen - Hazards & Alerts</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -15,28 +15,28 @@
     <main>
         <div class="page-header">
             <button class="menu-toggle-btn" onclick="toggleNav()">☰</button>
-            <h1>Senzori de Risc & Pericole</h1>
+            <h1>Risk & Hazard Sensors</h1>
         </div>
 
-        <div class="danger-panel status-safe" id="panel-inundatie">
+        <div class="danger-panel status-safe" id="panel-flood">
             <span class="danger-icon">💧</span>
-            <h2>Senzor Inundație (Baie)</h2>
-            <p id="status-inundatie" class="text-success" style="font-weight: bold; font-size: 1.1em;">Stare Normală</p>
-            <div id="controls-inundatie" style="margin-top: 20px; display: flex; justify-content: center;">
-                <button type="button" class="btn-simulate" onclick="simuleazaInundatie()">Simulează Inundație</button>
-                <button type="button" class="btn-stop" onclick="reseteazaInundatie()" style="display: none;">Oprește
-                    Alarma și Robinetul</button>
+            <h2>Flood Sensor (Bathroom)</h2>
+            <p id="status-flood" class="text-success" style="font-weight: bold; font-size: 1.1em;">Normal State</p>
+            <div id="controls-flood" style="margin-top: 20px; display: flex; justify-content: center;">
+                <button type="button" class="btn-simulate" onclick="simulateFlood()">Simulate Flood</button>
+                <button type="button" class="btn-stop" onclick="resetFlood()" style="display: none;">Stop Alarm and
+                    Valve</button>
             </div>
         </div>
 
-        <div class="danger-panel status-safe" id="panel-incendiu">
+        <div class="danger-panel status-safe" id="panel-fire">
             <span class="danger-icon">🔥</span>
-            <h2>Detector de Fum & Gaz (Bucătărie)</h2>
-            <p id="status-incendiu" class="text-success" style="font-weight: bold; font-size: 1.1em;">Stare Normală</p>
-            <div id="controls-incendiu" style="margin-top: 20px; display: flex; justify-content: center;">
-                <button type="button" class="btn-simulate" onclick="simuleazaIncendiu()">Simulează Detecție Fum</button>
-                <button type="button" class="btn-stop" onclick="reseteazaIncendiu()" style="display: none;">Oprește
-                    Alarma și Gazul</button>
+            <h2>Smoke & Gas Detector (Kitchen)</h2>
+            <p id="status-fire" class="text-success" style="font-weight: bold; font-size: 1.1em;">Normal State</p>
+            <div id="controls-fire" style="margin-top: 20px; display: flex; justify-content: center;">
+                <button type="button" class="btn-simulate" onclick="simulateFire()">Simulate Smoke Detection</button>
+                <button type="button" class="btn-stop" onclick="resetFire()" style="display: none;">Stop Alarm and
+                    Gas</button>
             </div>
         </div>
     </main>
@@ -45,28 +45,25 @@
     <script type="module" src="../js/app.js"></script>
     <script type="module" src="../js/validation.js"></script>
     <script type="module">
-        import { simuleazaInundatie, reseteazaInundatie, simuleazaIncendiu, reseteazaIncendiu } from '../js/validation.js';
+        import { simulateFlood, resetFlood, simulateFire, resetFire } from '../js/validation.js';
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Mapare butoane Inundație
-            const btnSimInundatie = document.querySelector('#panel-inundatie .btn-simulate');
-            const btnStopInundatie = document.querySelector('#panel-inundatie .btn-stop');
-            if (btnSimInundatie) btnSimInundatie.addEventListener('click', () => simuleazaInundatie(true));
-            if (btnStopInundatie) btnStopInundatie.addEventListener('click', () => reseteazaInundatie());
+            const btnSimFlood = document.querySelector('#panel-flood .btn-simulate');
+            const btnStopFlood = document.querySelector('#panel-flood .btn-stop');
+            if (btnSimFlood) btnSimFlood.addEventListener('click', () => simulateFlood(true));
+            if (btnStopFlood) btnStopFlood.addEventListener('click', () => resetFlood());
 
-            // Mapare butoane Incendiu
-            const btnSimIncendiu = document.querySelector('#panel-incendiu .btn-simulate');
-            const btnStopIncendiu = document.querySelector('#panel-incendiu .btn-stop');
-            if (btnSimIncendiu) btnSimIncendiu.addEventListener('click', () => simuleazaIncendiu(true));
-            if (btnStopIncendiu) btnStopIncendiu.addEventListener('click', () => reseteazaIncendiu());
+            const btnSimFire = document.querySelector('#panel-fire .btn-simulate');
+            const btnStopFire = document.querySelector('#panel-fire .btn-stop');
+            if (btnSimFire) btnSimFire.addEventListener('click', () => simulateFire(true));
+            if (btnStopFire) btnStopFire.addEventListener('click', () => resetFire());
 
-            // Oferim 100ms timp structurii globale JSON smartHomeData să se încarce stabil
             setTimeout(() => {
-                if (localStorage.getItem('pericolInundatie') === 'true') {
-                    simuleazaInundatie(false);
+                if (localStorage.getItem('floodHazard') === 'true') {
+                    simulateFlood(false);
                 }
-                if (localStorage.getItem('pericolIncendiu') === 'true') {
-                    simuleazaIncendiu(false);
+                if (localStorage.getItem('fireHazard') === 'true') {
+                    simulateFire(false);
                 }
             }, 100);
         });

@@ -1,0 +1,16 @@
+# Prevent Cline from reading heavy module logic
+node_modules/
+
+# Ignore production builds entirely
+dist/
+out/
+build/
+
+# TOKEN SAVER: Blocks Cline from reading thousands of lines of dependency trees
+package-lock.json
+
+# Audio assets (Cline cannot 'hear' or parse binary media anyway)
+sounds/
+
+# Visual assets (Ignore unless you explicitly want Cline to pick new layout images)
+assets/

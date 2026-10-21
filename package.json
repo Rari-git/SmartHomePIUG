@@ -1,12 +1,12 @@
 {
-  "name": "smarthome-piug",
+  "name": "lumen",
   "version": "1.0.0",
-  "description": "SmartHome Interface Project",
+  "description": "Lumen Smart Home Interface Project",
   "main": "electron-main.js",
   "scripts": {
     "start": "electron .",
     "build": "vite build",
-    "package-win": "npm run build && electron-packager . SmartHomeApp --platform=win32 --arch=x64 --out=build_release/ --overwrite --asar --prune=true --ignore=\"^/(css|js)/\" --ignore=\"^/(index\\\\.html|vite\\\\.config\\\\.js)$\" --ignore=\"\\\\.gitignore\" --ignore=\"README\\\\.md\""
+    "package-win": "npm run build && electron-packager . Lumen --platform=win32 --arch=x64 --out=build_release/ --overwrite --asar --prune=true --ignore=\"^/(css|js)/\" --ignore=\"^/(index\\.html|vite\\.config\\.js)$\" --ignore=\"\\.gitignore\" --ignore=\"README\\.md\""
   },
   "keywords": [],
   "author": "",

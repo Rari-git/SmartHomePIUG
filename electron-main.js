@@ -1,11 +1,9 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
-// Optimizări performanță motor Electron
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-zero-copy');
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
-// app.commandLine.appendSwitch('disable-background-timer-throttling'); // Opțional: menține fluiditatea animațiilor în fundal (folosește mai multe resurse)
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
@@ -21,34 +19,29 @@ function createWindow() {
             height: 40
         },
         icon: path.join(__dirname, 'assets/icon.ico'),
-        backgroundColor: '#000000', // Previne 'white flash' la pornire, util pt teme întunecate
-        show: false, // Fereastra va fi ascunsă până când este gata de afișare
+        backgroundColor: '#000000',
+        show: false,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            v8CacheOptions: 'bypassHeatCheckAndEagerCompile', // Optimizare cache JS pentru pornire mai rapidă
-            spellcheck: false // Dacă aplicația nu are nevoie de corectură gramaticală, salvează memorie
+            v8CacheOptions: 'bypassHeatCheckAndEagerCompile',
+            spellcheck: false
         }
     });
 
-    // Curățare memorie RAM la minimizare
     mainWindow.on('minimize', () => {
         if (process.platform === 'win32') {
-            mainWindow.setThumbarButtons([]); // Curăță potențiale referințe inutile
+            mainWindow.setThumbarButtons([]);
         }
     });
 
-    // Afișare lină doar când DOM-ul este complet gata
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
-        //mainWindow.focus();
     });
 
     if (app.isPackaged) {
-        // În producția finală (ASAR), încărcăm interfața minificată din folderul dist/
         mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
     } else {
-        // În dezvoltare (npm start), rulăm fișierul original brut
         mainWindow.loadFile('index.html');
     }
 }

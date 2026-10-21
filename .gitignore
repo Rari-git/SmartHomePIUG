@@ -1,3 +1,18 @@
+# Dependency directories
 node_modules/
+
+# Production build artifacts
 dist/
+out/
+build/
+
+# Massive lockfiles (Cline doesn't need to read these)
 package-lock.json
+
+# Log files
+*.log
+npm-debug.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
