@@ -5,7 +5,8 @@ Convert the Electron smart-home app from Romanian to English-only, fix bugs, and
 
 ## Completed
 
-### TASK 1 — Inventory (docs created)
+### TASK 1 — Inventory (docs created, committed on `english-and-fixes`)
+- Commit `d2349a5`: "TASK 1: Create English→Romanian glossary and progress log"
 - Created `docs/glossary.md`: full Romanian → English mapping table covering category keys, device states, room names, function/variable names, non-ASCII identifiers, page file names, stored keys, locale-specific code, and app name.
 - Created `PROGRESS.md`: this file.
 - Inventory findings:
