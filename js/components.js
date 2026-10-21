@@ -15,15 +15,15 @@ class SmartNav extends HTMLElement {
             <nav>
                 <h2>SmartHome</h2>
                 <a href="${caleHome}" class="${isActive('index.html')}">🏠 Home</a>
-                <a href="${prefixPagini}scene.html" class="${isActive('scene.html')}">🎭 Scene</a>
-                <a href="${prefixPagini}accesorii.html" class="${isActive('accesorii.html')}">🛋️ Accesorii</a>
-                <a href="${prefixPagini}automatizari.html" class="${isActive('automatizari.html')}">🤖 Automatizări</a>
-                <a href="${prefixPagini}statistici.html" class="${isActive('statistici.html')}">📈 Statistici</a>
-                <a href="${prefixPagini}camere.html" class="${isActive('camere.html')}">🌡️ Climă Camere</a>
-                <a href="${prefixPagini}harta.html" class="${isActive('harta.html')}">🗺️ Hartă Casă</a>
-                <a href="${prefixPagini}securitate.html" class="${isActive('securitate.html')}">🛡️ Securitate</a>
-                <a href="${prefixPagini}pericole.html" class="${isActive('pericole.html')}">🚨 Pericole</a>
-                <a href="${prefixPagini}setari.html" class="${isActive('setari.html')}">⚙️ Setări</a>
+                <a href="${prefixPagini}scenes.html" class="${isActive('scenes.html')}">🎭 Scenes</a>
+                <a href="${prefixPagini}accessories.html" class="${isActive('accessories.html')}">🛋️ Accessories</a>
+                <a href="${prefixPagini}automations.html" class="${isActive('automations.html')}">🤖 Automations</a>
+                <a href="${prefixPagini}statistics.html" class="${isActive('statistics.html')}">📈 Statistics</a>
+                <a href="${prefixPagini}rooms.html" class="${isActive('rooms.html')}">🌡️ Rooms</a>
+                <a href="${prefixPagini}map.html" class="${isActive('map.html')}">🗺️ Map</a>
+                <a href="${prefixPagini}security.html" class="${isActive('security.html')}">🛡️ Security</a>
+                <a href="${prefixPagini}hazards.html" class="${isActive('hazards.html')}">🚨 Hazards</a>
+                <a href="${prefixPagini}settings.html" class="${isActive('settings.html')}">⚙️ Settings</a>
             </nav>
         `;
     }
