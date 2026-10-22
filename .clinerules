@@ -1,6 +1,0 @@
-NEVER read, search, or edit any files or paths matching these patterns:
-- package-lock.json
-- node_modules/
-- dist/
-- sounds/
-- assets/
