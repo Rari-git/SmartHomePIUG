@@ -1,5 +1,5 @@
-import { showToast } from './ui.js';
-import { updateClimateAverages, fetchWeather, getTempUnit } from './app.js';
+import { showToast, getTempUnit } from './utils.js';
+import { updateClimateAverages, fetchWeather } from './app.js';
 
 const BACKGROUNDS = [
     { filename: "bg-blue.jpg", dominantColor: "#007aff" },
@@ -24,6 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.head.appendChild(metaVT);
     }
     updateUiBackgroundSettings();
+
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+        const action = target.getAttribute('data-action');
+
+        if (action === 'toggle-dark-mode') toggleDarkMode();
+        else if (action === 'toggle-auto-accent') toggleAutoAccent();
+        else if (action === 'toggle-help') toggleHelp();
+        else if (action === 'toggle-nav') toggleNav();
+        else if (action === 'change-bg') changeBackground(parseInt(target.dataset.idx));
+        else if (action === 'set-temp-unit') setTempUnit(target.dataset.unit);
+        else if (action === 'set-manual-accent') setManualAccentColor(target.dataset.color);
+    });
 });
 
 function getAbsoluteAssetUrl(filename) {
@@ -117,8 +131,8 @@ function changeBackground(index) {
         initBackgroundAndAccent();
     }
 
-    if (window.updateUiBackgroundSettings) {
-        window.updateUiBackgroundSettings();
+    if (typeof updateUiBackgroundSettings === 'function') {
+        updateUiBackgroundSettings();
     }
     showToast("Background updated.");
 }
@@ -143,30 +157,6 @@ function updateUnitButtons() {
     if (btnC) btnC.classList.toggle('active', unit === 'C');
     if (btnF) btnF.classList.toggle('active', unit === 'F');
 }
-
-export {
-    showToast,
-    toggleDarkMode,
-    changeAccentColor,
-    setManualAccentColor,
-    toggleHelp,
-    toggleNav,
-    changeBackground,
-    toggleAutoAccent,
-    setTempUnit,
-    getCurrentBgIndex,
-    isAutoAccentOn,
-    updateUiBackgroundSettings
-};
-
-window.toggleDarkMode = toggleDarkMode;
-window.changeAccentColor = changeAccentColor;
-window.toggleHelp = toggleHelp;
-window.toggleNav = toggleNav;
-window.changeBackground = changeBackground;
-window.toggleAutoAccent = toggleAutoAccent;
-window.setTempUnit = setTempUnit;
-window.updateUiBackgroundSettings = updateUiBackgroundSettings;
 
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
@@ -271,3 +261,27 @@ function toggleNav() {
         backdrop.classList.remove('active');
     }
 }
+
+export {
+    toggleDarkMode,
+    changeAccentColor,
+    setManualAccentColor,
+    toggleHelp,
+    toggleNav,
+    changeBackground,
+    toggleAutoAccent,
+    setTempUnit,
+    getCurrentBgIndex,
+    isAutoAccentOn,
+    updateUiBackgroundSettings
+};
+
+// Keep global bindings ONLY for raw static HTML files that need inline event access
+window.toggleDarkMode = toggleDarkMode;
+window.changeAccentColor = changeAccentColor;
+window.toggleHelp = toggleHelp;
+window.toggleNav = toggleNav;
+window.changeBackground = changeBackground;
+window.toggleAutoAccent = toggleAutoAccent;
+window.setTempUnit = setTempUnit;
+window.updateUiBackgroundSettings = updateUiBackgroundSettings;

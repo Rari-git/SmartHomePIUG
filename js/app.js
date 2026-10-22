@@ -3,8 +3,11 @@ import {
     reloadInterface, updateCardInDOM, syncDOMWithMemory,
     displayHomeNotifications, buildSceneHTML, buildCardHTML,
     openDeviceMenu, openActiveLightsPopup, openActiveAudioPopup,
-    openAllNotificationsPopup, applyFadeOutAndClose, showToast, closePopup
+    openAllNotificationsPopup, applyFadeOutAndClose, closePopup,
+    openCreateScenePopup, openAutomationModal, openAddAccessoryModal, closeAddAccessoryModal
 } from './ui.js';
+import { getTempUnit, convertTemp, showToast } from './utils.js';
+import { hardwareService } from './services/hardwareService.js';
 
 export let vacationInterval = null;
 export let customScenesList = JSON.parse(localStorage.getItem('smartHomeCustomScenes')) || [];
@@ -107,6 +110,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.stopPropagation(); toggleDeviceState(target.dataset.cat, parseInt(target.dataset.idx), e); openActiveAudioPopup();
         } else if (action === 'delete-device-popup') {
             e.stopPropagation(); deleteAccessory(target.dataset.cat, parseInt(target.dataset.idx));
+        } else if (action === 'close-popup') {
+            closePopup();
+        } else if (action === 'close-pin-popup') {
+            closePinPopup();
+        } else if (action === 'press-pin') {
+            pressPinKey(target.dataset.val);
+        } else if (action === 'save-scene') {
+            saveNewCustomScene();
+        } else if (action === 'open-automation-modal') {
+            openAutomationModal();
         }
     });
 
@@ -384,7 +397,6 @@ function toggleFavorite(id, type, event) {
 function toggleDeviceState(cat, index, event) {
     if (event) event.stopPropagation();
     localStorage.removeItem('activeScene');
-
     stopVacationInterval();
 
     const disp = subDevices[cat][index];
@@ -397,43 +409,40 @@ function toggleDeviceState(cat, index, event) {
         'vacuum': { 'Docked': 'Cleaning', 'Cleaning': 'Docked' }
     };
 
+    let newState = disp.state === "On" ? "Off" : "On";
+
     if (stateDictionary[cat]) {
         let defaultState = 'Closed';
         if (cat === 'locks') defaultState = 'Locked';
         else if (cat === 'videoCameras') defaultState = 'Standby';
         else if (cat === 'motionSensors') defaultState = 'Inactive';
         else if (cat === 'vacuum') defaultState = 'Docked';
-
-        disp.state = stateDictionary[cat][disp.state] || defaultState;
+        newState = stateDictionary[cat][disp.state] || defaultState;
     } else if (cat === 'purifier') {
-        disp.state = disp.state === "Off" ? "Auto" : (disp.state === "Auto" ? "Boost" : "Off");
-    } else {
-        disp.state = disp.state === "On" ? "Off" : "On";
+        newState = disp.state === "Off" ? "Auto" : (disp.state === "Auto" ? "Boost" : "Off");
     }
 
-    if (cat === 'motionSensors' && disp.state === "Active") {
-        let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
-        logs.unshift({ room: disp.room, time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }) });
-        localStorage.setItem('motionLogs', JSON.stringify(logs.slice(0, 15)));
-    }
+    hardwareService.setDeviceState(cat, index, newState).then((res) => {
+        if (!res.success) return;
 
-    if (typeof addToLog === 'function') {
-        addToLog(`${disp.name || 'Device'} switched to state [${disp.state}]`);
-    }
+        if (cat === 'motionSensors' && newState === "Active") {
+            let logs = JSON.parse(localStorage.getItem('motionLogs')) || [];
+            logs.unshift({ room: disp.room, time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }) });
+            localStorage.setItem('motionLogs', JSON.stringify(logs.slice(0, 15)));
+        }
 
-    const deviceId = `${cat}_${index}`;
-    let usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
-    usage[deviceId] = (usage[deviceId] || 0) + 1;
-    localStorage.setItem('deviceUsage', JSON.stringify(usage));
+        if (typeof addToLog === 'function') {
+            addToLog(`${disp.name || 'Device'} switched to state [${newState}]`);
+        }
 
-    checkAutomationRules(cat, index, disp.state);
-    saveState();
+        const deviceId = `${cat}_${index}`;
+        let usage = JSON.parse(localStorage.getItem('deviceUsage')) || {};
+        usage[deviceId] = (usage[deviceId] || 0) + 1;
+        localStorage.setItem('deviceUsage', JSON.stringify(usage));
 
-    if (typeof updateCardInDOM === 'function') {
-        updateCardInDOM(cat, index);
-    } else {
-        reloadInterface();
-    }
+        checkAutomationRules(cat, index, newState);
+        saveState();
+    });
 }
 
 function checkTimeAutomations() {
@@ -637,8 +646,7 @@ function applyMode(mode) {
                 const rIdx = Math.floor(Math.random() * elements.length);
                 const disp = elements[rIdx];
                 disp.state = (randomCat === 'blinds') ? (disp.state === "Closed" ? "Open" : "Closed") : (disp.state === "On" ? "Off" : "On");
-                saveState();
-                if (typeof updateCardInDOM === 'function') updateCardInDOM(randomCat, rIdx); else reloadInterface();
+                hardwareService.setDeviceState(randomCat, rIdx, disp.state).then(() => saveState());
             }
         }, 4000);
     }
@@ -809,17 +817,6 @@ function addToLog(message) {
     if (document.getElementById('logs-container')) renderStatisticsLogs();
 }
 
-function getTempUnit() {
-    return localStorage.getItem('tempUnit') || 'C';
-}
-
-function convertTemp(celsius) {
-    if (getTempUnit() === 'F') {
-        return Math.round(celsius * 9 / 5 + 32);
-    }
-    return Math.round(celsius);
-}
-
 function updateClimateAverages() {
     const rooms = ['living', 'bedroom', 'kitchen', 'bathroom'];
 
@@ -956,15 +953,12 @@ export {
     deleteAutomation, toggleAutomation, adjustFromPopup, turnOffAllGlobal, stopVacationInterval,
     applyMode, calculatePlugConsumption, calculateDeviceConsumption, executeScene, saveNewCustomScene,
     deleteCustomScene, deleteAccessory, executeTotalSecurity, addToLog, updateClimateAverages,
-    fetchWeather, getTempUnit, convertTemp
+    fetchWeather
 };
 
-window.pressPinKey = pressPinKey;
+// Keep global bindings ONLY for functions triggered by raw HTML files that cannot be dynamically bound
 window.saveNewPinCode = saveNewPinCode;
-window.saveAutomation = saveAutomation;
-window.saveNewCustomScene = saveNewCustomScene;
 window.adjustFromPopup = adjustFromPopup;
-window.closePinPopup = closePinPopup;
 window.executeTotalSecurity = executeTotalSecurity;
 window.addSuggestion = addSuggestion;
 window.deleteAutomation = deleteAutomation;
@@ -974,5 +968,3 @@ window.openPinPopup = openPinPopup;
 window.executeScene = executeScene;
 window.deleteAccessory = deleteAccessory;
 window.fetchWeather = fetchWeather;
-window.getTempUnit = getTempUnit;
-window.convertTemp = convertTemp;

@@ -1,26 +1,15 @@
 import { curtainIcon, windowIcon, recommendedTemplates } from './data.js';
-import { subDevices, scenesDB, calculatePlugConsumption, calculateDeviceConsumption, saveState, addToLog, updateClimateAverages, closePinPopup, getTempUnit, convertTemp } from './app.js';
+import { subDevices, scenesDB, calculatePlugConsumption, calculateDeviceConsumption, saveState, addToLog, updateClimateAverages, closePinPopup } from './app.js';
+import { formatTemperature, getTempUnit, convertTemp, showToast } from './utils.js';
 
 export let currentDashType = 'energy';
 export let currentDashPeriod = '7d';
 export let sortableInstances = { acc: null, scene: null };
 
-function formatTemperature(celsiusValue) {
-    const unit = localStorage.getItem('tempUnit') || 'C';
-    if (unit === 'F') {
-        const fahrenheit = Math.round((celsiusValue * 9 / 5) + 32);
-        return `${fahrenheit}°F`;
-    }
-    return `${celsiusValue}°C`;
-}
-
 function applyFadeOutAndClose(modal) {
-    if (!modal || !modal.classList.contains('active')) {
-        return;
-    }
+    if (!modal || !modal.classList.contains('active')) return;
 
     const transitionDuration = 350;
-
     modal.style.transition = `opacity ${transitionDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
     modal.style.opacity = '0';
 
@@ -28,7 +17,6 @@ function applyFadeOutAndClose(modal) {
     const cleanup = () => {
         if (isCleanedUp) return;
         isCleanedUp = true;
-
         modal.classList.remove('active');
         modal.style.transition = '';
         modal.style.opacity = '';
@@ -240,10 +228,7 @@ function renderHome() {
             if (accContainer && accContainer.children.length > 0) {
                 if (sortableInstances.acc) sortableInstances.acc.destroy();
                 sortableInstances.acc = new Sortable(accContainer, {
-                    animation: 200,
-                    delay: 150,
-                    delayOnTouchOnly: true,
-                    ghostClass: 'is-active',
+                    animation: 200, delay: 150, delayOnTouchOnly: true, ghostClass: 'is-active',
                     onEnd: function () {
                         const newOrder = Array.from(accContainer.children).map(card => card.getAttribute('data-id'));
                         localStorage.setItem('favAcc', JSON.stringify(newOrder));
@@ -253,10 +238,7 @@ function renderHome() {
             if (sceneContainer && sceneContainer.children.length > 0) {
                 if (sortableInstances.scene) sortableInstances.scene.destroy();
                 sortableInstances.scene = new Sortable(sceneContainer, {
-                    animation: 200,
-                    delay: 150,
-                    delayOnTouchOnly: true,
-                    ghostClass: 'is-active',
+                    animation: 200, delay: 150, delayOnTouchOnly: true, ghostClass: 'is-active',
                     onEnd: function () {
                         const newOrder = Array.from(sceneContainer.children).map(card => card.getAttribute('data-id'));
                         localStorage.setItem('favScenes', JSON.stringify(newOrder));
@@ -389,7 +371,7 @@ function renderAutomations() {
 
     const addCard = document.createElement('div');
     addCard.className = 'hk-card card-add-new';
-    addCard.setAttribute('onclick', 'openAutomationModal()');
+    addCard.setAttribute('data-action', 'open-automation-modal');
     addCard.innerHTML = `<div class="plus-icon"><i class="ph-bold ph-plus"></i></div><div class="add-title">New Rule</div><div class="add-desc">Complete manual configuration</div>`;
     fragment.appendChild(addCard);
 
@@ -470,18 +452,18 @@ function displayHomeNotifications() {
         const notif = allNotifications[i];
         const item = document.createElement('div');
         item.className = 'notification-item';
-        if (notif.id === "notif_lights") {
-            item.dataset.action = "open-popup-lights";
+
+        if (notif.action) {
             item.classList.add('hover-accent');
-            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Click for details)</span></span>`;
-        } else if (notif.id === "notif_audio") {
-            item.dataset.action = "open-popup-audio";
-            item.classList.add('hover-accent');
-            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Click for details)</span></span>`;
-        } else if (notif.action) {
-            item.classList.add('hover-accent');
-            item.setAttribute('onclick', notif.action);
-            item.innerHTML = `<span>${notif.text}</span>`;
+            item.dataset.action = notif.action;
+            if (notif.cat) item.dataset.cat = notif.cat;
+            if (notif.idx !== undefined) item.dataset.idx = notif.idx;
+
+            if (notif.action === "open-popup-lights" || notif.action === "open-popup-audio") {
+                item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Click for details)</span></span>`;
+            } else {
+                item.innerHTML = `<span>${notif.text}</span>`;
+            }
         } else {
             item.innerHTML = `<span>${notif.text}</span>`;
         }
@@ -505,44 +487,44 @@ function generateNotificationsList() {
     const bulbsOn = (subDevices.bulbs || []).filter(d => d.state === "On");
     const rgbOn = (subDevices.rgbLights || []).filter(d => d.state === "On");
     const totalLights = bulbsOn.length + rgbOn.length;
-    if (totalLights > 0) notifications.push({ id: "notif_lights", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLights} ${totalLights === 1 ? 'light on' : 'lights on'}` });
+    if (totalLights > 0) notifications.push({ id: "notif_lights", text: `<i class="ph-fill ph-lightbulb"></i> ${totalLights} ${totalLights === 1 ? 'light on' : 'lights on'}`, action: 'open-popup-lights' });
 
     const audioOn = (subDevices.audio || []).filter(d => d.state === "On");
-    if (audioOn.length > 0) notifications.push({ id: "notif_audio", text: `<i class="ph-fill ph-speaker-high"></i> ${audioOn.length} active systems` });
+    if (audioOn.length > 0) notifications.push({ id: "notif_audio", text: `<i class="ph-fill ph-speaker-high"></i> ${audioOn.length} active systems`, action: 'open-popup-audio' });
 
     const tvOn = (subDevices.tv || []).filter(d => d.state === "On");
     if (tvOn.length > 0) {
         const idx = subDevices.tv.findIndex(d => d === tvOn[0]);
-        notifications.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV on in ${tvOn[0].room}`, action: `openDeviceMenu('none', 'tv', ${idx})` });
+        notifications.push({ id: "notif_tv", text: `<i class="ph-fill ph-television"></i> TV on in ${tvOn[0].room}`, action: `open-device-menu`, cat: 'tv', idx: idx });
     }
 
     if (subDevices.vacuum && subDevices.vacuum[0] && subDevices.vacuum[0].state === "Cleaning") {
-        notifications.push({ id: "notif_vacuum", text: `<i class="ph-fill ph-robot"></i> Robot cleaning in ${subDevices.vacuum[0].room}`, action: `openDeviceMenu('none', 'vacuum', 0)` });
+        notifications.push({ id: "notif_vacuum", text: `<i class="ph-fill ph-robot"></i> Robot cleaning in ${subDevices.vacuum[0].room}`, action: `open-device-menu`, cat: 'vacuum', idx: 0 });
     }
 
     if (subDevices.purifier && subDevices.purifier[0] && subDevices.purifier[0].state !== "Off") {
-        notifications.push({ id: "notif_purifier", text: `<i class="ph-fill ph-wind"></i> Purifier active in ${subDevices.purifier[0].room}`, action: `openDeviceMenu('none', 'purifier', 0)` });
+        notifications.push({ id: "notif_purifier", text: `<i class="ph-fill ph-wind"></i> Purifier active in ${subDevices.purifier[0].room}`, action: `open-device-menu`, cat: 'purifier', idx: 0 });
     }
 
     (subDevices.blinds || []).forEach((d, idx) => {
-        if (d.state === "Open") notifications.push({ id: `notif_blinds_${idx}`, text: `<i class="ph-fill ph-blinds"></i> ${d.name} in ${d.room} is open`, action: `openDeviceMenu('none', 'blinds', ${idx})` });
+        if (d.state === "Open") notifications.push({ id: `notif_blinds_${idx}`, text: `<i class="ph-fill ph-blinds"></i> ${d.name} in ${d.room} is open`, action: `open-device-menu`, cat: 'blinds', idx: idx });
     });
 
     (subDevices.appliances || []).forEach((d, idx) => {
-        if (d.state === "On") notifications.push({ id: `notif_appliance_${idx}`, text: `<i class="ph-fill ph-coffee"></i> ${d.name} is on`, action: `openDeviceMenu('none', 'appliances', ${idx})` });
+        if (d.state === "On") notifications.push({ id: `notif_appliance_${idx}`, text: `<i class="ph-fill ph-coffee"></i> ${d.name} is on`, action: `open-device-menu`, cat: 'appliances', idx: idx });
     });
 
     (subDevices.plugs || []).forEach((d, idx) => {
-        if (d.state === "On") notifications.push({ id: `notif_plug_${idx}`, text: `<i class="ph-fill ph-plug"></i> ${d.name} is powered`, action: `openDeviceMenu('none', 'plugs', ${idx})` });
+        if (d.state === "On") notifications.push({ id: `notif_plug_${idx}`, text: `<i class="ph-fill ph-plug"></i> ${d.name} is powered`, action: `open-device-menu`, cat: 'plugs', idx: idx });
     });
 
     if (subDevices.locks && subDevices.locks[0] && subDevices.locks[0].state === "Unlocked") {
-        notifications.push({ id: "notif_door", text: `<i class="ph-fill ph-lock-key"></i> Front door is unlocked!`, action: `openDeviceMenu('none', 'locks', 0)` });
+        notifications.push({ id: "notif_door", text: `<i class="ph-fill ph-lock-key"></i> Front door is unlocked!`, action: `open-device-menu`, cat: 'locks', idx: 0 });
     }
 
     if (subDevices.contactSensors) {
         subDevices.contactSensors.forEach((d, idx) => {
-            if (d.state === "Open") notifications.push({ id: `notif_window_${idx}`, text: `🚪 Window open in ${d.room}`, action: `openDeviceMenu('none', 'contactSensors', ${idx})` });
+            if (d.state === "Open") notifications.push({ id: `notif_window_${idx}`, text: `🚪 Window open in ${d.room}`, action: `open-device-menu`, cat: 'contactSensors', idx: idx });
         });
     }
 
@@ -721,7 +703,7 @@ function openCreateScenePopup() {
     const content = document.getElementById('modal-content');
     if (!modal || !content) return;
     title.innerHTML = "🎭 Create New Scene";
-    content.innerHTML = `<div class="form-row"><label>Scene Name:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="e.g.: Party Mode, Relaxing..."></div><div class="form-row"><label>Suggestive Emoji:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Fun</option><option value="🍃">🍃 Relax / Fresh</option><option value="💻">💻 Office / Work</option></select></div><div class="form-row"><label>Short Description:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="e.g.: Turn off all electronics in the house."></div><div class="form-row"><label>Behavior Template:</label><select id="custom-scene-template" class="form-input"><option value="away">Away Mode (Turn off all + Active alarms)</option><option value="night">Night Mode (Dark ambient + Locked doors)</option><option value="morning">Morning Mode (Open windows/blinds)</option></select></div><button onclick="saveNewCustomScene()" class="btn-full-success">💾 Create Scene</button>`;
+    content.innerHTML = `<div class="form-row"><label>Scene Name:</label><input type="text" id="custom-scene-name" class="form-input" placeholder="e.g.: Party Mode, Relaxing..."></div><div class="form-row"><label>Suggestive Emoji:</label><select id="custom-scene-emoji" class="form-input"><option value="🎉">🎉 Party / Fun</option><option value="🍃">🍃 Relax / Fresh</option><option value="💻">💻 Office / Work</option></select></div><div class="form-row"><label>Short Description:</label><input type="text" id="custom-scene-desc" class="form-input" placeholder="e.g.: Turn off all electronics in the house."></div><div class="form-row"><label>Behavior Template:</label><select id="custom-scene-template" class="form-input"><option value="away">Away Mode (Turn off all + Active alarms)</option><option value="night">Night Mode (Dark ambient + Locked doors)</option><option value="morning">Morning Mode (Open windows/blinds)</option></select></div><button data-action="save-scene" class="btn-full-success">💾 Create Scene</button>`;
     modal.classList.add('active');
 }
 
@@ -760,18 +742,17 @@ function openAllNotificationsPopup() {
     allNotifications.forEach(notif => {
         const item = document.createElement('div');
         item.className = 'notification-item card-style';
-        if (notif.id === "notif_lights") {
-            item.dataset.action = "open-popup-lights";
+        if (notif.action) {
             item.classList.add('hover-accent');
-            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Click for details)</span></span>`;
-        } else if (notif.id === "notif_audio") {
-            item.dataset.action = "open-popup-audio";
-            item.classList.add('hover-accent');
-            item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Click for details)</span></span>`;
-        } else if (notif.action) {
-            item.classList.add('hover-accent');
-            item.setAttribute('onclick', notif.action);
-            item.innerHTML = `<span>${notif.text}</span>`;
+            item.dataset.action = notif.action;
+            if (notif.cat) item.dataset.cat = notif.cat;
+            if (notif.idx !== undefined) item.dataset.idx = notif.idx;
+
+            if (notif.action === "open-popup-lights" || notif.action === "open-popup-audio") {
+                item.innerHTML = `<span>${notif.text} <span class="notif-hint">(Click for details)</span></span>`;
+            } else {
+                item.innerHTML = `<span>${notif.text}</span>`;
+            }
         } else {
             item.innerHTML = `<span>${notif.text}</span>`;
         }
@@ -790,53 +771,9 @@ function openAllNotificationsPopup() {
     modal.classList.add('active');
 }
 
-function closePopup() {
-    const modal = document.getElementById('popup-device');
-    applyFadeOutAndClose(modal);
-}
-
-function closeHistoryPopup() {
-    const modal = document.getElementById('popup-history');
-    applyFadeOutAndClose(modal);
-}
-
-function closeAutomationPopup() {
-    const modal = document.getElementById('popup-automation');
-    applyFadeOutAndClose(modal);
-}
-
-window.onclick = function (event) {
-    const m1 = document.getElementById('popup-device');
-    const m2 = document.getElementById('popup-automation');
-    const m3 = document.getElementById('popup-history');
-    const m4 = document.getElementById('popup-pin-alarm');
-
-    if (event.target === m1) {
-        closePopup();
-    }
-    if (event.target === m2) {
-        closeAutomationPopup();
-    }
-    if (event.target === m3) {
-        closeHistoryPopup();
-    }
-    if (event.target === m4) {
-        if (typeof closePinPopup === 'function') {
-            closePinPopup();
-        } else {
-            applyFadeOutAndClose(m4);
-        }
-    }
-};
-
-document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') {
-        closePopup();
-        closeAutomationPopup();
-        closeHistoryPopup();
-        if (typeof closePinPopup === 'function') closePinPopup();
-    }
-});
+function closePopup() { applyFadeOutAndClose(document.getElementById('popup-device')); }
+function closeHistoryPopup() { applyFadeOutAndClose(document.getElementById('popup-history')); }
+function closeAutomationPopup() { applyFadeOutAndClose(document.getElementById('popup-automation')); }
 
 function syncDOMWithMemory() {
     Object.keys(subDevices).forEach(cat => {
@@ -909,68 +846,6 @@ function updateCardInDOM(cat, index, skipGlobal = false) {
     }
 }
 
-function showToast(message, opts = {}) {
-    let container = document.getElementById('toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toast-container';
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-
-    const existingToasts = container.querySelectorAll('.toast-notification');
-    existingToasts.forEach(t => t.remove());
-
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.style.borderLeft = `4px solid ${opts.isError ? 'var(--error-color)' : 'var(--success-color)'}`;
-
-    const icon = opts.isError ? '<i class="ph-bold ph-warning-circle" style="color: var(--error-color); font-size: 1.2em;"></i>' : '<i class="ph-bold ph-check-circle" style="color: var(--success-color); font-size: 1.2em;"></i>';
-
-    let htmlContent = `${icon} <span>${message}</span>`;
-
-    if (opts.withUndo) {
-        htmlContent += `<button class="undo-btn" style="background: rgba(255,255,255,0.2); color: inherit; border: none; padding: 4px 8px; border-radius: 4px; margin-left: 10px; cursor: pointer; font-size: 0.85em; font-weight: bold;">Undo</button>`;
-    }
-
-    toast.innerHTML = htmlContent;
-    container.appendChild(toast);
-
-    if (opts.withUndo && opts.undoAction) {
-        toast.querySelector('.undo-btn').addEventListener('click', () => {
-            opts.undoAction();
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 400);
-            showToast('Action was canceled.', { isError: false });
-        });
-    }
-
-    requestAnimationFrame(() => toast.classList.add('show'));
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        toast.addEventListener('transitionend', () => {
-            toast.remove();
-            if (opts.callback) opts.callback();
-        });
-    }, 3500);
-}
-
-const originalShowToast = showToast;
-showToast = function (message, arg2, arg3) {
-    if (typeof arg2 === 'object' && arg2 !== null) {
-        return originalShowToast(message, arg2);
-    }
-    let opts = {};
-    if (typeof arg2 === 'boolean') {
-        opts.isError = arg2;
-    }
-    if (typeof arg3 === 'function') {
-        opts.callback = arg3;
-    }
-    return originalShowToast(message, opts);
-};
-
 function openAddAccessoryModal() {
     const modal = document.getElementById('popup-add-accessory');
     if (modal) modal.classList.add('active');
@@ -987,7 +862,7 @@ function saveNewAccessory() {
     const room = document.getElementById('new-acc-room').value;
 
     if (!name) {
-        showToast("Please enter a name for the accessory!", true);
+        showToast("Please enter a name for the accessory!", { isError: true });
         return;
     }
 
@@ -1048,7 +923,7 @@ export {
     openDeviceMenu, openActiveLightsPopup, openActiveAudioPopup,
     openCreateScenePopup, openAutomationModal, openAllNotificationsPopup,
     closePopup, closeHistoryPopup, closeAutomationPopup, syncDOMWithMemory,
-    updateCardInDOM, showToast, openAddAccessoryModal, closeAddAccessoryModal, saveNewAccessory
+    updateCardInDOM, openAddAccessoryModal, closeAddAccessoryModal, saveNewAccessory
 };
 
 window.switchDashboardChartType = switchDashboardChartType;
@@ -1058,7 +933,6 @@ window.closeHistoryPopup = closeHistoryPopup;
 window.closeAutomationPopup = closeAutomationPopup;
 window.openCreateScenePopup = openCreateScenePopup;
 window.openAutomationModal = openAutomationModal;
-window.showToast = showToast;
 window.reloadInterface = reloadInterface;
 window.openDeviceMenu = openDeviceMenu;
 window.openActiveLightsPopup = openActiveLightsPopup;
